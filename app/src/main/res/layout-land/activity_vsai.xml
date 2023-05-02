@@ -2,6 +2,74 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/schwierigkeitsgrad_auswaehlen"
+        android:textSize="32sp"
+        android:textAlignment="center"
+        android:layout_marginTop="12sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="64sp">
+        <TextView
+            android:layout_width="@dimen/button_width"
+            android:layout_height="wrap_content"
+            android:text="@string/schwierigkeit_einfach"
+            android:textSize="24sp"
+            android:layout_marginEnd="@dimen/button_horizontal_margin"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="@dimen/button_width"
+            android:layout_height="wrap_content"
+            android:text="@string/schwierigkeit_mittel"
+            android:layout_marginStart="@dimen/button_horizontal_margin"
+            android:textSize="24sp"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="@dimen/button_width"
+            android:layout_height="wrap_content"
+            android:text="@string/ai_kevin_otto"
+            android:textSize="@dimen/button_text_size"
+            android:layout_marginEnd="@dimen/button_horizontal_margin"
+            android:padding="12sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="@dimen/button_width"
+            android:layout_height="wrap_content"
+            android:text="@string/ai_max"
+            android:textSize="@dimen/button_text_size"
+            android:layout_marginStart="@dimen/button_horizontal_margin"
+            android:padding="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="@dimen/button_width"
+        android:layout_height="wrap_content"
+        android:text="@string/schwierigkeit_schwer"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:layout_marginTop="16sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="@dimen/button_width"
+        android:layout_height="wrap_content"
+        android:text="@string/ai_chris"
+        android:textSize="@dimen/button_text_size"
+        android:padding="12sp" />
 
 </LinearLayout>

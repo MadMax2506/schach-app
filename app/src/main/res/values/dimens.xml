@@ -2,4 +2,5 @@
 <resources>
     <dimen name="button_width">200sp</dimen>
     <dimen name="button_text_size">20sp</dimen>
+    <dimen name="button_horizontal_margin">50sp</dimen>
 </resources>

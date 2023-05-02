@@ -14,7 +14,7 @@
         android:layout_marginTop="12sp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
         android:text="@string/schwierigkeit_einfach"
         android:textSize="24sp"
@@ -29,7 +29,7 @@
         android:padding="12sp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
         android:text="@string/schwierigkeit_mittel"
         android:textSize="24sp"
@@ -44,7 +44,7 @@
         android:padding="12sp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
         android:text="@string/schwierigkeit_schwer"
         android:textSize="24sp"
