@@ -11,7 +11,8 @@ class VsOnlinePlayer : AppCompatActivity() {
         binding = ActivityVsonlineplayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
+        binding.buttonEinladungVersenden?.setOnClickListener {
+            // TODO
+        }
     }
 }
