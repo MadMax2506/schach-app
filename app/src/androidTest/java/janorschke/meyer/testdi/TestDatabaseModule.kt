@@ -16,23 +16,23 @@
 
 package janorschke.meyer.testdi
 
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.components.SingletonComponent
-import dagger.hilt.testing.TestInstallIn
-import janorschke.meyer.data.ChessRepository
-import janorschke.meyer.data.di.DataModule
-import janorschke.meyer.data.di.FakeChessRepository
-
-@Module
-@TestInstallIn(
-    components = [SingletonComponent::class],
-    replaces = [DataModule::class]
-)
-interface FakeDataModule {
-
-    @Binds
-    abstract fun bindRepository(
-        fakeRepository: FakeChessRepository
-    ): ChessRepository
-}
+//import dagger.Binds
+//import dagger.Module
+//import dagger.hilt.components.SingletonComponent
+//import dagger.hilt.testing.TestInstallIn
+//import janorschke.meyer.data.ChessRepository
+//import janorschke.meyer.data.di.DataModule
+//import janorschke.meyer.data.di.FakeChessRepository
+//
+//@Module
+//@TestInstallIn(
+//    components = [SingletonComponent::class],
+//    replaces = [DataModule::class]
+//)
+//interface FakeDataModule {
+//
+//    @Binds
+//    abstract fun bindRepository(
+//        fakeRepository: FakeChessRepository
+//    ): ChessRepository
+//}
