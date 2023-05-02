@@ -41,6 +41,7 @@
         android:gravity="center_horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_ai_kevin_otto"
             android:layout_width="@dimen/button_width"
             android:layout_height="wrap_content"
             android:text="@string/ai_kevin_otto"
@@ -49,6 +50,7 @@
             android:padding="12sp" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_ai_max"
             android:layout_width="@dimen/button_width"
             android:layout_height="wrap_content"
             android:text="@string/ai_max"
@@ -66,6 +68,7 @@
         android:layout_marginTop="16sp" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_ai_chris"
         android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
         android:text="@string/ai_chris"
