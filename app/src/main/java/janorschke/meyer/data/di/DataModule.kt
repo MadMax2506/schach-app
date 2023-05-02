@@ -16,34 +16,34 @@
 
 package janorschke.meyer.data.di
 
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import janorschke.meyer.data.ChessRepository
-import janorschke.meyer.data.DefaultChessRepository
-import javax.inject.Inject
-import javax.inject.Singleton
-
-@Module
-@InstallIn(SingletonComponent::class)
-interface DataModule {
-
-    @Singleton
-    @Binds
-    fun bindsChessRepository(
-        chessRepository: DefaultChessRepository
-    ): ChessRepository
-}
-
-class FakeChessRepository @Inject constructor() : ChessRepository {
-    override val chesss: Flow<List<String>> = flowOf(fakeChesss)
-
-    override suspend fun add(name: String) {
-        throw NotImplementedError()
-    }
-}
-
-val fakeChesss = listOf("One", "Two", "Three")
+//import dagger.Binds
+//import dagger.Module
+//import dagger.hilt.InstallIn
+//import dagger.hilt.components.SingletonComponent
+//import kotlinx.coroutines.flow.Flow
+//import kotlinx.coroutines.flow.flowOf
+//import janorschke.meyer.data.ChessRepository
+//import janorschke.meyer.data.DefaultChessRepository
+//import javax.inject.Inject
+//import javax.inject.Singleton
+//
+//@Module
+//@InstallIn(SingletonComponent::class)
+//interface DataModule {
+//
+//    @Singleton
+//    @Binds
+//    fun bindsChessRepository(
+//        chessRepository: DefaultChessRepository
+//    ): ChessRepository
+//}
+//
+//class FakeChessRepository @Inject constructor() : ChessRepository {
+//    override val chesss: Flow<List<String>> = flowOf(fakeChesss)
+//
+//    override suspend fun add(name: String) {
+//        throw NotImplementedError()
+//    }
+//}
+//
+//val fakeChesss = listOf("One", "Two", "Three")

@@ -67,6 +67,7 @@ android {
         buildConfig = false
         renderScript = false
         shaders = false
+        viewBinding = true
     }
 
     composeOptions {
@@ -82,6 +83,7 @@ android {
 
 dependencies {
 
+    implementation("androidx.appcompat:appcompat:1.6.1")
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
