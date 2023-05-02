@@ -3,13 +3,13 @@ package janorschke.meyer
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import janorschke.meyer.databinding.ActivityVsaiBinding
+import janorschke.meyer.databinding.ActivityAiBinding
 
-class VsAiActivtity : AppCompatActivity() {
-    private lateinit var binding: ActivityVsaiBinding
+class AiActivtity : AppCompatActivity() {
+    private lateinit var binding: ActivityAiBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityVsaiBinding.inflate(layoutInflater)
+        binding = ActivityAiBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.buttonAiKevinOtto?.setOnClickListener {

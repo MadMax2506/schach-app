@@ -29,11 +29,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.buttonVsAi?.setOnClickListener {
-            val intent = Intent(this, VsAiActivtity::class.java)
+            val intent = Intent(this, AiActivtity::class.java)
             startActivity(intent, savedInstanceState)
         }
         binding.buttonVsPlayerOnline?.setOnClickListener {
-            val intent = Intent(this, VsOnlinePlayer::class.java)
+            val intent = Intent(this, OnlinePlayerActivity::class.java)
             startActivity(intent, savedInstanceState)
         }
     }

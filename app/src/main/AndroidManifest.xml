@@ -36,8 +36,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".VsAiActivtity" />
-        <activity android:name=".VsOnlinePlayer" />
+        <activity android:name=".AiActivtity" />
+        <activity android:name=".OnlinePlayerActivity" />
         <activity android:name=".GameActivity" />
     </application>
 
