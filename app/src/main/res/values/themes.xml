@@ -16,6 +16,7 @@
   -->
 
 <resources>
-
-    <style name="Theme.Schach" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Schach" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--TODO Light Theme erstellen-->
+    </style>
 </resources>

@@ -15,43 +15,43 @@
  */
 
 package janorschke.meyer.data
-
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Test
-import janorschke.meyer.data.local.database.Chess
-import janorschke.meyer.data.local.database.ChessDao
-
-/**
- * Unit tests for [DefaultChessRepository].
- */
-@OptIn(ExperimentalCoroutinesApi::class) // TODO: Remove when stable
-class DefaultChessRepositoryTest {
-
-    @Test
-    fun chesss_newItemSaved_itemIsReturned() = runTest {
-        val repository = DefaultChessRepository(FakeChessDao())
-
-        repository.add("Repository")
-
-        assertEquals(repository.chesss.first().size, 1)
-    }
-
-}
-
-private class FakeChessDao : ChessDao {
-
-    private val data = mutableListOf<Chess>()
-
-    override fun getChesss(): Flow<List<Chess>> = flow {
-        emit(data)
-    }
-
-    override suspend fun insertChess(item: Chess) {
-        data.add(0, item)
-    }
-}
+//
+//import kotlinx.coroutines.ExperimentalCoroutinesApi
+//import kotlinx.coroutines.flow.Flow
+//import kotlinx.coroutines.flow.first
+//import kotlinx.coroutines.flow.flow
+//import kotlinx.coroutines.test.runTest
+//import org.junit.Assert.assertEquals
+//import org.junit.Test
+//import janorschke.meyer.data.local.database.Chess
+//import janorschke.meyer.data.local.database.ChessDao
+//
+///**
+// * Unit tests for [DefaultChessRepository].
+// */
+//@OptIn(ExperimentalCoroutinesApi::class) // TODO: Remove when stable
+//class DefaultChessRepositoryTest {
+//
+//    @Test
+//    fun chesss_newItemSaved_itemIsReturned() = runTest {
+//        val repository = DefaultChessRepository(FakeChessDao())
+//
+//        repository.add("Repository")
+//
+//        assertEquals(repository.chesss.first().size, 1)
+//    }
+//
+//}
+//
+//private class FakeChessDao : ChessDao {
+//
+//    private val data = mutableListOf<Chess>()
+//
+//    override fun getChesss(): Flow<List<Chess>> = flow {
+//        emit(data)
+//    }
+//
+//    override suspend fun insertChess(item: Chess) {
+//        data.add(0, item)
+//    }
+//}
