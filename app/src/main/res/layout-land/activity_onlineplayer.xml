@@ -9,7 +9,7 @@
         android:id="@+id/button_einladung_versenden"
         android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
-        android:text="@string/einladung_versenden"
-        android:textSize="@dimen/button_text_size"/>
+        android:text="@string/online_invite_friend"
+        android:textSize="@dimen/button_text_size" />
 
 </LinearLayout>
