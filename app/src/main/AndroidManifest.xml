@@ -38,6 +38,7 @@
         </activity>
         <activity android:name=".VsAiActivtity" />
         <activity android:name=".VsOnlinePlayer" />
+        <activity android:name=".GameActivity" />
     </application>
 
 </manifest>
