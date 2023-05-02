@@ -33,4 +33,8 @@
 
     <!-- online -->
     <string name="online_invite_friend">Einladung versenden</string>
+
+    <!-- game -->
+    <string name="placeholder">%s</string>
+
 </resources>
