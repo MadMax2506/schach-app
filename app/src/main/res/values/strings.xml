@@ -18,9 +18,9 @@
     <string name="app_name">Schach</string>
 
     <!-- main -->
-    <string name="online_spiel">Online Spiel</string>
-    <string name="spiel_gegen_ki">Spiel gegen KI</string>
-    <string name="schach">Schach</string>
+    <string name="online_game">Online Spiel</string>
+    <string name="play_vs_ai">Spiel gegen KI</string>
+    <string name="chess">Schach</string>
 
     <!-- ai -->
     <string name="ai_select_level">Schwierigkeitsgrad auswählen</string>

@@ -9,7 +9,7 @@
         android:layout_marginTop="100sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/schach"
+        android:text="@string/chess"
         android:textSize="40sp" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="64sp"
         android:padding="12sp"
-        android:text="@string/spiel_gegen_ki"
+        android:text="@string/play_vs_ai"
         android:textSize="@dimen/button_text_size" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32sp"
         android:padding="12sp"
-        android:text="@string/online_spiel"
+        android:text="@string/online_game"
         android:textSize="@dimen/button_text_size" />
 
 </LinearLayout>
