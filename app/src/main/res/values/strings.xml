@@ -16,4 +16,22 @@
 
 <resources>
     <string name="app_name">Schach</string>
+
+    <!-- Main-/Startseite Texte -->
+    <string name="online_spiel">Online Spiel</string>
+    <string name="spiel_gegen_ki">Spiel gegen KI</string>
+    <string name="schach">Schach</string>
+
+    <!-- Schwierigkeitsgrade u. AI Texte -->
+    <string name="schwierigkeitsgrad_auswaehlen">Schwierigkeitsgrad auswählen</string>
+    <string name="ai_kevin_otto">Kevin Otto</string>
+    <string name="ai_max">Max</string>
+    <string name="ai_chris">Chris</string>
+    <string name="schwierigkeit_einfach">Einfach</string>
+    <string name="schwierigkeit_mittel">Mittel</string>
+    <string name="schwierigkeit_schwer">Schwer</string>
+
+    <!-- Online Suche Texte -->
+
+
 </resources>

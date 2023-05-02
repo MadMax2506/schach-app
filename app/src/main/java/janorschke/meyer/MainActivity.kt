@@ -16,6 +16,7 @@
 
 package janorschke.meyer
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import janorschke.meyer.databinding.ActivityMainBinding
@@ -27,7 +28,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        binding.buttonVsAi?.setOnClickListener {
+            val intent = Intent(this, VsAiActivtity::class.java)
+            startActivity(intent, savedInstanceState)
+        }
+        binding.buttonVsPlayerOnline?.setOnClickListener {
+            val intent = Intent(this, VsOnlinePlayer::class.java)
+            startActivity(intent, savedInstanceState)
+        }
     }
 
 }
