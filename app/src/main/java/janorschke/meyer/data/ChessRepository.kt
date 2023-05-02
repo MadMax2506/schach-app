@@ -16,26 +16,26 @@
 
 package janorschke.meyer.data
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import janorschke.meyer.data.local.database.Chess
-import janorschke.meyer.data.local.database.ChessDao
-import javax.inject.Inject
-
-interface ChessRepository {
-    val chesss: Flow<List<String>>
-
-    suspend fun add(name: String)
-}
-
-class DefaultChessRepository @Inject constructor(
-    private val chessDao: ChessDao
-) : ChessRepository {
-
-    override val chesss: Flow<List<String>> =
-        chessDao.getChesss().map { items -> items.map { it.name } }
-
-    override suspend fun add(name: String) {
-        chessDao.insertChess(Chess(name = name))
-    }
-}
+//import kotlinx.coroutines.flow.Flow
+//import kotlinx.coroutines.flow.map
+//import janorschke.meyer.data.local.database.Chess
+//import janorschke.meyer.data.local.database.ChessDao
+//import javax.inject.Inject
+//
+//interface ChessRepository {
+//    val chesss: Flow<List<String>>
+//
+//    suspend fun add(name: String)
+//}
+//
+//class DefaultChessRepository @Inject constructor(
+//    private val chessDao: ChessDao
+//) : ChessRepository {
+//
+//    override val chesss: Flow<List<String>> =
+//        chessDao.getChesss().map { items -> items.map { it.name } }
+//
+//    override suspend fun add(name: String) {
+//        chessDao.insertChess(Chess(name = name))
+//    }
+//}
