@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import janorschke.meyer.databinding.ActivityAiBinding
 import janorschke.meyer.game.GameActivity
-import janorschke.meyer.game.GameMode
 import janorschke.meyer.global.TransferKeys
 
 const val LOG_TAG = "AiActivtity"
@@ -27,7 +26,6 @@ class AiActivtity : AppCompatActivity() {
         val intent = Intent(this, GameActivity::class.java).apply {
             Log.d(LOG_TAG, "Change activity")
             putExtras(Bundle().apply {
-                putString(TransferKeys.GAME_MODE.value, GameMode.AI.value)
                 putString(TransferKeys.AI_LEVEL.value, aiLevel.value)
             })
         }
