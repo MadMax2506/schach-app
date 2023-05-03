@@ -19,10 +19,15 @@ class GameActivity : AppCompatActivity() {
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // board handling
         val boardViewModel = ViewModelProvider(this)[BoardViewModel::class.java]
         val gameFieldAdapter = GameFieldAdapter(this.applicationContext, boardViewModel)
 
         binding.board?.adapter = gameFieldAdapter
+
+        // player handling
+        // TODO set names
+        // TODO set adapters for moves and geschlagene figuren
 
         val gameModeStr = intent.extras?.getString(TransferKeys.GAME_MODE.value)
         if (gameModeStr == null) {
