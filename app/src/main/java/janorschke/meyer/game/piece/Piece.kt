@@ -19,5 +19,5 @@ abstract class Piece(val boardViewModel: BoardViewModel, val color: PieceColor) 
      * @param position current position
      * @return possible moves
      */
-    abstract fun possibleMoves(position: PiecePosition): Array<PiecePosition>
+    abstract fun possibleMoves(position: PiecePosition): MutableCollection<PiecePosition>
 }

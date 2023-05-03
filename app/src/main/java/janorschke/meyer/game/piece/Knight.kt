@@ -8,7 +8,7 @@ class Knight(boardViewModel: BoardViewModel, colo: PieceColor) : Piece(boardView
         return R.drawable.chess_knight
     }
 
-    override fun possibleMoves(position: PiecePosition): Array<PiecePosition> {
+    override fun possibleMoves(position: PiecePosition): MutableCollection<PiecePosition> {
         TODO("Not yet implemented")
     }
 }
