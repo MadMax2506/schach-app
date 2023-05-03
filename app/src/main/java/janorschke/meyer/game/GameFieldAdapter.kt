@@ -1,5 +1,6 @@
 package janorschke.meyer.game
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,10 @@ import janorschke.meyer.R
 import janorschke.meyer.game.piece.Piece
 import janorschke.meyer.game.piece.PiecePosition
 
-class GameFieldAdapter(private val boardViewModel: BoardViewModel) : BaseAdapter() {
+class GameFieldAdapter(
+    private val context: Context,
+    private val boardViewModel: BoardViewModel
+) : BaseAdapter() {
 
     override fun getCount(): Int {
         return BoardViewModel.BOARD_SIZE

@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, AiActivtity::class.java))
         }
         binding.buttonOnline?.setOnClickListener {
-            Log.d(LOG_TAG, "Start OnlinePlayerActivity")
+            Log.d(LOG_TAG, "Start SettingsActivity")
             startActivity(Intent(this, SettingsActivity::class.java))
         }
     }

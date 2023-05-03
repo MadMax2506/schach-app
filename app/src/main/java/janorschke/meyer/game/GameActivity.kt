@@ -21,7 +21,7 @@ class GameActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val boardViewModel = ViewModelProvider(this)[BoardViewModel::class.java]
-        val gameFieldAdapter = GameFieldAdapter(boardViewModel)
+        val gameFieldAdapter = GameFieldAdapter(applicationContext, boardViewModel)
 
         binding.board?.adapter = gameFieldAdapter
 
