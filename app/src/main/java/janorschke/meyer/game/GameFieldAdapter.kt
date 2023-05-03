@@ -11,7 +11,8 @@ import janorschke.meyer.game.piece.Piece
 import janorschke.meyer.game.piece.PiecePosition
 
 class GameFieldAdapter(
-    private val context: Context, private val boardViewModel: BoardViewModel
+    private val context: Context,
+    private val boardViewModel: BoardViewModel
 ) : BaseAdapter() {
 
     override fun getCount(): Int {
