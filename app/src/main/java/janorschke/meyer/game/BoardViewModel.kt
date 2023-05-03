@@ -16,7 +16,7 @@ class BoardViewModel : ViewModel() {
 
     companion object {
         const val BOARD_SIZE = 64
-        const val ROW_SIZE = 8
+        const val LINE_SIZE = 8
     }
 
     init {
@@ -40,7 +40,7 @@ class BoardViewModel : ViewModel() {
     }
 
     private fun resetBoard() {
-        board = Array(8) { Array(8) { null } }
+        board = Array(LINE_SIZE) { Array(LINE_SIZE) { null } }
         board[0] = generateBaseLine(PieceColor.BLACK)
         board[1] = generatePawnLine(PieceColor.BLACK)
         board[6] = generatePawnLine(PieceColor.WHITE)
@@ -48,7 +48,7 @@ class BoardViewModel : ViewModel() {
     }
 
     private fun generatePawnLine(color: PieceColor): Array<Piece?> {
-        return Array(ROW_SIZE) { Pawn(this, color) }
+        return Array(LINE_SIZE) { Pawn(this, color) }
     }
 
     private fun generateBaseLine(color: PieceColor): Array<Piece?> {
