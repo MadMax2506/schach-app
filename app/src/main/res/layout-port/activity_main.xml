@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_marginTop="100sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chess"
+        android:textSize="40sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_ai"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64sp"
+        android:padding="12sp"
+        android:text="@string/play_vs_ai"
+        android:textSize="@dimen/button_text_size" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_online"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32sp"
+        android:padding="12sp"
+        android:text="@string/online_game"
+        android:textSize="@dimen/button_text_size" />
+
+</LinearLayout>

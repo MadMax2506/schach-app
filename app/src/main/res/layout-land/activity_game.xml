@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="wrap_content"
+        android:layout_height="0sp"
+        android:layout_weight="1"
+        android:layout_gravity="start">
+
+        <GridView
+            android:id="@+id/board"
+            android:layout_width="0sp"
+            android:layout_height="0sp"
+            android:numColumns="8"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_gravity="center" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- TODO Spielername Dynamisch setzen -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/name_player1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textAlignment="center" />
+
+        <!-- TODO RecyclerView ggf. durch etwas einfacheres ersetzen -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/captured_pieces_player1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16sp"/>
+        
+        <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
+            android:layout_height="0sp"
+            android:layout_gravity="start">
+
+            <GridView
+                android:id="@+id/moves"
+                android:layout_width="0sp"
+                android:layout_height="0sp"
+                android:numColumns="2"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_gravity="center" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/captured_pieces_player2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16sp"/>
+
+        <TextView
+            android:id="@+id/name_player2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+</LinearLayout>

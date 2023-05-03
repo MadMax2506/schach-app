@@ -16,4 +16,24 @@
 
 <resources>
     <string name="app_name">Schach</string>
+
+    <!-- main -->
+    <string name="online_game">Online Spiel</string>
+    <string name="play_vs_ai">Spiel gegen KI</string>
+    <string name="chess">Schach</string>
+
+    <!-- ai -->
+    <string name="ai_select_level">Schwierigkeitsgrad auswählen</string>
+    <string name="ai_kevin_otto">Kevin Otto</string>
+    <string name="ai_max">Max</string>
+    <string name="ai_chris">Chris</string>
+    <string name="ai_level_easy">Einfach</string>
+    <string name="ai_level_medium">Mittel</string>
+    <string name="ai_hard">Schwer</string>
+
+    <!-- online -->
+    <string name="online_invite_friend">Einladung versenden</string>
+
+    <!-- game -->
+
 </resources>
