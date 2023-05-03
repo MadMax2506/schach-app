@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32sp"
         android:padding="12sp"
-        android:text="@string/online_game"
+        android:text="@string/settings"
         android:textSize="@dimen/button_text_size" />
 
 </LinearLayout>
