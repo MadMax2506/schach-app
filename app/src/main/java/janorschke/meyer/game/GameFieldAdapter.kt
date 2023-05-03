@@ -1,14 +1,17 @@
 package janorschke.meyer.game
 
 import android.content.Context
+import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Button
+import androidx.core.content.ContextCompat
 import janorschke.meyer.R
 import janorschke.meyer.game.piece.Piece
 import janorschke.meyer.game.piece.PiecePosition
+
 
 class GameFieldAdapter(
     private val context: Context,
@@ -41,11 +44,23 @@ class GameFieldAdapter(
         val position = PiecePosition(index)
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/13
         val piece = boardViewModel.getField(position)
+        if (piece != null) {
+            val drawable = ContextCompat.getDrawable(context, piece.getImageId())!!.mutate()
+
+            val fillColor = ContextCompat.getColor(context, piece.color.fillColorId)
+            val strokeColor = ContextCompat.getColor(context, piece.color.strokeColorId)
+
+            // TODO Übergangsweg / Workaround => strokeColor funktioniert noch nicht
+            //drawable.setTint(strokeColor)
+            drawable.setColorFilter(fillColor, PorterDuff.Mode.MULTIPLY)
+
+            button.background = drawable
+        }
 
         view.setBackgroundResource(getViewBackgroundColor(position))
 
         // Figure is on the current position
-        if (piece != null) button.setBackgroundResource(piece.getImageId())
+        //if (piece != null) button.setBackgroundResource(piece.getImageId())
         button.setOnClickListener { boardViewModel.onFieldClicked(position) }
 
         return view
