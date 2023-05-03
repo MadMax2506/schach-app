@@ -3,16 +3,14 @@ package janorschke.meyer.game
 import androidx.lifecycle.ViewModel
 
 class BoardViewModel : ViewModel() {
+    private lateinit var board : Array<Array<PieceType>>
 
-    val boardSize: Int = 64
-    private val board = Array(8) { Array(8) { PieceType.NONE } }
+    companion object {
+        const val BOARD_SIZE = 64
+    }
 
     init {
         resetBoard()
-    }
-
-    private fun resetBoard() {
-        // TODO Weiße und Schwarze Figuren initialisieren / in Startposition setzen
     }
 
     fun getBoard(): Array<Array<PieceType>> {
@@ -34,4 +32,9 @@ class BoardViewModel : ViewModel() {
     }
 
     // TODO Spiellogik Methoden einbauen
+
+    private fun resetBoard() {
+        board = Array(8) { Array(8) { PieceType.NONE } }
+        // TODO set position
+    }
 }
