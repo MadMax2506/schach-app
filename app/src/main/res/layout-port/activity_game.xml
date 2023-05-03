@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- TODO Spielername Dynamisch setzen -->
+    <!-- TODO Spielername Dynamisch setzen & Captured-Pieces einbauen -->
     <TextView
         android:id="@+id/name_player1"
         android:layout_width="match_parent"
