@@ -11,7 +11,7 @@ abstract class Piece(val boardViewModel: BoardViewModel, val color: PieceColor) 
         val board = boardViewModel.getBoard()
 
         val indices = board.indices
-        if (position.row !in indices && position.col !in indices) return false
+        if (position.row !in indices || position.col !in indices) return false
 
         val piece = board[position.row][position.col]
         return if (piece == null) true else piece.color != this.color
