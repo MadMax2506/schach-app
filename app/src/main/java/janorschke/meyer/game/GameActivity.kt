@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import janorschke.meyer.R
 import janorschke.meyer.ai.AiLevel
 import janorschke.meyer.databinding.ActivityGameBinding
 import janorschke.meyer.global.TransferKeys
@@ -20,19 +21,23 @@ class GameActivity : AppCompatActivity() {
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // board handling
         val boardViewModel = ViewModelProvider(this)[BoardViewModel::class.java]
         val gameFieldAdapter = GameFieldAdapter(applicationContext, boardViewModel)
 
-        binding.board?.adapter = gameFieldAdapter
+        binding.boardWrapper?.board?.adapter = gameFieldAdapter
 
+        // player handling
         val aiLevelString = intent.extras?.getString(TransferKeys.AI_LEVEL.value)
         if (aiLevelString == null) {
             startActivity(Intent(this, MainActivity::class.java))
             Log.e(LOG_TAG, "Invalid ai level")
         } else {
-            val aiLevel = AiLevel.valueOf(aiLevelString)
-            Log.d(LOG_TAG, "Start game with ai-level=${aiLevel.value}")
-            // TODO get game mode specific things, aiLevel, player name ....
+            val aiLevel = enumValueOf<AiLevel>(aiLevelString)
+            Log.d(LOG_TAG, "Start game with ai-level=${aiLevel}")
+
+            binding.playerOne?.name?.text = resources.getString(aiLevel.resourceId)
+            binding.playerTwo?.name?.text = resources.getString(R.string.default_player_name)
         }
     }
 }

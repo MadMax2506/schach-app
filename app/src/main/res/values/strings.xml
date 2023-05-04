@@ -32,5 +32,6 @@
     <string name="ai_hard">Schwer</string>
 
     <!-- game -->
+    <string name="default_player_name">Du</string>
 
 </resources>
