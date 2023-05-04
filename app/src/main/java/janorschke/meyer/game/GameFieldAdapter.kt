@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.Button
 import androidx.core.content.ContextCompat
 import janorschke.meyer.R
+import janorschke.meyer.databinding.GameFieldBinding
 import janorschke.meyer.game.piece.Piece
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PiecePosition
@@ -18,6 +18,7 @@ class GameFieldAdapter(
     private val context: Context,
     private val boardViewModel: BoardViewModel
 ) : BaseAdapter() {
+    private class ViewHolder(val binding: GameFieldBinding, val view: View)
 
     override fun getCount(): Int {
         return BoardViewModel.BOARD_SIZE
@@ -31,20 +32,19 @@ class GameFieldAdapter(
         return position.toLong()
     }
 
-    // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/12
     override fun getView(index: Int, convertView: View?, parent: ViewGroup?): View {
-        val view: View = if (convertView == null) {
-            val layoutInflater = LayoutInflater.from(parent?.context)
-            layoutInflater.inflate(R.layout.game_field, parent, false)
+        lateinit var holder: ViewHolder
+        if (convertView == null) {
+            val binding = GameFieldBinding.inflate(LayoutInflater.from(parent?.context), parent, false)
+            holder = ViewHolder(binding, binding.root)
+            holder.view.tag = holder
         } else {
-            convertView
+            holder = convertView.tag as ViewHolder
         }
 
         val position = PiecePosition(index)
+        holder.view.setBackgroundResource(getViewBackgroundColor(position))
 
-        view.setBackgroundResource(getViewBackgroundColor(position))
-
-        val button: Button = view.findViewById(R.id.btn)
         val piece = boardViewModel.getField(position)
         if (piece != null) {
             val drawable = ContextCompat.getDrawable(context, piece.getImageId())!!.mutate()
@@ -58,11 +58,11 @@ class GameFieldAdapter(
                 )
                 drawable.colorFilter = ColorMatrixColorFilter(NEGATIVE)
             }
-            button.background = drawable
+            holder.binding.btn.background = drawable
         }
-        button.setOnClickListener { boardViewModel.onFieldClicked(position) }
+        holder.binding.btn.setOnClickListener { boardViewModel.onFieldClicked(position) }
 
-        return view
+        return holder.view
     }
 
     private fun getViewBackgroundColor(position: PiecePosition): Int {
