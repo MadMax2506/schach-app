@@ -1,7 +1,7 @@
 package janorschke.meyer.game
 
 import android.content.Context
-import android.graphics.PorterDuff
+import android.graphics.ColorMatrixColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +10,7 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import janorschke.meyer.R
 import janorschke.meyer.game.piece.Piece
+import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PiecePosition
 
 
@@ -39,28 +40,26 @@ class GameFieldAdapter(
             convertView
         }
 
-        val button: Button = view.findViewById(R.id.btn)
-
         val position = PiecePosition(index)
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/13
+
+        view.setBackgroundResource(getViewBackgroundColor(position))
+
+        val button: Button = view.findViewById(R.id.btn)
         val piece = boardViewModel.getField(position)
         if (piece != null) {
             val drawable = ContextCompat.getDrawable(context, piece.getImageId())!!.mutate()
 
-            val fillColor = ContextCompat.getColor(context, piece.color.fillColorId)
-            val strokeColor = ContextCompat.getColor(context, piece.color.strokeColorId)
-
-            // TODO Übergangsweg / Workaround => strokeColor funktioniert noch nicht
-            //drawable.setTint(strokeColor)
-            drawable.setColorFilter(fillColor, PorterDuff.Mode.MULTIPLY)
-
+            if (piece.color == PieceColor.BLACK) {
+                val NEGATIVE = floatArrayOf(
+                    -1.0f, 0f, 0f, 0f, 255f,  // red
+                    0f, -1.0f, 0f, 0f, 255f,  // green
+                    0f, 0f, -1.0f, 0f, 255f,  // blue
+                    0f, 0f, 0f, 1.0f, 0f // alpha
+                )
+                drawable.colorFilter = ColorMatrixColorFilter(NEGATIVE)
+            }
             button.background = drawable
         }
-
-        view.setBackgroundResource(getViewBackgroundColor(position))
-
-        // Figure is on the current position
-        //if (piece != null) button.setBackgroundResource(piece.getImageId())
         button.setOnClickListener { boardViewModel.onFieldClicked(position) }
 
         return view
@@ -68,7 +67,7 @@ class GameFieldAdapter(
 
     private fun getViewBackgroundColor(position: PiecePosition): Int {
         return if (position.row % 2 == 0 && position.col % 2 == 1 || position.row % 2 == 1 && position.col % 2 == 0) {
-            R.color.purple_700
-        } else R.color.white
+            R.color.brown
+        } else R.color.beige
     }
 }
