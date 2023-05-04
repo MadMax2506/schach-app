@@ -1,7 +1,7 @@
 package janorschke.meyer.ai
 
 enum class AiLevel(val value: String) {
-    KEVIN_OTTO("KEVIN_OTTO"),
-    MAX("MAX"),
-    CHRIS("CHRIS")
+    KEVIN_OTTO("kevin_otto"),
+    MAX("max"),
+    CHRIS("chris")
 }

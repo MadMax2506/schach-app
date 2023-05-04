@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ai.AiActivtity" />
-        <activity android:name=".online.OnlinePlayerActivity" />
+        <activity android:name=".settings.SettingsActivity" />
         <activity android:name=".game.GameActivity" />
     </application>
 

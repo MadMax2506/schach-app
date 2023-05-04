@@ -3,13 +3,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="center_horizontal">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button_einladung_versenden"
-        android:layout_width="@dimen/button_width"
+    <TextView
+        android:layout_marginTop="100sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/online_invite_friend"
-        android:textSize="@dimen/button_text_size" />
+        android:text="@string/settings"
+        android:textSize="40sp" />
 
 </LinearLayout>

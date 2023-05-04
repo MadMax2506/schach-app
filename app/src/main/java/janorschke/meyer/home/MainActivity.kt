@@ -22,7 +22,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import janorschke.meyer.ai.AiActivtity
 import janorschke.meyer.databinding.ActivityMainBinding
-import janorschke.meyer.online.OnlinePlayerActivity
+import janorschke.meyer.settings.SettingsActivity
 
 const val LOG_TAG = "MainActivity"
 
@@ -38,8 +38,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, AiActivtity::class.java))
         }
         binding.buttonOnline?.setOnClickListener {
-            Log.d(LOG_TAG, "Start OnlinePlayerActivity")
-            startActivity(Intent(this, OnlinePlayerActivity::class.java))
+            Log.d(LOG_TAG, "Start SettingsActivity")
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
     }
 }
