@@ -12,4 +12,6 @@
         android:textSize="@dimen/h1"
         android:textAlignment="center" />
 
+    <!-- TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/31 -->
+
 </LinearLayout>

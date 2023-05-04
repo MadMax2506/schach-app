@@ -23,8 +23,7 @@
             android:id="@+id/player_one" />
 
 
-        <!-- TODO only placeholder -->
-        <!-- https://github.com/MadMax2506/android-wahlmodul-project/issues/31 -->
+        <!-- TODO LinearLayout is only placeholder - implementation in https://github.com/MadMax2506/android-wahlmodul-project/issues/31 -->
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
