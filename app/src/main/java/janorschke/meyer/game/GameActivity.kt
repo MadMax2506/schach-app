@@ -35,8 +35,11 @@ class GameActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             Log.e(LOG_TAG, "Invalid ai level")
         } else {
-            val aiLevel = AiLevel.valueOf(aiLevelString)
-            Log.d(LOG_TAG, "Start game with ai-level=${aiLevel.value}")
+            val aiLevel = enumValueOf<AiLevel>(aiLevelString)
+            Log.d(LOG_TAG, "Start game with ai-level=${aiLevel}")
+
+            binding.namePlayer1?.text = "TODO"
+            binding.namePlayer2?.text = resources.getString(aiLevel.resourceId)
             // TODO get game mode specific things, aiLevel, player name ....
         }
     }

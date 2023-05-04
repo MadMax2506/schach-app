@@ -26,7 +26,7 @@ class AiActivtity : AppCompatActivity() {
         val intent = Intent(this, GameActivity::class.java).apply {
             Log.d(LOG_TAG, "Change activity")
             putExtras(Bundle().apply {
-                putString(TransferKeys.AI_LEVEL.value, aiLevel.value)
+                putString(TransferKeys.AI_LEVEL.value, aiLevel.toString())
             })
         }
 
