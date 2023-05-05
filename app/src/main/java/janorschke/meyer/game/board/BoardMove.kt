@@ -24,9 +24,9 @@ data class BoardMove(
          */
         val fromPiece: Piece,
         /**
-         * true, if another piece is beaten
+         * Piece on the target position which is beaten (opponent) or is null (empty field)
          */
-        val isOpponentPieceBeaten: Boolean,
+        val toPiece: Piece?,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -38,7 +38,7 @@ data class BoardMove(
         if (from != other.from) return false
         if (to != other.to) return false
         if (fromPiece != other.fromPiece) return false
-        if (isOpponentPieceBeaten != other.isOpponentPieceBeaten) return false
+        if (toPiece != other.toPiece) return false
 
         return true
     }
@@ -48,7 +48,7 @@ data class BoardMove(
         result = 31 * result + from.hashCode()
         result = 31 * result + to.hashCode()
         result = 31 * result + fromPiece.hashCode()
-        result = 31 * result + (isOpponentPieceBeaten?.hashCode() ?: 0)
+        result = 31 * result + (toPiece?.hashCode() ?: 0)
         return result
     }
 }
