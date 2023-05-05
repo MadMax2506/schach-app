@@ -11,4 +11,8 @@ class King(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewM
     override fun possibleMoves(position: PiecePosition): MutableCollection<PiecePosition> {
         TODO("Not yet implemented")
     }
+
+    override fun isFieldUnavailable(position: PiecePosition): Boolean {
+        TODO("Not yet implemented")
+    }
 }
