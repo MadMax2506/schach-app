@@ -15,4 +15,25 @@ class PiecePosition {
         this.row = row
         this.col = col
     }
+
+    /**
+     * @return the row-position as string
+     */
+    fun getRowNotation(): String {
+        return (row + 1).toString()
+    }
+
+    /**
+     * @return the col-position as string
+     */
+    fun getColNotation(): String {
+        return (97 + col).toChar().toString()
+    }
+
+    /**
+     * @return the position as string in the valid chess notation
+     */
+    fun getNotation(): String {
+        return "${getColNotation()}${getRowNotation()}"
+    }
 }

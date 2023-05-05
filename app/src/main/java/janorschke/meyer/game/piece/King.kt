@@ -1,13 +1,8 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.R
 import janorschke.meyer.game.board.Board
 
-class King(board: Board, color: PieceColor) : Piece(board, color) {
-    override fun getImageId(): Int {
-        return R.drawable.chess_king
-    }
-
+class King(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.KING) {
     override fun possibleMoves(position: PiecePosition): MutableCollection<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
         for (i in -1..1) {

@@ -48,7 +48,7 @@ class GameFieldAdapter(
 
         val piece = gameViewModel.getField(position)
         if (piece != null) {
-            ContextCompat.getDrawable(context, piece.getImageId())!!.mutate().apply {
+            ContextCompat.getDrawable(context, piece.pieceInfo.imageId)!!.mutate().apply {
                 if (piece.color == PieceColor.BLACK) {
                     val NEGATIVE = floatArrayOf(
                             -1.0f, 0f, 0f, 0f, 255f,  // red
@@ -67,8 +67,6 @@ class GameFieldAdapter(
     }
 
     private fun getViewBackgroundColor(position: PiecePosition): Int {
-        return if (position.row % 2 == 0 && position.col % 2 == 1 || position.row % 2 == 1 && position.col % 2 == 0) {
-            R.color.brown
-        } else R.color.beige
+        return if (position.row % 2 != position.col % 2) R.color.brown else R.color.beige
     }
 }
