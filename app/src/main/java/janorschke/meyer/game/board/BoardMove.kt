@@ -12,6 +12,10 @@ data class BoardMove(
          */
         val board: Array<Array<Piece?>>,
         /**
+         * Source position of the piece
+         */
+        val from: PiecePosition,
+        /**
          * Target position of the piece
          */
         val to: PiecePosition,
@@ -20,9 +24,9 @@ data class BoardMove(
          */
         val fromPiece: Piece,
         /**
-         * Piece on the target position which is beaten (opponent) or is null (empty field)
+         * true, if another piece is beaten
          */
-        val toPiece: Piece?,
+        val isOpponentPieceBeaten: Boolean,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -31,18 +35,20 @@ data class BoardMove(
         other as BoardMove
 
         if (!board.contentDeepEquals(other.board)) return false
+        if (from != other.from) return false
         if (to != other.to) return false
         if (fromPiece != other.fromPiece) return false
-        if (toPiece != other.toPiece) return false
+        if (isOpponentPieceBeaten != other.isOpponentPieceBeaten) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = board.contentDeepHashCode()
+        result = 31 * result + from.hashCode()
         result = 31 * result + to.hashCode()
         result = 31 * result + fromPiece.hashCode()
-        result = 31 * result + (toPiece?.hashCode() ?: 0)
+        result = 31 * result + (isOpponentPieceBeaten?.hashCode() ?: 0)
         return result
     }
 }

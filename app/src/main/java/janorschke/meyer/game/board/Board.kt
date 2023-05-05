@@ -52,7 +52,7 @@ class Board {
         setField(from, null)
         setField(to, fromPiece)
 
-        return BoardMove(fields.clone(), to, fromPiece!!, toPiece)
+        return BoardMove(fields.clone(), from, to, fromPiece!!, toPiece != null)
     }
 
     private fun setField(position: PiecePosition, piece: Piece?) {
