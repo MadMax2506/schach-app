@@ -23,4 +23,8 @@ class King(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewM
         // TODO steht eigener König im Schach nach dem bewegen?
         return possibleMoves
     }
+
+    override fun isFieldUnavailable(position: PiecePosition): Boolean {
+        TODO("Not yet implemented")
+    }
 }
