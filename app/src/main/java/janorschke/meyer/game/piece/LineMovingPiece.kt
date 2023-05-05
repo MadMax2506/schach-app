@@ -47,10 +47,7 @@ abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor
      * @param possibleMoves
      * @return true if there are no further possible moves
      */
-    private fun addPosition(
-            position: PiecePosition,
-            possibleMoves: MutableList<PiecePosition>
-    ): Boolean {
+    private fun addPosition(position: PiecePosition, possibleMoves: MutableList<PiecePosition>): Boolean {
         if (isFieldUnavailable(position)) return true
 
         // TODO Steht der König im Schach oder ist die Figur gesesselt
