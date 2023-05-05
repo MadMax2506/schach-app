@@ -1,7 +1,7 @@
 package janorschke.meyer.game.piece
 
 import janorschke.meyer.R
-import janorschke.meyer.game.BoardViewModel
+import janorschke.meyer.game.board.BoardViewModel
 import kotlin.math.abs
 
 class Knight(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewModel, color) {

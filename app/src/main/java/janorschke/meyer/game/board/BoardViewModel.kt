@@ -1,4 +1,4 @@
-package janorschke.meyer.game
+package janorschke.meyer.game.board
 
 import androidx.lifecycle.ViewModel
 import janorschke.meyer.game.piece.Bishop
@@ -53,14 +53,14 @@ class BoardViewModel : ViewModel() {
 
     private fun generateBaseLine(color: PieceColor): Array<Piece?> {
         return arrayOf(
-            Rook(this, color),
-            Knight(this, color),
-            Bishop(this, color),
-            Queen(this, color),
-            King(this, color),
-            Bishop(this, color),
-            Knight(this, color),
-            Rook(this, color)
+                Rook(this, color),
+                Knight(this, color),
+                Bishop(this, color),
+                Queen(this, color),
+                King(this, color),
+                Bishop(this, color),
+                Knight(this, color),
+                Rook(this, color)
         )
     }
 }

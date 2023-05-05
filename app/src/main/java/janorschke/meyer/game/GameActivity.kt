@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import janorschke.meyer.R
 import janorschke.meyer.ai.AiLevel
 import janorschke.meyer.databinding.ActivityGameBinding
+import janorschke.meyer.game.board.BoardViewModel
 import janorschke.meyer.global.TransferKeys
 import janorschke.meyer.home.MainActivity
 

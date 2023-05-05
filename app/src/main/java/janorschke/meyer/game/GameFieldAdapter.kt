@@ -9,14 +9,15 @@ import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
 import janorschke.meyer.R
 import janorschke.meyer.databinding.GameFieldBinding
+import janorschke.meyer.game.board.BoardViewModel
 import janorschke.meyer.game.piece.Piece
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PiecePosition
 
 
 class GameFieldAdapter(
-    private val context: Context,
-    private val boardViewModel: BoardViewModel
+        private val context: Context,
+        private val boardViewModel: BoardViewModel
 ) : BaseAdapter() {
     private class ViewHolder(val binding: GameFieldBinding, val view: View)
 
@@ -51,10 +52,10 @@ class GameFieldAdapter(
 
             if (piece.color == PieceColor.BLACK) {
                 val NEGATIVE = floatArrayOf(
-                    -1.0f, 0f, 0f, 0f, 255f,  // red
-                    0f, -1.0f, 0f, 0f, 255f,  // green
-                    0f, 0f, -1.0f, 0f, 255f,  // blue
-                    0f, 0f, 0f, 1.0f, 0f // alpha
+                        -1.0f, 0f, 0f, 0f, 255f,  // red
+                        0f, -1.0f, 0f, 0f, 255f,  // green
+                        0f, 0f, -1.0f, 0f, 255f,  // blue
+                        0f, 0f, 0f, 1.0f, 0f // alpha
                 )
                 drawable.colorFilter = ColorMatrixColorFilter(NEGATIVE)
             }

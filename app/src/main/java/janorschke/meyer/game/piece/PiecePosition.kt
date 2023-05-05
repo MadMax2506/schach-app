@@ -1,6 +1,6 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.BoardViewModel
+import janorschke.meyer.game.board.BoardViewModel
 
 class PiecePosition {
     val row: Int

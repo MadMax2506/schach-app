@@ -1,6 +1,6 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.BoardViewModel
+import janorschke.meyer.game.board.BoardViewModel
 
 abstract class Piece(protected val boardViewModel: BoardViewModel, val color: PieceColor) {
     protected var moved: Boolean = false

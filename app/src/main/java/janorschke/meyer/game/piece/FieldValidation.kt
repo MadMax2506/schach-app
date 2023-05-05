@@ -1,6 +1,6 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.BoardViewModel
+import janorschke.meyer.game.board.BoardViewModel
 
 /**
  * Utils class to validate a field on the board
