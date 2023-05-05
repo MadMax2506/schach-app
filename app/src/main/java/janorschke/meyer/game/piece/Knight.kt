@@ -1,13 +1,9 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.R
 import janorschke.meyer.game.BoardViewModel
 import kotlin.math.abs
 
-class Knight(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewModel, color) {
-    override fun getImageId(): Int {
-        return R.drawable.chess_knight
-    }
+class Knight(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewModel, color, PieceInfo.KNIGHT) {
 
     override fun isFieldUnavailable(position: PiecePosition): Boolean {
         return !fieldValidation.isInBound(position) || fieldValidation.isTeammate(position)

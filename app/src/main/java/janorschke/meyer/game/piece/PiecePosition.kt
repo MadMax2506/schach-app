@@ -15,4 +15,11 @@ class PiecePosition {
         this.row = row
         this.col = col
     }
+
+    /**
+     * @return the position as string in the valid chess notation
+     */
+    override fun toString(): String {
+        return "${(97 + col).toChar()}${row + 1}"
+    }
 }

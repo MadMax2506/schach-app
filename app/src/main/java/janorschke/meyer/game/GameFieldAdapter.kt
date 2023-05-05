@@ -15,8 +15,8 @@ import janorschke.meyer.game.piece.PiecePosition
 
 
 class GameFieldAdapter(
-    private val context: Context,
-    private val boardViewModel: BoardViewModel
+        private val context: Context,
+        private val boardViewModel: BoardViewModel
 ) : BaseAdapter() {
     private class ViewHolder(val binding: GameFieldBinding, val view: View)
 
@@ -47,14 +47,14 @@ class GameFieldAdapter(
 
         val piece = boardViewModel.getField(position)
         if (piece != null) {
-            val drawable = ContextCompat.getDrawable(context, piece.getImageId())!!.mutate()
+            val drawable = ContextCompat.getDrawable(context, piece.pieceInfo.imageId)!!.mutate()
 
             if (piece.color == PieceColor.BLACK) {
                 val NEGATIVE = floatArrayOf(
-                    -1.0f, 0f, 0f, 0f, 255f,  // red
-                    0f, -1.0f, 0f, 0f, 255f,  // green
-                    0f, 0f, -1.0f, 0f, 255f,  // blue
-                    0f, 0f, 0f, 1.0f, 0f // alpha
+                        -1.0f, 0f, 0f, 0f, 255f,  // red
+                        0f, -1.0f, 0f, 0f, 255f,  // green
+                        0f, 0f, -1.0f, 0f, 255f,  // blue
+                        0f, 0f, 0f, 1.0f, 0f // alpha
                 )
                 drawable.colorFilter = ColorMatrixColorFilter(NEGATIVE)
             }
@@ -66,8 +66,6 @@ class GameFieldAdapter(
     }
 
     private fun getViewBackgroundColor(position: PiecePosition): Int {
-        return if (position.row % 2 == 0 && position.col % 2 == 1 || position.row % 2 == 1 && position.col % 2 == 0) {
-            R.color.brown
-        } else R.color.beige
+        return if (position.row % 2 != position.col % 2) R.color.brown else R.color.beige
     }
 }

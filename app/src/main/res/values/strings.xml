@@ -31,6 +31,14 @@
     <string name="ai_level_medium">Mittel</string>
     <string name="ai_hard">Schwer</string>
 
+    <!-- piece info -->
+    <string name="piece_info_king">K</string>
+    <string name="piece_info_queen">D</string>
+    <string name="piece_info_rook">T</string>
+    <string name="piece_info_knight">S</string>
+    <string name="piece_info_bishop">L</string>
+    <string name="piece_info_pawn" />
+
     <!-- game -->
     <string name="default_player_name">Du</string>
 
