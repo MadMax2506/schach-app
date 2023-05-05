@@ -26,8 +26,7 @@ class GameViewModel : ViewModel() {
      */
     fun movePiece(from: PiecePosition, to: PiecePosition) {
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/23
-        val board = board.createBoardMove(from, to)
-        boardHistory.push(board)
+        boardHistory.push(board.createBoardMove(from, to))
     }
 
     /**
