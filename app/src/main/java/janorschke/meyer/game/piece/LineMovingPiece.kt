@@ -4,15 +4,11 @@ import janorschke.meyer.game.BoardViewModel
 
 abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor, pieceInfo: PieceInfo) : Piece(boardViewModel, color, pieceInfo) {
 
-    override fun isFieldUnavailable(position: PiecePosition): Boolean {
-        return !fieldValidation.isInBound(position) || fieldValidation.isTeammate(position)
-    }
-
     /**
      * @param position current position
      * @return possible moves on the four diagonal line
      */
-    protected fun possibleMovesOnDiagonalLine(position: PiecePosition): MutableCollection<PiecePosition> {
+    protected fun possibleMovesOnDiagonalLine(position: PiecePosition): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
 
         // right up
@@ -39,6 +35,31 @@ abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor
             if (addPosition(currentPosition, possibleMoves)) break
         }
 
+        return possibleMoves
+    }
+
+    fun possibleMovesOnStraightLine(position: PiecePosition): MutableList<PiecePosition> {
+        val possibleMoves = mutableListOf<PiecePosition>()
+        // right
+        for (row in 1 until BoardViewModel.LINE_SIZE) {
+            val currentPosition = PiecePosition(position.row + row, position.col)
+            if (addPosition(currentPosition, possibleMoves)) break
+        }
+        // left
+        for (row in 1 until BoardViewModel.LINE_SIZE) {
+            val currentPosition = PiecePosition(position.row - row, position.col)
+            if (addPosition(currentPosition, possibleMoves)) break
+        }
+        // up
+        for (col in 1 until BoardViewModel.LINE_SIZE) {
+            val currentPosition = PiecePosition(position.row, position.col + col)
+            if (addPosition(currentPosition, possibleMoves)) break
+        }
+        // down
+        for (col in 1 until BoardViewModel.LINE_SIZE) {
+            val currentPosition = PiecePosition(position.row, position.col - col)
+            if (addPosition(currentPosition, possibleMoves)) break
+        }
         return possibleMoves
     }
 

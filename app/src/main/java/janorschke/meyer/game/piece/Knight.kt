@@ -5,11 +5,7 @@ import kotlin.math.abs
 
 class Knight(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewModel, color, PieceInfo.KNIGHT) {
 
-    override fun isFieldUnavailable(position: PiecePosition): Boolean {
-        return !fieldValidation.isInBound(position) || fieldValidation.isTeammate(position)
-    }
-
-    override fun possibleMoves(position: PiecePosition): MutableCollection<PiecePosition> {
+    override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
         for (i in -2..2) {
             for (j in -2..2) {
