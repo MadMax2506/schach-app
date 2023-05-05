@@ -2,8 +2,7 @@ package janorschke.meyer.game.piece
 
 import janorschke.meyer.game.BoardViewModel
 
-abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor) :
-    Piece(boardViewModel, color) {
+abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewModel, color) {
 
     override fun isFieldUnavailable(position: PiecePosition): Boolean {
         return !fieldValidation.isInBound(position) || fieldValidation.isTeammate(position)
@@ -49,8 +48,8 @@ abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor
      * @return true if there are no further possible moves
      */
     private fun addPosition(
-        position: PiecePosition,
-        possibleMoves: MutableList<PiecePosition>
+            position: PiecePosition,
+            possibleMoves: MutableList<PiecePosition>
     ): Boolean {
         if (isFieldUnavailable(position)) return true
 
