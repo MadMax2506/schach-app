@@ -1,60 +1,16 @@
 package janorschke.meyer.game.piece
 
 import janorschke.meyer.game.BoardViewModel
-import kotlin.math.abs
 
-abstract class Piece(val boardViewModel: BoardViewModel, val color: PieceColor) {
-    /**
-     * @param position being checked
-     * @return true, if a piece can move to the position
-     */
-    protected fun isFieldAvailable(position: PiecePosition): Boolean {
-        val board = boardViewModel.getBoard()
-
-        val indices = board.indices
-        if (position.row !in indices || position.col !in indices) return false
-
-        val piece = board[position.row][position.col]
-        return if (piece == null) true else piece.color != this.color
-    }
+abstract class Piece(protected val boardViewModel: BoardViewModel, val color: PieceColor) {
+    protected var moved: Boolean = false
+    protected val fieldValidation = FieldValidation(this, boardViewModel)
 
     /**
-     * @param position current position
-     * @return possible moves on the four diagonal line
+     * Marks the piece as moved
      */
-    protected fun possibleMovesOnDiagonalLine(position: PiecePosition): MutableCollection<PiecePosition> {
-        // TODO steht eigener König im Schach vor dem bewegen?
-        val possibleMoves = mutableListOf<PiecePosition>()
-
-        // right up
-        for (i in 1..7) {
-            val currentPosition = PiecePosition(position.row + i, position.col + i)
-            if (!isFieldAvailable(currentPosition)) break
-            possibleMoves.add(currentPosition)
-        }
-
-        // left down
-        for (i in -1 downTo -7) {
-            val currentPosition = PiecePosition(position.row + i, position.col + i)
-            if (!isFieldAvailable(currentPosition)) break
-            possibleMoves.add(currentPosition)
-        }
-
-        // left up
-        for (i in -1 downTo -7) {
-            val currentPosition = PiecePosition(position.row + abs(i), position.col + i)
-            if (!isFieldAvailable(currentPosition)) break
-            possibleMoves.add(currentPosition)
-        }
-
-        // right down
-        for (i in -1 downTo -7) {
-            val currentPosition = PiecePosition(position.row + i, position.col + abs(i))
-            if (!isFieldAvailable(currentPosition)) break
-            possibleMoves.add(currentPosition)
-        }
-
-        return possibleMoves
+    fun move() {
+        moved = true
     }
 
     /**
@@ -68,4 +24,5 @@ abstract class Piece(val boardViewModel: BoardViewModel, val color: PieceColor) 
      */
     abstract fun possibleMoves(position: PiecePosition): MutableCollection<PiecePosition>
 
+    abstract fun isFieldUnavailable(position: PiecePosition): Boolean
 }
