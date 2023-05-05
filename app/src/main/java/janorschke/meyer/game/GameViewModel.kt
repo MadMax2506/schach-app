@@ -15,7 +15,7 @@ class GameViewModel : ViewModel() {
     }
 
     /**
-     * Moves an piece to another position
+     * Moves a piece to another position
      *
      * @param from source position
      * @param to target position
