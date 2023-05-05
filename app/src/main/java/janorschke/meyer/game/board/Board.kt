@@ -1,6 +1,5 @@
 package janorschke.meyer.game.board
 
-import janorschke.meyer.game.GameViewModel
 import janorschke.meyer.game.piece.Bishop
 import janorschke.meyer.game.piece.King
 import janorschke.meyer.game.piece.Knight
@@ -11,13 +10,13 @@ import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.Queen
 import janorschke.meyer.game.piece.Rook
 
-class Board(private val gameViewModel: GameViewModel) {
+class Board {
     companion object {
         const val SIZE = 64
         const val LINE_SIZE = 8
     }
 
-    private lateinit var board: Array<Array<Piece?>>
+    private lateinit var fields: Array<Array<Piece?>>
 
     init {
         reset()
@@ -26,8 +25,8 @@ class Board(private val gameViewModel: GameViewModel) {
     /**
      * @return the whole chess board
      */
-    fun get(): Array<Array<Piece?>> {
-        return board
+    fun getFields(): Array<Array<Piece?>> {
+        return fields
     }
 
     /**
@@ -35,7 +34,7 @@ class Board(private val gameViewModel: GameViewModel) {
      * @return piece on the target
      */
     fun getField(position: PiecePosition): Piece? {
-        return board[position.row][position.col]
+        return fields[position.row][position.col]
     }
 
     /**
@@ -53,22 +52,22 @@ class Board(private val gameViewModel: GameViewModel) {
         setField(from, null)
         setField(to, fromPiece)
 
-        return BoardMove(board.clone(), to, fromPiece!!, toPiece)
+        return BoardMove(fields.clone(), to, fromPiece!!, toPiece)
     }
 
     private fun setField(position: PiecePosition, piece: Piece?) {
-        board[position.row][position.col] = piece
+        fields[position.row][position.col] = piece
     }
 
     /**
      * Resets the board to the initial state
      */
     fun reset() {
-        board = Array(LINE_SIZE) { Array(LINE_SIZE) { null } }
-        board[0] = generateBaseLine(PieceColor.BLACK)
-        board[1] = generatePawnLine(PieceColor.BLACK)
-        board[6] = generatePawnLine(PieceColor.WHITE)
-        board[7] = generateBaseLine(PieceColor.WHITE)
+        fields = Array(LINE_SIZE) { Array(LINE_SIZE) { null } }
+        fields[0] = generateBaseLine(PieceColor.BLACK)
+        fields[1] = generatePawnLine(PieceColor.BLACK)
+        fields[6] = generatePawnLine(PieceColor.WHITE)
+        fields[7] = generateBaseLine(PieceColor.WHITE)
     }
 
     /**
@@ -76,7 +75,7 @@ class Board(private val gameViewModel: GameViewModel) {
      * @return the pawn line
      */
     private fun generatePawnLine(color: PieceColor): Array<Piece?> {
-        return Array(LINE_SIZE) { Pawn(gameViewModel, color) }
+        return Array(LINE_SIZE) { Pawn(this, color) }
     }
 
     /**
@@ -85,14 +84,14 @@ class Board(private val gameViewModel: GameViewModel) {
      */
     private fun generateBaseLine(color: PieceColor): Array<Piece?> {
         return arrayOf(
-                Rook(gameViewModel, color),
-                Knight(gameViewModel, color),
-                Bishop(gameViewModel, color),
-                Queen(gameViewModel, color),
-                King(gameViewModel, color),
-                Bishop(gameViewModel, color),
-                Knight(gameViewModel, color),
-                Rook(gameViewModel, color)
+                Rook(this, color),
+                Knight(this, color),
+                Bishop(this, color),
+                Queen(this, color),
+                King(this, color),
+                Bishop(this, color),
+                Knight(this, color),
+                Rook(this, color)
         )
     }
 }

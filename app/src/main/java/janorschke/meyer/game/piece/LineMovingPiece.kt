@@ -1,9 +1,8 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.GameViewModel
 import janorschke.meyer.game.board.Board
 
-abstract class LineMovingPiece(gameViewModel: GameViewModel, color: PieceColor) : Piece(gameViewModel, color) {
+abstract class LineMovingPiece(board: Board, color: PieceColor) : Piece(board, color) {
 
     override fun isFieldUnavailable(position: PiecePosition): Boolean {
         return !fieldValidation.isInBound(position) || fieldValidation.isTeammate(position)

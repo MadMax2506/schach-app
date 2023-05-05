@@ -1,10 +1,10 @@
 package janorschke.meyer.game.piece
 
 import janorschke.meyer.R
-import janorschke.meyer.game.GameViewModel
+import janorschke.meyer.game.board.Board
 import kotlin.math.abs
 
-class Knight(gameViewModel: GameViewModel, color: PieceColor) : Piece(gameViewModel, color) {
+class Knight(board: Board, color: PieceColor) : Piece(board, color) {
     override fun getImageId(): Int {
         return R.drawable.chess_knight
     }

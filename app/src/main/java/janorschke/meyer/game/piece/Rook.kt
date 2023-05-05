@@ -1,9 +1,9 @@
 package janorschke.meyer.game.piece
 
 import janorschke.meyer.R
-import janorschke.meyer.game.GameViewModel
+import janorschke.meyer.game.board.Board
 
-class Rook(gameViewModel: GameViewModel, color: PieceColor) : LineMovingPiece(gameViewModel, color) {
+class Rook(board: Board, color: PieceColor) : LineMovingPiece(board, color) {
     override fun getImageId(): Int {
         return R.drawable.chess_rook
     }

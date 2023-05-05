@@ -7,12 +7,8 @@ import janorschke.meyer.game.piece.Piece
 import janorschke.meyer.game.piece.PiecePosition
 
 class GameViewModel : ViewModel() {
-    private val board: Board = Board(this)
+    private val board: Board = Board()
     private val boardHistory: BoardHistory = BoardHistory()
-
-    fun get(): Array<Array<Piece?>> {
-        return board.get()
-    }
 
     fun getField(position: PiecePosition): Piece? {
         return board.getField(position)
