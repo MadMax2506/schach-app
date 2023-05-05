@@ -1,6 +1,9 @@
-package janorschke.meyer.game.piece
+package janorschke.meyer.game.piece.model
 
 import janorschke.meyer.game.board.Board
+import janorschke.meyer.game.piece.PieceColor
+import janorschke.meyer.game.piece.PieceInfo
+import janorschke.meyer.game.piece.PiecePosition
 import kotlin.math.abs
 
 class Knight(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.KNIGHT) {

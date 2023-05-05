@@ -1,6 +1,6 @@
 package janorschke.meyer.game.board
 
-import janorschke.meyer.game.piece.Piece
+import janorschke.meyer.game.piece.model.Piece
 
 /**
  * Provides the history of all board moves and the beaten pieces by a move

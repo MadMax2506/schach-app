@@ -1,14 +1,14 @@
 package janorschke.meyer.game.board
 
-import janorschke.meyer.game.piece.Bishop
-import janorschke.meyer.game.piece.King
-import janorschke.meyer.game.piece.Knight
-import janorschke.meyer.game.piece.Pawn
-import janorschke.meyer.game.piece.Piece
+import janorschke.meyer.game.piece.model.Bishop
+import janorschke.meyer.game.piece.model.King
+import janorschke.meyer.game.piece.model.Knight
+import janorschke.meyer.game.piece.model.Pawn
+import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PiecePosition
-import janorschke.meyer.game.piece.Queen
-import janorschke.meyer.game.piece.Rook
+import janorschke.meyer.game.piece.model.Queen
+import janorschke.meyer.game.piece.model.Rook
 
 class Board {
     companion object {

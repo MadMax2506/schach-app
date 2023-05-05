@@ -3,7 +3,7 @@ package janorschke.meyer.game
 import androidx.lifecycle.ViewModel
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
-import janorschke.meyer.game.piece.Piece
+import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.piece.PiecePosition
 
 class GameViewModel : ViewModel() {

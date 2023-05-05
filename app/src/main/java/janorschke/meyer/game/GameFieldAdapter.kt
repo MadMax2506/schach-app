@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import janorschke.meyer.R
 import janorschke.meyer.databinding.GameFieldBinding
 import janorschke.meyer.game.board.Board
-import janorschke.meyer.game.piece.Piece
+import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PiecePosition
 
