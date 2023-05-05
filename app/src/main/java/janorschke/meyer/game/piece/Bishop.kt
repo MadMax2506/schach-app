@@ -9,6 +9,6 @@ class Bishop(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardVie
     }
 
     override fun possibleMoves(position: PiecePosition): MutableCollection<PiecePosition> {
-        TODO("Not yet implemented")
+        return possibleMovesOnDiagonalLine(position)
     }
 }
