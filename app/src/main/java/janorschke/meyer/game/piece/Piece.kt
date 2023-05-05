@@ -1,10 +1,10 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.board.BoardViewModel
+import janorschke.meyer.game.GameViewModel
 
-abstract class Piece(protected val boardViewModel: BoardViewModel, val color: PieceColor) {
+abstract class Piece(protected val gameViewModel: GameViewModel, val color: PieceColor) {
     protected var moved: Boolean = false
-    protected val fieldValidation = FieldValidation(this, boardViewModel)
+    protected val fieldValidation = FieldValidation(this, gameViewModel)
 
     /**
      * Marks the piece as moved

@@ -1,11 +1,11 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.board.BoardViewModel
+import janorschke.meyer.game.GameViewModel
 
 /**
  * Utils class to validate a field on the board
  */
-class FieldValidation(private val piece: Piece, private val boardViewModel: BoardViewModel) {
+class FieldValidation(private val piece: Piece, private val gameViewModel: GameViewModel) {
     /**
      * @param position being checked
      * @return true, if position contains an piece of the opponent team
@@ -23,7 +23,7 @@ class FieldValidation(private val piece: Piece, private val boardViewModel: Boar
     fun isTeammate(position: PiecePosition): Boolean {
         if (!isInBound(position)) throw IndexOutOfBoundsException("Position is not on the board")
 
-        return boardViewModel.getBoard()[position.row][position.col]?.color == piece.color
+        return gameViewModel.board.getPiece(position)?.color == piece.color
     }
 
     /**
@@ -34,7 +34,7 @@ class FieldValidation(private val piece: Piece, private val boardViewModel: Boar
     fun isEmpty(position: PiecePosition): Boolean {
         if (!isInBound(position)) throw IndexOutOfBoundsException("Position is not on the board")
 
-        return boardViewModel.getBoard()[position.row][position.col] == null
+        return gameViewModel.board.getPiece(position) == null
     }
 
     /**
@@ -42,7 +42,7 @@ class FieldValidation(private val piece: Piece, private val boardViewModel: Boar
      * @return true, if position is on the board
      */
     fun isInBound(position: PiecePosition): Boolean {
-        val indices = boardViewModel.getBoard().indices
+        val indices = gameViewModel.board.get().indices
         return position.row in indices && position.col in indices
     }
 }

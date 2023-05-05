@@ -1,9 +1,9 @@
 package janorschke.meyer.game.piece
 
 import janorschke.meyer.R
-import janorschke.meyer.game.board.BoardViewModel
+import janorschke.meyer.game.GameViewModel
 
-class King(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewModel, color) {
+class King(gameViewModel: GameViewModel, color: PieceColor) : Piece(gameViewModel, color) {
     override fun getImageId(): Int {
         return R.drawable.chess_king
     }

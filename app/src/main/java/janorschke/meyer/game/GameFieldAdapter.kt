@@ -9,7 +9,7 @@ import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
 import janorschke.meyer.R
 import janorschke.meyer.databinding.GameFieldBinding
-import janorschke.meyer.game.board.BoardViewModel
+import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.piece.Piece
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PiecePosition
@@ -17,16 +17,16 @@ import janorschke.meyer.game.piece.PiecePosition
 
 class GameFieldAdapter(
         private val context: Context,
-        private val boardViewModel: BoardViewModel
+        private val gameViewModel: GameViewModel
 ) : BaseAdapter() {
     private class ViewHolder(val binding: GameFieldBinding, val view: View)
 
     override fun getCount(): Int {
-        return BoardViewModel.BOARD_SIZE
+        return Board.SIZE
     }
 
     override fun getItem(index: Int): Piece? {
-        return boardViewModel.getField(PiecePosition(index))
+        return gameViewModel.board.getPiece(PiecePosition(index))
     }
 
     override fun getItemId(position: Int): Long {
@@ -46,7 +46,7 @@ class GameFieldAdapter(
         val position = PiecePosition(index)
         holder.view.setBackgroundResource(getViewBackgroundColor(position))
 
-        val piece = boardViewModel.getField(position)
+        val piece = gameViewModel.board.getPiece(position)
         if (piece != null) {
             val drawable = ContextCompat.getDrawable(context, piece.getImageId())!!.mutate()
 
@@ -61,7 +61,7 @@ class GameFieldAdapter(
             }
             holder.binding.btn.background = drawable
         }
-        holder.binding.btn.setOnClickListener { boardViewModel.onFieldClicked(position) }
+        holder.binding.btn.setOnClickListener { gameViewModel.onFieldClicked(position) }
 
         return holder.view
     }

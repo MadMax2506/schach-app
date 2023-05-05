@@ -1,9 +1,9 @@
 package janorschke.meyer.game.piece
 
 import janorschke.meyer.R
-import janorschke.meyer.game.board.BoardViewModel
+import janorschke.meyer.game.GameViewModel
 
-class Bishop(boardViewModel: BoardViewModel, color: PieceColor) : LineMovingPiece(boardViewModel, color) {
+class Bishop(gameViewModel: GameViewModel, color: PieceColor) : LineMovingPiece(gameViewModel, color) {
     override fun getImageId(): Int {
         return R.drawable.chess_bishop
     }

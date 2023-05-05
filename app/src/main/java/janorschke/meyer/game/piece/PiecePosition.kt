@@ -1,14 +1,14 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.board.BoardViewModel
+import janorschke.meyer.game.board.Board
 
 class PiecePosition {
     val row: Int
     val col: Int
 
     constructor(position: Int) {
-        row = position / BoardViewModel.LINE_SIZE
-        col = position % BoardViewModel.LINE_SIZE
+        row = position / Board.LINE_SIZE
+        col = position % Board.LINE_SIZE
     }
 
     constructor(row: Int, col: Int) {

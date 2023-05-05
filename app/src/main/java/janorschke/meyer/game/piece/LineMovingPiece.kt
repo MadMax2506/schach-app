@@ -1,8 +1,9 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.board.BoardViewModel
+import janorschke.meyer.game.GameViewModel
+import janorschke.meyer.game.board.Board
 
-abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewModel, color) {
+abstract class LineMovingPiece(gameViewModel: GameViewModel, color: PieceColor) : Piece(gameViewModel, color) {
 
     override fun isFieldUnavailable(position: PiecePosition): Boolean {
         return !fieldValidation.isInBound(position) || fieldValidation.isTeammate(position)
@@ -16,25 +17,25 @@ abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor
         val possibleMoves = mutableListOf<PiecePosition>()
 
         // right up
-        for (i in 1 until BoardViewModel.LINE_SIZE) {
+        for (i in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row + i, position.col + i)
             if (addPosition(currentPosition, possibleMoves)) break
         }
 
         // right down
-        for (i in 1 until BoardViewModel.LINE_SIZE) {
+        for (i in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row + i, position.col - i)
             if (addPosition(currentPosition, possibleMoves)) break
         }
 
         // left up
-        for (i in 1 until BoardViewModel.LINE_SIZE) {
+        for (i in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row - i, position.col + i)
             if (addPosition(currentPosition, possibleMoves)) break
         }
 
         // left down
-        for (i in 1 until BoardViewModel.LINE_SIZE) {
+        for (i in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row - i, position.col - i)
             if (addPosition(currentPosition, possibleMoves)) break
         }
