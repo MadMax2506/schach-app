@@ -1,8 +1,8 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.BoardViewModel
+import janorschke.meyer.game.board.Board
 
-class Pawn(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewModel, color, PieceInfo.PAWN) {
+class Pawn(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.PAWN) {
     override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
 

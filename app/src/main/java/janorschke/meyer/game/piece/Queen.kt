@@ -1,8 +1,8 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.BoardViewModel
+import janorschke.meyer.game.board.Board
 
-class Queen(boardViewModel: BoardViewModel, color: PieceColor) : LineMovingPiece(boardViewModel, color, PieceInfo.QUEEN) {
+class Queen(board: Board, color: PieceColor) : LineMovingPiece(board, color, PieceInfo.QUEEN) {
     override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
         TODO("Not yet implemented")
     }

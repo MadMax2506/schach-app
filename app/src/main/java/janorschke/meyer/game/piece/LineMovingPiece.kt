@@ -1,8 +1,8 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.BoardViewModel
+import janorschke.meyer.game.board.Board
 
-abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor, pieceInfo: PieceInfo) : Piece(boardViewModel, color, pieceInfo) {
+abstract class LineMovingPiece(board: Board, color: PieceColor, pieceInfo: PieceInfo) : Piece(board, color, pieceInfo) {
 
     /**
      * @param position current position
@@ -12,25 +12,25 @@ abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor
         val possibleMoves = mutableListOf<PiecePosition>()
 
         // right up
-        for (i in 1 until BoardViewModel.LINE_SIZE) {
+        for (i in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row + i, position.col + i)
             if (addPosition(currentPosition, possibleMoves)) break
         }
 
         // right down
-        for (i in 1 until BoardViewModel.LINE_SIZE) {
+        for (i in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row + i, position.col - i)
             if (addPosition(currentPosition, possibleMoves)) break
         }
 
         // left up
-        for (i in 1 until BoardViewModel.LINE_SIZE) {
+        for (i in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row - i, position.col + i)
             if (addPosition(currentPosition, possibleMoves)) break
         }
 
         // left down
-        for (i in 1 until BoardViewModel.LINE_SIZE) {
+        for (i in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row - i, position.col - i)
             if (addPosition(currentPosition, possibleMoves)) break
         }
@@ -42,28 +42,29 @@ abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor
         val possibleMoves = mutableListOf<PiecePosition>()
 
         // up
-        for (row in 1 until BoardViewModel.LINE_SIZE) {
+        for (row in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row + row, position.col)
             if (addPosition(currentPosition, possibleMoves)) break
         }
 
         // down
-        for (row in 1 until BoardViewModel.LINE_SIZE) {
+        for (row in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row - row, position.col)
             if (addPosition(currentPosition, possibleMoves)) break
         }
 
         // right
-        for (col in 1 until BoardViewModel.LINE_SIZE) {
+        for (col in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row, position.col + col)
             if (addPosition(currentPosition, possibleMoves)) break
         }
 
         // left
-        for (col in 1 until BoardViewModel.LINE_SIZE) {
+        for (col in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row, position.col - col)
             if (addPosition(currentPosition, possibleMoves)) break
         }
+
         return possibleMoves
     }
 

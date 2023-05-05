@@ -1,12 +1,12 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.BoardViewModel
+import janorschke.meyer.game.board.Board
 
 /**
  * Represents a chess piece
  */
 abstract class Piece(
-        protected val boardViewModel: BoardViewModel,
+        protected val board: Board,
         /**
          * Specifies piece color
          */
@@ -20,7 +20,7 @@ abstract class Piece(
          */
         var moved: Boolean = false
 ) {
-    protected val fieldValidation = FieldValidation(this, boardViewModel)
+    protected val fieldValidation = FieldValidation(this, board)
 
     /**
      * Marks the piece as moved

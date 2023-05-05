@@ -1,8 +1,8 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.BoardViewModel
+import janorschke.meyer.game.board.Board
 
-class King(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewModel, color, PieceInfo.KING) {
+class King(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.KING) {
     override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
         for (i in -1..1) {

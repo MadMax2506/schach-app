@@ -1,10 +1,9 @@
 package janorschke.meyer.game.piece
 
-import janorschke.meyer.game.BoardViewModel
+import janorschke.meyer.game.board.Board
 import kotlin.math.abs
 
-class Knight(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewModel, color, PieceInfo.KNIGHT) {
-
+class Knight(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.KNIGHT) {
     override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
         for (i in -2..2) {

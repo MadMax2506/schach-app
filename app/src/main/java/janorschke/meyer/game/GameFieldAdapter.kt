@@ -9,6 +9,7 @@ import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
 import janorschke.meyer.R
 import janorschke.meyer.databinding.GameFieldBinding
+import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.piece.Piece
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PiecePosition
@@ -16,16 +17,16 @@ import janorschke.meyer.game.piece.PiecePosition
 
 class GameFieldAdapter(
         private val context: Context,
-        private val boardViewModel: BoardViewModel
+        private val gameViewModel: GameViewModel
 ) : BaseAdapter() {
     private class ViewHolder(val binding: GameFieldBinding, val view: View)
 
     override fun getCount(): Int {
-        return BoardViewModel.BOARD_SIZE
+        return Board.SIZE
     }
 
     override fun getItem(index: Int): Piece? {
-        return boardViewModel.getField(PiecePosition(index))
+        return gameViewModel.getField(PiecePosition(index))
     }
 
     override fun getItemId(position: Int): Long {
@@ -45,22 +46,22 @@ class GameFieldAdapter(
         val position = PiecePosition(index)
         holder.view.setBackgroundResource(getViewBackgroundColor(position))
 
-        val piece = boardViewModel.getField(position)
+        val piece = gameViewModel.getField(position)
         if (piece != null) {
-            val drawable = ContextCompat.getDrawable(context, piece.pieceInfo.imageId)!!.mutate()
-
-            if (piece.color == PieceColor.BLACK) {
-                val NEGATIVE = floatArrayOf(
-                        -1.0f, 0f, 0f, 0f, 255f,  // red
-                        0f, -1.0f, 0f, 0f, 255f,  // green
-                        0f, 0f, -1.0f, 0f, 255f,  // blue
-                        0f, 0f, 0f, 1.0f, 0f // alpha
-                )
-                drawable.colorFilter = ColorMatrixColorFilter(NEGATIVE)
+            ContextCompat.getDrawable(context, piece.pieceInfo.imageId)!!.mutate().apply {
+                if (piece.color == PieceColor.BLACK) {
+                    val NEGATIVE = floatArrayOf(
+                            -1.0f, 0f, 0f, 0f, 255f,  // red
+                            0f, -1.0f, 0f, 0f, 255f,  // green
+                            0f, 0f, -1.0f, 0f, 255f,  // blue
+                            0f, 0f, 0f, 1.0f, 0f // alpha
+                    )
+                    this.colorFilter = ColorMatrixColorFilter(NEGATIVE)
+                }
+                holder.binding.btn.background = this
             }
-            holder.binding.btn.background = drawable
         }
-        holder.binding.btn.setOnClickListener { boardViewModel.onFieldClicked(position) }
+        holder.binding.btn.setOnClickListener { gameViewModel.onFieldClicked(position) }
 
         return holder.view
     }
