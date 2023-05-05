@@ -3,15 +3,26 @@ package janorschke.meyer.game
 import androidx.lifecycle.ViewModel
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
-import janorschke.meyer.game.piece.model.Piece
+import janorschke.meyer.game.board.BoardMove
 import janorschke.meyer.game.piece.PiecePosition
+import janorschke.meyer.game.piece.model.Piece
 
 class GameViewModel : ViewModel() {
     private val board: Board = Board()
     private val boardHistory: BoardHistory = BoardHistory()
 
+    /**
+     * @see Board.getField
+     */
     fun getField(position: PiecePosition): Piece? {
         return board.getField(position)
+    }
+
+    /**
+     * @see BoardHistory.getHistory
+     */
+    fun getBoardHistory(): MutableList<BoardMove> {
+        return boardHistory.getHistory()
     }
 
     /**

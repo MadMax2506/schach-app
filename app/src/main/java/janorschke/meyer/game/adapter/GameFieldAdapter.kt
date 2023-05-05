@@ -17,7 +17,7 @@ import janorschke.meyer.game.piece.model.Piece
 
 
 class GameFieldAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
-    private class ViewHolder(val binding: GameFieldBinding, val view: View)
+    private data class ViewHolder(val binding: GameFieldBinding, val view: View)
 
     override fun getCount(): Int {
         return Board.SIZE
