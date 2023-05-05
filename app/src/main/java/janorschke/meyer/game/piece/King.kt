@@ -9,10 +9,19 @@ class King(boardViewModel: BoardViewModel, color: PieceColor) : Piece(boardViewM
     }
 
     override fun possibleMoves(position: PiecePosition): MutableCollection<PiecePosition> {
-        TODO("Not yet implemented")
+        val possibleMoves = mutableListOf<PiecePosition>()
+        for (i in -1..1) {
+            for (j in -1..1) {
+                val currentPosition = PiecePosition(position.row + i, position.col + j)
+                if (isFieldUnavailable(currentPosition)) continue
+                // TODO Steht der König im Schach oder ist die Figur gefesselt
+                possibleMoves.add(currentPosition)
+            }
+        }
+        return possibleMoves
     }
 
     override fun isFieldUnavailable(position: PiecePosition): Boolean {
-        TODO("Not yet implemented")
+        return !fieldValidation.isInBound(position) || fieldValidation.isTeammate(position)
     }
 }
