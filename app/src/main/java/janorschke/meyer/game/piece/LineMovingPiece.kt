@@ -14,7 +14,6 @@ abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor
      * @return possible moves on the four diagonal line
      */
     protected fun possibleMovesOnDiagonalLine(position: PiecePosition): MutableCollection<PiecePosition> {
-        // TODO steht eigener König im Schach vor dem bewegen?
         val possibleMoves = mutableListOf<PiecePosition>()
 
         // right up
@@ -55,6 +54,7 @@ abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor
     ): Boolean {
         if (isFieldUnavailable(position)) return true
 
+        // TODO Steht der König im Schach oder ist die Figur gesesselt
         possibleMoves.add(position)
         return fieldValidation.isOpponent(position)
     }
