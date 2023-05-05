@@ -40,22 +40,26 @@ abstract class LineMovingPiece(boardViewModel: BoardViewModel, color: PieceColor
 
     fun possibleMovesOnStraightLine(position: PiecePosition): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
-        // right
+
+        // up
         for (row in 1 until BoardViewModel.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row + row, position.col)
             if (addPosition(currentPosition, possibleMoves)) break
         }
-        // left
+
+        // down
         for (row in 1 until BoardViewModel.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row - row, position.col)
             if (addPosition(currentPosition, possibleMoves)) break
         }
-        // up
+
+        // right
         for (col in 1 until BoardViewModel.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row, position.col + col)
             if (addPosition(currentPosition, possibleMoves)) break
         }
-        // down
+
+        // left
         for (col in 1 until BoardViewModel.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row, position.col - col)
             if (addPosition(currentPosition, possibleMoves)) break
