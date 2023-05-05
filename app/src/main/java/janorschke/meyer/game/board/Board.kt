@@ -23,12 +23,41 @@ class Board(private val gameViewModel: GameViewModel) {
         reset()
     }
 
+    /**
+     * @return the whole chess board
+     */
     fun get(): Array<Array<Piece?>> {
         return board
     }
 
-    fun getPiece(position: PiecePosition): Piece? {
+    /**
+     * @param position target
+     * @return piece on the target
+     */
+    fun getField(position: PiecePosition): Piece? {
         return board[position.row][position.col]
+    }
+
+    /**
+     * Moves an piece to another position
+     *
+     * @param from source position
+     * @param to target position
+     * @return board move
+     */
+    fun createBoardMove(from: PiecePosition, to: PiecePosition): BoardMove {
+        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/23
+        val fromFieldPiece = getField(from)
+        val toFieldPiece = getField(to)
+
+        setField(from, null)
+        setField(to, fromFieldPiece)
+
+        return BoardMove(board.clone(), to, toFieldPiece == null)
+    }
+
+    private fun setField(position: PiecePosition, piece: Piece?) {
+        board[position.row][position.col] = piece
     }
 
     /**

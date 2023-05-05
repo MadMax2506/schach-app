@@ -26,7 +26,7 @@ class GameFieldAdapter(
     }
 
     override fun getItem(index: Int): Piece? {
-        return gameViewModel.board.getPiece(PiecePosition(index))
+        return gameViewModel.getField(PiecePosition(index))
     }
 
     override fun getItemId(position: Int): Long {
@@ -46,20 +46,20 @@ class GameFieldAdapter(
         val position = PiecePosition(index)
         holder.view.setBackgroundResource(getViewBackgroundColor(position))
 
-        val piece = gameViewModel.board.getPiece(position)
+        val piece = gameViewModel.getField(position)
         if (piece != null) {
-            val drawable = ContextCompat.getDrawable(context, piece.getImageId())!!.mutate()
-
-            if (piece.color == PieceColor.BLACK) {
-                val NEGATIVE = floatArrayOf(
-                        -1.0f, 0f, 0f, 0f, 255f,  // red
-                        0f, -1.0f, 0f, 0f, 255f,  // green
-                        0f, 0f, -1.0f, 0f, 255f,  // blue
-                        0f, 0f, 0f, 1.0f, 0f // alpha
-                )
-                drawable.colorFilter = ColorMatrixColorFilter(NEGATIVE)
+            ContextCompat.getDrawable(context, piece.getImageId())!!.mutate().apply {
+                if (piece.color == PieceColor.BLACK) {
+                    val NEGATIVE = floatArrayOf(
+                            -1.0f, 0f, 0f, 0f, 255f,  // red
+                            0f, -1.0f, 0f, 0f, 255f,  // green
+                            0f, 0f, -1.0f, 0f, 255f,  // blue
+                            0f, 0f, 0f, 1.0f, 0f // alpha
+                    )
+                    this.colorFilter = ColorMatrixColorFilter(NEGATIVE)
+                }
+                holder.binding.btn.background = this
             }
-            holder.binding.btn.background = drawable
         }
         holder.binding.btn.setOnClickListener { gameViewModel.onFieldClicked(position) }
 

@@ -23,7 +23,7 @@ class FieldValidation(private val piece: Piece, private val gameViewModel: GameV
     fun isTeammate(position: PiecePosition): Boolean {
         if (!isInBound(position)) throw IndexOutOfBoundsException("Position is not on the board")
 
-        return gameViewModel.board.getPiece(position)?.color == piece.color
+        return gameViewModel.getField(position)?.color == piece.color
     }
 
     /**
@@ -34,7 +34,7 @@ class FieldValidation(private val piece: Piece, private val gameViewModel: GameV
     fun isEmpty(position: PiecePosition): Boolean {
         if (!isInBound(position)) throw IndexOutOfBoundsException("Position is not on the board")
 
-        return gameViewModel.board.getPiece(position) == null
+        return gameViewModel.getField(position) == null
     }
 
     /**
@@ -42,7 +42,7 @@ class FieldValidation(private val piece: Piece, private val gameViewModel: GameV
      * @return true, if position is on the board
      */
     fun isInBound(position: PiecePosition): Boolean {
-        val indices = gameViewModel.board.get().indices
+        val indices = gameViewModel.get().indices
         return position.row in indices && position.col in indices
     }
 }
