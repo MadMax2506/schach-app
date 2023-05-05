@@ -33,7 +33,9 @@ abstract class Piece(
      * @param position current position
      * @return possible moves
      */
-    abstract fun possibleMoves(position: PiecePosition): MutableCollection<PiecePosition>
+    abstract fun possibleMoves(position: PiecePosition): MutableList<PiecePosition>
 
-    abstract fun isFieldUnavailable(position: PiecePosition): Boolean
+    fun isFieldUnavailable(position: PiecePosition): Boolean {
+        return !fieldValidation.isInBound(position) || fieldValidation.isTeammate(position)
+    }
 }

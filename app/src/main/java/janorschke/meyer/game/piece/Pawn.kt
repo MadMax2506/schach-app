@@ -3,8 +3,10 @@ package janorschke.meyer.game.piece
 import janorschke.meyer.game.board.Board
 
 class Pawn(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.PAWN) {
-    override fun possibleMoves(position: PiecePosition): MutableCollection<PiecePosition> {
+    override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
+
+        // TODO Schach?
 
         // normal move
         PiecePosition(position.row + 1, position.col).apply {
@@ -22,11 +24,6 @@ class Pawn(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.PAWN
                 if (!isFieldUnavailable(this) && fieldValidation.isOpponent(this)) possibleMoves.add(this)
             }
         }
-
         return possibleMoves
-    }
-
-    override fun isFieldUnavailable(position: PiecePosition): Boolean {
-        return !fieldValidation.isInBound(position) || fieldValidation.isTeammate(position)
     }
 }
