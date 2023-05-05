@@ -47,13 +47,13 @@ class Board(private val gameViewModel: GameViewModel) {
      */
     fun createBoardMove(from: PiecePosition, to: PiecePosition): BoardMove {
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/23
-        val fromFieldPiece = getField(from)
-        val toFieldPiece = getField(to)
+        val fromPiece = getField(from)
+        val toPiece = getField(to)
 
         setField(from, null)
-        setField(to, fromFieldPiece)
+        setField(to, fromPiece)
 
-        return BoardMove(board.clone(), to, toFieldPiece == null)
+        return BoardMove(board.clone(), to, fromPiece!!, toPiece)
     }
 
     private fun setField(position: PiecePosition, piece: Piece?) {

@@ -4,12 +4,24 @@ import janorschke.meyer.game.piece.Piece
 import janorschke.meyer.game.piece.PiecePosition
 
 /**
- * Snapshot for {@link Board}
+ * Snapshot for {@link Board} after moving a piece
  */
-class BoardMove(val board: Array<Array<Piece?>>, val to: PiecePosition, val beatenOpponentPiece: Boolean) {
-    fun getMoveNotation(): String {
-        val piece = board[to.row][to.col]
-        // TODO need https://github.com/MadMax2506/android-wahlmodul-project/issues/40
-        return "${""}${if (beatenOpponentPiece) "x" else ""}${""}"
-    }
+class BoardMove(
+        /**
+         * Version of the board after moving pieces
+         */
+        val board: Array<Array<Piece?>>,
+        /**
+         * Target position of the piece
+         */
+        val to: PiecePosition,
+        /**
+         * Piece which is moving
+         */
+        val fromPiece: Piece,
+        /**
+         * Piece on the target position which is beaten (opponent) or is null (empty field)
+         */
+        val toPiece: Piece?,
+) {
 }
