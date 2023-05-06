@@ -9,6 +9,7 @@ import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Queen
 import janorschke.meyer.game.piece.model.Rook
+import java.lang.IllegalStateException
 
 class Board {
     companion object {
@@ -94,4 +95,21 @@ class Board {
                 Rook(this, color)
         )
     }
+
+    /**
+     * Searches for the King on the board with the given color
+     * @param color of the piece
+     * @return position of the King
+     */
+    fun findKingPosition(color: PieceColor): PiecePosition =
+            fields.flatMap { it.toList() }.filter { it is King && it.color == color }
+                    .withIndex().map { PiecePosition(it.index) }.firstOrNull()
+                    ?: throw IllegalStateException("King with color $color could not be found!")
+
+    /**
+     * @param color of the pieces
+     * @return all pieces of the given color
+     */
+    fun getPieces(color: PieceColor): List<Piece> =
+            fields.flatten().filterNotNull().filter { it.color == color }
 }

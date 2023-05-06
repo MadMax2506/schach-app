@@ -39,7 +39,30 @@ abstract class Piece(
      */
     abstract fun possibleMoves(position: PiecePosition): MutableList<PiecePosition>
 
+    /**
+     * @return true, if you're not allowed to go to that position
+     */
     fun isFieldUnavailable(position: PiecePosition): Boolean {
         return !fieldValidation.isInBound(position) || fieldValidation.isTeammate(position)
+    }
+
+    /**
+     * @return true, if King is in check
+     */
+    fun isKingInCheck(): Boolean {
+        val kingPosition = board.findKingPosition(color)
+        val opponentPieces = board.getPieces(color.opponent())
+
+        for (opPiece in opponentPieces) {
+            /*
+            TODO anders zu lösen, da im Piece keine position gespeichert wird
+            jede Figur aber nochmal auf dem Board zu suchen ist zu viel aufwand
+            */
+
+//            if(opPiece.possibleMoves(opPiece.position).contains(kingPosition)) {
+//                return true
+//            }
+        }
+        return false
     }
 }

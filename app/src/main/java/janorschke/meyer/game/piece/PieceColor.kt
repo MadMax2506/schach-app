@@ -2,5 +2,7 @@ package janorschke.meyer.game.piece
 
 enum class PieceColor {
     WHITE,
-    BLACK
+    BLACK;
+
+    fun opponent(): PieceColor = if (this == WHITE) BLACK else WHITE
 }
