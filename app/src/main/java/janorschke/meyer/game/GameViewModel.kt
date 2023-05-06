@@ -3,9 +3,8 @@ package janorschke.meyer.game
 import androidx.lifecycle.ViewModel
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
-import janorschke.meyer.game.piece.PieceColor
-import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.piece.PiecePosition
+import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.player.PlayerInfo
 
 class GameViewModel : ViewModel() {
@@ -35,18 +34,22 @@ class GameViewModel : ViewModel() {
      * @param position which is selected
      */
     fun onFieldClicked(position: PiecePosition) {
-        val piece = board.getField(position) ?: return
+        val piece = board.getField(position)
 
-        if (selectedPiecePosition == null && piece.color == playerInfo.color) {
+        // handle first click
+        if (selectedPiecePosition == null && piece != null && piece.color == playerInfo.color) {
             selectedPiecePosition = position
+            val possibleMoves = piece.possibleMoves(position)
             // show possibleMoves
-        } else if (selectedPiecePosition != null && position != selectedPiecePosition) {
-            // dont show moves from selectedPosition,
-            // validate if move is ok and move,
-            // if click on another white piece, set new selectedposition
-        } else {
-            // dont show possibleMoves anymore
-        }
+        } else { // handle second click
+            if (piece != null && piece.color == playerInfo.color) {
+                // clicking on own piece
+            } else {
+                // check if move is valid
+                // execute move
+                // don't show possibleMoves anymore
+            }
 
+        }
     }
 }
