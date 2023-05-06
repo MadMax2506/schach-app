@@ -35,8 +35,8 @@ class GameFieldAdapter(
         return position.toLong()
     }
 
-    fun setPossibleMoves(moves: List<PiecePosition>) {
-        possibleMoves = moves
+    fun setPossibleMoves(possibleMoves: List<PiecePosition>) {
+        this.possibleMoves = possibleMoves
         notifyDataSetChanged()
     }
 
