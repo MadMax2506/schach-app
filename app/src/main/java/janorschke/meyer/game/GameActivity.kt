@@ -26,7 +26,7 @@ class GameActivity : AppCompatActivity() {
         // board handling
         val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
         val gameFieldAdapter = GameFieldAdapter(applicationContext, gameViewModel)
-
+        gameViewModel.setGameFieldAdapter(gameFieldAdapter)
         binding.boardWrapper?.board?.adapter = gameFieldAdapter
 
         // player handling
@@ -41,8 +41,8 @@ class GameActivity : AppCompatActivity() {
             binding.playerOne?.name?.text = resources.getString(aiLevel.resourceId)
             binding.playerTwo?.name?.text = resources.getString(R.string.default_player_name)
             //Spielerfarbe setzen
-            val playerInfo: PlayerInfo = PlayerInfo(PieceColor.WHITE)
-            gameViewModel.playerInfo = playerInfo
+            val playerInfo = PlayerInfo(PieceColor.WHITE)
+            gameViewModel.setPlayerInfo(playerInfo)
         }
     }
 }

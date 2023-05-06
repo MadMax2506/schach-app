@@ -1,6 +1,7 @@
 package janorschke.meyer.game
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.ColorMatrixColorFilter
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +11,9 @@ import androidx.core.content.ContextCompat
 import janorschke.meyer.R
 import janorschke.meyer.databinding.GameFieldBinding
 import janorschke.meyer.game.board.Board
-import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PiecePosition
+import janorschke.meyer.game.piece.model.Piece
 
 
 class GameFieldAdapter(
@@ -20,6 +21,7 @@ class GameFieldAdapter(
         private val gameViewModel: GameViewModel
 ) : BaseAdapter() {
     private class ViewHolder(val binding: GameFieldBinding, val view: View)
+    private var possibleMoves: List<PiecePosition> = emptyList()
 
     override fun getCount(): Int {
         return Board.SIZE
@@ -31,6 +33,11 @@ class GameFieldAdapter(
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
+    }
+
+    fun setPossibleMoves(moves: List<PiecePosition>) {
+        possibleMoves = moves
+        notifyDataSetChanged()
     }
 
     override fun getView(index: Int, convertView: View?, parent: ViewGroup?): View {
@@ -45,6 +52,11 @@ class GameFieldAdapter(
 
         val position = PiecePosition(index)
         holder.view.setBackgroundResource(getViewBackgroundColor(position))
+        if(possibleMoves.contains(position)) {
+            holder.binding.btn.background = ContextCompat.getDrawable(context, R.drawable.chess_possiblemove)!!.mutate()
+        } else {
+            holder.binding.btn.setBackgroundColor(Color.TRANSPARENT)
+        }
 
         val piece = gameViewModel.getField(position)
         if (piece != null) {
