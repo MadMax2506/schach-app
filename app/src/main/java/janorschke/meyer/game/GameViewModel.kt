@@ -1,6 +1,7 @@
 package janorschke.meyer.game
 
 import androidx.lifecycle.ViewModel
+import janorschke.meyer.game.adapter.GameFieldAdapter
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
 import janorschke.meyer.game.piece.PiecePosition
