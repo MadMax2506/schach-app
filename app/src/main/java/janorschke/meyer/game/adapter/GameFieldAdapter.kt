@@ -1,4 +1,4 @@
-package janorschke.meyer.game
+package janorschke.meyer.game.adapter
 
 import android.content.Context
 import android.graphics.Color
@@ -10,16 +10,14 @@ import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
 import janorschke.meyer.R
 import janorschke.meyer.databinding.GameFieldBinding
+import janorschke.meyer.game.GameViewModel
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Piece
 
 
-class GameFieldAdapter(
-        private val context: Context,
-        private val gameViewModel: GameViewModel
-) : BaseAdapter() {
+class GameFieldAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
     private class ViewHolder(val binding: GameFieldBinding, val view: View)
     private var possibleMoves: List<PiecePosition> = emptyList()
 

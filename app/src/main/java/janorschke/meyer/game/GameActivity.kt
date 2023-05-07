@@ -10,6 +10,7 @@ import janorschke.meyer.ai.AiLevel
 import janorschke.meyer.databinding.ActivityGameBinding
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.player.PlayerInfo
+import janorschke.meyer.game.adapter.GameFieldAdapter
 import janorschke.meyer.global.TransferKeys
 import janorschke.meyer.home.MainActivity
 
