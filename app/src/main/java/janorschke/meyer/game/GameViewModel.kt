@@ -67,9 +67,7 @@ class GameViewModel : ViewModel() {
     private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
         val possibleMoves = board.getField(fromPosition)?.possibleMoves(fromPosition) ?: emptyList()
 
-        if (toPosition in possibleMoves) {
-            movePiece(fromPosition, toPosition)
-        }
+        if (toPosition in possibleMoves) movePiece(fromPosition, toPosition)
         setSelectedPiece(null, emptyList())
     }
 
