@@ -8,6 +8,10 @@ import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.player.PlayerInfo
 
+/**
+ * The GameViewModel represents the view model for a chess game.
+ * It manages the game state, handles user input, and communicates with the view layer through a GameFieldAdapter object.
+ */
 class GameViewModel : ViewModel() {
     private lateinit var gameFieldAdapter: GameFieldAdapter
     private val board: Board = Board()
@@ -28,7 +32,7 @@ class GameViewModel : ViewModel() {
     }
 
     /**
-     * Moves a piece to another position
+     * Moves a piece to the target position
      *
      * @param from source position
      * @param to target position
@@ -51,21 +55,27 @@ class GameViewModel : ViewModel() {
     fun onFieldClicked(position: PiecePosition) {
         val piece = board.getField(position)
         val possibleMoves = piece?.possibleMoves(position) ?: emptyList()
+        val isPlayersPiece = (piece?.color == playerInfo.color)
 
         // handle first click
-        if (selectedPiecePosition == null && piece?.color == playerInfo.color) {
+        if (selectedPiecePosition == null && isPlayersPiece) {
             setSelectedPiece(position, possibleMoves)
             return
         }
         // handle second click
-        if (selectedPiecePosition != null && piece?.color != playerInfo.color) {
+        if (selectedPiecePosition != null && !isPlayersPiece) {
             tryToMovePiece(selectedPiecePosition!!, position)
             return
         }
-        if ((piece?.color == playerInfo.color && selectedPiecePosition != position)) setSelectedPiece(position, possibleMoves)
+        if (isPlayersPiece && selectedPiecePosition != position) setSelectedPiece(position, possibleMoves)
         else setSelectedPiece()
     }
 
+    /**
+     * Moves a chess piece from the source position to the target position, if the target position is valid.
+     * @param fromPosition the source position of the chess piece
+     * @param toPosition the target position to move the chess piece to
+     */
     private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
         val possibleMoves = board.getField(fromPosition)?.possibleMoves(fromPosition) ?: emptyList()
 
@@ -73,6 +83,11 @@ class GameViewModel : ViewModel() {
         setSelectedPiece()
     }
 
+    /**
+     * Sets the selected piece and shows the possible moves through the GameFieldAdapter.
+     * @param position the position of the selected piece (optional: Default = null)
+     * @param possibleMoves the possible moves for the selected piece (optional: Default = emptyList())
+     */
     private fun setSelectedPiece(position: PiecePosition? = null, possibleMoves: List<PiecePosition> = emptyList()) {
         selectedPiecePosition = position
         gameFieldAdapter.setPossibleMoves(possibleMoves)
