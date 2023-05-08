@@ -107,9 +107,13 @@ class Board {
                     ?: throw IllegalStateException("King with color $color could not be found!")
 
     /**
-     * @param color of the pieces
-     * @return all pieces of the given color
+     * @return true, if King is in check
      */
-    fun getPieces(color: PieceColor): List<Piece> =
-            fields.flatten().filterNotNull().filter { it.color == color }
+    fun isKingInCheck(color: PieceColor): Boolean {
+        val kingPosition = this.findKingPosition(color)
+
+        return fields.flatten().filterNotNull().withIndex().filter {
+            it.value.possibleMoves(PiecePosition(it.index)).contains(kingPosition)
+        }.toList().isNotEmpty()
+    }
 }
