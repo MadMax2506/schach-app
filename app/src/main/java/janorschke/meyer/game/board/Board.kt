@@ -116,4 +116,32 @@ class Board {
             it.value.possibleMoves(PiecePosition(it.index)).contains(kingPosition)
         }.toList().isNotEmpty()
     }
+
+    /**
+     * @return true if the King of the given color is in checkmate, false otherwise
+     */
+    fun isKingCheckmate(color: PieceColor): Boolean {
+        if (!isKingInCheck(color)) {
+            return false
+        }
+        // check if any piece can go somewhere, that is not checkmate
+        fields.flatten().filterNotNull().withIndex().forEach {piece ->
+            if (piece.value.color == color) {
+                val moves = piece.value.possibleMoves(PiecePosition(piece.index))
+                for (move in moves) {
+                    val boardCopy = fields.copyOf()
+                    val movePiece = boardCopy[piece.index / LINE_SIZE][piece.index % LINE_SIZE]
+                    boardCopy[piece.index / LINE_SIZE][piece.index % LINE_SIZE] = null
+                    boardCopy[move.row][move.col] = movePiece
+
+                    if (!isKingInCheck(color)) {
+                        // if King is not in check after this move, then it's not checkmate
+                        return false
+                    }
+                }
+            }
+        }
+        return true
+    }
+
 }
