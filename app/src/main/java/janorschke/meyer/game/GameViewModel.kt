@@ -52,26 +52,28 @@ class GameViewModel : ViewModel() {
         val piece = board.getField(position)
         val possibleMoves = piece?.possibleMoves(position) ?: emptyList()
 
-        when {
-            // handle first click
-            selectedPiecePosition == null && piece?.color == playerInfo.color -> setSelectedPiece(position, possibleMoves)
-            // handle second click
-            selectedPiecePosition != null -> {
-                val isTeammate = (piece?.color == playerInfo.color && selectedPiecePosition != position)
-                if (piece?.color != playerInfo.color) tryToMovePiece(selectedPiecePosition!!, position)
-                setSelectedPiece(if (isTeammate) position else null, if (isTeammate) possibleMoves else emptyList())
-            }
+        // handle first click
+        if (selectedPiecePosition == null && piece?.color == playerInfo.color) {
+            setSelectedPiece(position, possibleMoves)
+            return
         }
+        // handle second click
+        if (selectedPiecePosition != null && piece?.color != playerInfo.color) {
+            tryToMovePiece(selectedPiecePosition!!, position)
+            return
+        }
+        if ((piece?.color == playerInfo.color && selectedPiecePosition != position)) setSelectedPiece(position, possibleMoves)
+        else setSelectedPiece()
     }
 
     private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
         val possibleMoves = board.getField(fromPosition)?.possibleMoves(fromPosition) ?: emptyList()
 
         if (toPosition in possibleMoves) movePiece(fromPosition, toPosition)
-        setSelectedPiece(null, emptyList())
+        setSelectedPiece()
     }
 
-    private fun setSelectedPiece(position: PiecePosition?, possibleMoves: List<PiecePosition>) {
+    private fun setSelectedPiece(position: PiecePosition? = null, possibleMoves: List<PiecePosition> = emptyList()) {
         selectedPiecePosition = position
         gameFieldAdapter.setPossibleMoves(possibleMoves)
     }
