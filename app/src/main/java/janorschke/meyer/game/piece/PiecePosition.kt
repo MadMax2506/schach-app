@@ -36,4 +36,17 @@ class PiecePosition {
     fun getNotation(): String {
         return "${getColNotation()}${getRowNotation()}"
     }
+
+    override fun hashCode(): Int {
+        var result = row
+        result = 31 * result + col
+        return result
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is PiecePosition) return false
+
+        return this.row == other.row && this.col == other.col
+    }
 }

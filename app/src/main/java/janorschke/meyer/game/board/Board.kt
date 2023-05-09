@@ -16,10 +16,13 @@ class Board {
         const val LINE_SIZE = 8
     }
 
-    private lateinit var fields: Array<Array<Piece?>>
+    private var fields: Array<Array<Piece?>> = Array(LINE_SIZE) { Array(LINE_SIZE) { null } }
 
     init {
-        reset()
+        fields[0] = generateBaseLine(PieceColor.BLACK)
+        fields[1] = generatePawnLine(PieceColor.BLACK)
+        fields[6] = generatePawnLine(PieceColor.WHITE)
+        fields[7] = generateBaseLine(PieceColor.WHITE)
     }
 
     /**
@@ -37,6 +40,10 @@ class Board {
         return fields[position.row][position.col]
     }
 
+    private fun setField(position: PiecePosition, piece: Piece?) {
+        fields[position.row][position.col] = piece
+    }
+
     /**
      * Moves an piece to another position
      *
@@ -45,29 +52,15 @@ class Board {
      * @return board move
      */
     fun createBoardMove(from: PiecePosition, to: PiecePosition): BoardMove {
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/23
-        val fromPiece = getField(from)
+        val fromPiece = getField(from)!!
         val toPiece = getField(to)
 
         setField(from, null)
         setField(to, fromPiece)
 
-        return BoardMove(fields.clone(), from, to, fromPiece!!, toPiece)
-    }
+        fromPiece.moved = true
 
-    private fun setField(position: PiecePosition, piece: Piece?) {
-        fields[position.row][position.col] = piece
-    }
-
-    /**
-     * Resets the board to the initial state
-     */
-    fun reset() {
-        fields = Array(LINE_SIZE) { Array(LINE_SIZE) { null } }
-        fields[0] = generateBaseLine(PieceColor.BLACK)
-        fields[1] = generatePawnLine(PieceColor.BLACK)
-        fields[6] = generatePawnLine(PieceColor.WHITE)
-        fields[7] = generateBaseLine(PieceColor.WHITE)
+        return BoardMove(fields.clone(), from, to, fromPiece, toPiece)
     }
 
     /**
