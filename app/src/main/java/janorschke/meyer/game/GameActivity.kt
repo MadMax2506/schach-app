@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import janorschke.meyer.R
 import janorschke.meyer.ai.AiLevel
 import janorschke.meyer.databinding.ActivityGameBinding
+import janorschke.meyer.game.piece.PieceColor
+import janorschke.meyer.game.player.PlayerInfo
 import janorschke.meyer.game.adapter.GameFieldAdapter
 import janorschke.meyer.global.TransferKeys
 import janorschke.meyer.home.MainActivity
@@ -25,7 +27,7 @@ class GameActivity : AppCompatActivity() {
         // board handling
         val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
         val gameFieldAdapter = GameFieldAdapter(applicationContext, gameViewModel)
-
+        gameViewModel.setGameFieldAdapter(gameFieldAdapter)
         binding.boardWrapper?.board?.adapter = gameFieldAdapter
 
         // player handling
@@ -39,6 +41,8 @@ class GameActivity : AppCompatActivity() {
 
             binding.playerOne?.name?.text = resources.getString(aiLevel.resourceId)
             binding.playerTwo?.name?.text = resources.getString(R.string.default_player_name)
+            //Spielerfarbe setzen
+            gameViewModel.setPlayerInfo(PlayerInfo(PieceColor.WHITE))
         }
     }
 }
