@@ -57,18 +57,14 @@ class GameViewModel : ViewModel() {
         val possibleMoves = piece?.possibleMoves(position) ?: emptyList()
         val isPlayersPiece = (piece?.color == playerInfo.color)
 
-        // handle first click
-        if (selectedPiecePosition == null && isPlayersPiece) {
-            setSelectedPiece(position, possibleMoves)
-            return
+        when {
+            // handle first click
+            (selectedPiecePosition == null && isPlayersPiece) -> setSelectedPiece(position, possibleMoves)
+            // handle second click
+            (selectedPiecePosition != null && !isPlayersPiece) -> tryToMovePiece(selectedPiecePosition!!, position)
+            (isPlayersPiece && selectedPiecePosition != position) -> setSelectedPiece(position, possibleMoves)
+            else -> setSelectedPiece()
         }
-        // handle second click
-        if (selectedPiecePosition != null && !isPlayersPiece) {
-            tryToMovePiece(selectedPiecePosition!!, position)
-            return
-        }
-        if (isPlayersPiece && selectedPiecePosition != position) setSelectedPiece(position, possibleMoves)
-        else setSelectedPiece()
     }
 
     /**
