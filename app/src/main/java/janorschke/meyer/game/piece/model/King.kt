@@ -8,14 +8,17 @@ import janorschke.meyer.game.piece.PiecePosition
 
 class King(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.KING) {
     override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
-        return (-1..1).flatMap { row ->
-            (-1..1).map { col ->
-                PiecePosition(position.row + row, position.col + col)
+        val possibleMoves = mutableListOf<PiecePosition>()
+        for (row in -1..1) {
+            for (col in -1..1) {
+                val currentPosition = PiecePosition(position.row + row, position.col + col)
+                if (isFieldUnavailable(currentPosition)) continue
+
+                val boardCopy = Board(board)
+                boardCopy.createBoardMove(position, currentPosition)
+                if(!BoardValidator.isKingInCheck(boardCopy, color)) possibleMoves.add(currentPosition)
             }
-        }.filterNot { isFieldUnavailable(it) }
-                .filterNot {
-                    Board(board).apply { this.createBoardMove(position, it) }
-                            .let { board -> BoardValidator.isKingInCheck(board, color) }
-                }.toMutableList()
+        }
+        return possibleMoves
     }
 }

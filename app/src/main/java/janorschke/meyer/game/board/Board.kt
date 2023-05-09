@@ -18,7 +18,7 @@ class Board {
 
     private var fields: Array<Array<Piece?>> = Array(LINE_SIZE) { Array(LINE_SIZE) { null } }
 
-    init {
+    constructor() {
         fields[0] = generateBaseLine(PieceColor.BLACK)
         fields[1] = generatePawnLine(PieceColor.BLACK)
         fields[6] = generatePawnLine(PieceColor.WHITE)
