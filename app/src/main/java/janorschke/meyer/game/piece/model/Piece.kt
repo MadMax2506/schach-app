@@ -35,9 +35,10 @@ abstract class Piece(
 
     /**
      * @param position current position
+     * @param disableCheckCheck disables the check of a Check in Chess (optional: Default = false)
      * @return possible moves
      */
-    abstract fun possibleMoves(position: PiecePosition): MutableList<PiecePosition>
+    abstract fun possibleMoves(position: PiecePosition, disableCheckCheck: Boolean = false): MutableList<PiecePosition>
 
     /**
      * @return true, if you're not allowed to go to that position

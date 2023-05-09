@@ -6,7 +6,7 @@ import janorschke.meyer.game.piece.PieceInfo
 import janorschke.meyer.game.piece.PiecePosition
 
 class Rook(board: Board, color: PieceColor) : LineMovingPiece(board, color, PieceInfo.ROOK) {
-    override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
+    override fun possibleMoves(position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
         return possibleMovesOnStraightLine(position)
     }
 }

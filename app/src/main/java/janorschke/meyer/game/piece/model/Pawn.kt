@@ -6,7 +6,7 @@ import janorschke.meyer.game.piece.PieceInfo
 import janorschke.meyer.game.piece.PiecePosition
 
 class Pawn(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.PAWN) {
-    override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
+    override fun possibleMoves(position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
         val moveDirection = if (color == PieceColor.WHITE) -1 else 1
 

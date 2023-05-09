@@ -30,8 +30,7 @@ abstract class BoardValidator {
                     .withIndex()
                     .filter { it.value.color == color.opponent() }
                     // wird in possibleMoves aufgerufen => rekursion zwischen 2 Funktionen
-                    // TODO hin und her zwischen schwarzen und weißen Figuren => Endlosschleife?
-                    .filter { it.value.possibleMoves(PiecePosition(it.index)).contains(this.findKingPosition(board, color)) }
+                    .filter { it.value.possibleMoves(PiecePosition(it.index), true).contains(this.findKingPosition(board, color)) }
                     .toList()
                     .isNotEmpty()
         }

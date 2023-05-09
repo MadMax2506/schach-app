@@ -7,7 +7,7 @@ import janorschke.meyer.game.piece.PiecePosition
 import kotlin.math.abs
 
 class Knight(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.KNIGHT) {
-    override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
+    override fun possibleMoves(position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
         for (i in -2..2) {
             for (j in -2..2) {
