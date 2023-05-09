@@ -28,6 +28,9 @@ abstract class BoardValidator {
             return board.getFields().flatten()
                     .filterNotNull()
                     .withIndex()
+                    .filter { it.value.color == color.opponent() }
+                    // wird in possibleMoves aufgerufen => rekursion zwischen 2 Funktionen
+                    // TODO hin und her zwischen schwarzen und weißen Figuren => Endlosschleife?
                     .filter { it.value.possibleMoves(PiecePosition(it.index)).contains(this.findKingPosition(board, color)) }
                     .toList()
                     .isNotEmpty()
@@ -47,7 +50,7 @@ abstract class BoardValidator {
                         if (piece.value.color == color) {
                             val moves = piece.value.possibleMoves(PiecePosition(piece.index))
                             moves.forEach { move ->
-                                val boardCopy = board.getFields().copyOf()
+                                val boardCopy = board.getFields().map { it.copyOf() }.toTypedArray()
                                 val movePiece = boardCopy[piece.index / Board.LINE_SIZE][piece.index % Board.LINE_SIZE]
                                 boardCopy[piece.index / Board.LINE_SIZE][piece.index % Board.LINE_SIZE] = null
                                 boardCopy[move.row][move.col] = movePiece

@@ -31,7 +31,7 @@ class Board {
      * @param board Board object to copy
      */
     constructor(board: Board) {
-        this.fields = board.fields.copyOf()
+        this.fields = board.fields.map { it.copyOf() }.toTypedArray()
     }
 
     /**
@@ -65,7 +65,7 @@ class Board {
 
         fromPiece.moved = true
 
-        return BoardMove(fields.clone(), from, to, fromPiece, toPiece)
+        return BoardMove(fields.map { it.copyOf() }.toTypedArray(), from, to, fromPiece, toPiece)
     }
 
     /**
