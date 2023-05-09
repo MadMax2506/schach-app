@@ -7,7 +7,7 @@ import janorschke.meyer.game.piece.PiecePosition
 /**
  * Validator for a specific field on the chess board for a piece
  */
-class FieldValidation(private val piece: Piece, private val board: Board) {
+class FieldValidator(private val piece: Piece, private val board: Board) {
     /**
      * @param position being checked
      * @return true, if position contains a piece of the opponent team

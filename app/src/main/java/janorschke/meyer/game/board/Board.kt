@@ -1,15 +1,14 @@
 package janorschke.meyer.game.board
 
+import janorschke.meyer.game.piece.PieceColor
+import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Bishop
 import janorschke.meyer.game.piece.model.King
 import janorschke.meyer.game.piece.model.Knight
 import janorschke.meyer.game.piece.model.Pawn
 import janorschke.meyer.game.piece.model.Piece
-import janorschke.meyer.game.piece.PieceColor
-import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Queen
 import janorschke.meyer.game.piece.model.Rook
-import java.lang.IllegalStateException
 
 class Board {
     companion object {
@@ -24,6 +23,15 @@ class Board {
         fields[1] = generatePawnLine(PieceColor.BLACK)
         fields[6] = generatePawnLine(PieceColor.WHITE)
         fields[7] = generateBaseLine(PieceColor.WHITE)
+    }
+
+    /**
+     * Copy constructor to create a new Board object based on an existing one.
+     *
+     * @param board Board object to copy
+     */
+    constructor(board: Board) {
+        this.fields = board.fields.copyOf()
     }
 
     /**
@@ -81,60 +89,5 @@ class Board {
                 Knight(this, color),
                 Rook(this, color)
         )
-    }
-
-    /**
-     * Searches for the King on the board with the given color
-     * @param color of the piece
-     * @return position of the King
-     */
-    fun findKingPosition(color: PieceColor): PiecePosition {
-        return fields.flatten()
-                .filter { it is King && it.color == color }
-                .withIndex()
-                .map { PiecePosition(it.index) }
-                .firstOrNull()
-                ?: throw IllegalStateException("King with color $color could not be found!")
-    }
-
-    /**
-     * @return true, if King is in check
-     */
-    fun isKingInCheck(color: PieceColor): Boolean {
-        return fields.flatten()
-                .filterNotNull()
-                .withIndex()
-                .filter { it.value.possibleMoves(PiecePosition(it.index)).contains(this.findKingPosition(color)) }
-                .toList()
-                .isNotEmpty()
-    }
-
-    /**
-     * @return true if the King of the given color is in checkmate, false otherwise
-     */
-    fun isKingCheckmate(color: PieceColor): Boolean {
-        if (!isKingInCheck(color)) return false
-
-        // check if any piece can go somewhere, that is not checkmate
-        return fields.flatten()
-                .filterNotNull()
-                .withIndex()
-                .none { piece ->
-                    if (piece.value.color == color) {
-                        val moves = piece.value.possibleMoves(PiecePosition(piece.index))
-                        moves.forEach { move ->
-                            val boardCopy = fields.copyOf()
-                            val movePiece = boardCopy[piece.index / LINE_SIZE][piece.index % LINE_SIZE]
-                            boardCopy[piece.index / LINE_SIZE][piece.index % LINE_SIZE] = null
-                            boardCopy[move.row][move.col] = movePiece
-
-                            if (!isKingInCheck(color)) {
-                                // if King is not in check after this move, then it's not checkmate
-                                return true
-                            }
-                        }
-                    }
-                    return false
-                }
     }
 }
