@@ -23,8 +23,9 @@ class BoardHistory {
      * @return the last move and remove it from the history
      */
     fun undo(): BoardMove {
-        beatenPieces.removeLast()
-        return history.removeLast()
+        val move = history.removeLast()
+        if (move.toPiece != null) beatenPieces.removeLast()
+        return move
     }
 
     /**

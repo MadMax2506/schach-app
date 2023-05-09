@@ -37,11 +37,8 @@ class GameViewModel : ViewModel() {
      * @param from source position
      * @param to target position
      */
-    fun movePiece(from: PiecePosition, to: PiecePosition) {
-        val piece = board.getField(from)!!
-        piece.moved = true
+    private fun movePiece(from: PiecePosition, to: PiecePosition) {
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/23
-        // TODO Info: Der folgende Code aktualisiert das richtige Feld und macht keine Kopie
         boardHistory.push(board.createBoardMove(from, to))
     }
 
