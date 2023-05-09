@@ -26,17 +26,13 @@ class Board {
     /**
      * @return the whole chess board
      */
-    fun getFields(): Array<Array<Piece?>> {
-        return fields
-    }
+    fun getFields(): Array<Array<Piece?>> = fields
 
     /**
      * @param position target
      * @return piece on the target
      */
-    fun getField(position: PiecePosition): Piece? {
-        return fields[position.row][position.col]
-    }
+    fun getField(position: PiecePosition): Piece? = fields[position.row][position.col]
 
     /**
      * Moves an piece to another position
@@ -75,9 +71,7 @@ class Board {
      * @param color of the piece
      * @return the pawn line
      */
-    private fun generatePawnLine(color: PieceColor): Array<Piece?> {
-        return Array(LINE_SIZE) { Pawn(this, color) }
-    }
+    private fun generatePawnLine(color: PieceColor): Array<Piece?> = Array(LINE_SIZE) { Pawn(this, color) }
 
     /**
      * @param color of the piece
@@ -101,47 +95,53 @@ class Board {
      * @param color of the piece
      * @return position of the King
      */
-    fun findKingPosition(color: PieceColor): PiecePosition =
-            fields.flatMap { it.toList() }.filter { it is King && it.color == color }
-                    .withIndex().map { PiecePosition(it.index) }.firstOrNull()
-                    ?: throw IllegalStateException("King with color $color could not be found!")
+    fun findKingPosition(color: PieceColor): PiecePosition {
+        return fields.flatten()
+                .filter { it is King && it.color == color }
+                .withIndex()
+                .map { PiecePosition(it.index) }
+                .firstOrNull()
+                ?: throw IllegalStateException("King with color $color could not be found!")
+    }
 
     /**
      * @return true, if King is in check
      */
     fun isKingInCheck(color: PieceColor): Boolean {
-        val kingPosition = this.findKingPosition(color)
-
-        return fields.flatten().filterNotNull().withIndex().filter {
-            it.value.possibleMoves(PiecePosition(it.index)).contains(kingPosition)
-        }.toList().isNotEmpty()
+        return fields.flatten()
+                .filterNotNull()
+                .withIndex()
+                .filter { it.value.possibleMoves(PiecePosition(it.index)).contains(this.findKingPosition(color)) }
+                .toList()
+                .isNotEmpty()
     }
 
     /**
      * @return true if the King of the given color is in checkmate, false otherwise
      */
     fun isKingCheckmate(color: PieceColor): Boolean {
-        if (!isKingInCheck(color)) {
-            return false
-        }
+        if (!isKingInCheck(color)) return false
+
         // check if any piece can go somewhere, that is not checkmate
-        fields.flatten().filterNotNull().withIndex().forEach {piece ->
-            if (piece.value.color == color) {
-                val moves = piece.value.possibleMoves(PiecePosition(piece.index))
-                for (move in moves) {
-                    val boardCopy = fields.copyOf()
-                    val movePiece = boardCopy[piece.index / LINE_SIZE][piece.index % LINE_SIZE]
-                    boardCopy[piece.index / LINE_SIZE][piece.index % LINE_SIZE] = null
-                    boardCopy[move.row][move.col] = movePiece
+        return fields.flatten()
+                .filterNotNull()
+                .withIndex()
+                .none { piece ->
+                    if (piece.value.color == color) {
+                        val moves = piece.value.possibleMoves(PiecePosition(piece.index))
+                        moves.forEach { move ->
+                            val boardCopy = fields.copyOf()
+                            val movePiece = boardCopy[piece.index / LINE_SIZE][piece.index % LINE_SIZE]
+                            boardCopy[piece.index / LINE_SIZE][piece.index % LINE_SIZE] = null
+                            boardCopy[move.row][move.col] = movePiece
 
-                    if (!isKingInCheck(color)) {
-                        // if King is not in check after this move, then it's not checkmate
-                        return false
+                            if (!isKingInCheck(color)) {
+                                // if King is not in check after this move, then it's not checkmate
+                                return true
+                            }
+                        }
                     }
+                    return false
                 }
-            }
-        }
-        return true
     }
-
 }
