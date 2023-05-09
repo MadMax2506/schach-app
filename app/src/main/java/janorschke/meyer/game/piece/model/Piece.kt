@@ -4,7 +4,7 @@ import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PieceInfo
 import janorschke.meyer.game.piece.PiecePosition
-import janorschke.meyer.game.piece.validator.FieldValidation
+import janorschke.meyer.game.piece.validator.FieldValidator
 
 /**
  * Represents a chess piece
@@ -24,7 +24,7 @@ abstract class Piece(
          */
         var moved: Boolean = false
 ) {
-    protected val fieldValidation = FieldValidation(this, board)
+    protected val fieldValidator = FieldValidator(this, board)
 
     /**
      * Marks the piece as moved
@@ -43,6 +43,6 @@ abstract class Piece(
      * @return true, if you're not allowed to go to that position
      */
     fun isFieldUnavailable(position: PiecePosition): Boolean {
-        return !fieldValidation.isInBound(position) || fieldValidation.isTeammate(position)
+        return !fieldValidator.isInBound(position) || fieldValidator.isTeammate(position)
     }
 }

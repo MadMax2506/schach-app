@@ -81,6 +81,6 @@ abstract class LineMovingPiece(board: Board, color: PieceColor, pieceInfo: Piece
 
         // TODO Steht der König im Schach oder ist die Figur gesesselt
         possibleMoves.add(position)
-        return fieldValidation.isOpponent(position)
+        return fieldValidator.isOpponent(position)
     }
 }
