@@ -62,7 +62,7 @@ class Board {
             setField(to, fromPiece)
         }
 
-        fromPiece.move()
+        fromPiece.moved = true
 
         return BoardMove(fields.clone(), from, to, fromPiece, toPiece)
     }
