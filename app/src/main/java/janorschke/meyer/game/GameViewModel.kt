@@ -107,11 +107,6 @@ class GameViewModel : ViewModel() {
 
             if (BoardValidator.isKingCheckmate(board, piece!!.color.opponent())) {
                 Log.d("", "Checkmate")
-                val text = "Hello toast!"
-                val duration = Toast.LENGTH_SHORT
-
-                val toast = Toast.makeText(null, text, duration)
-                toast.show()
             }
             //TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/53
 
