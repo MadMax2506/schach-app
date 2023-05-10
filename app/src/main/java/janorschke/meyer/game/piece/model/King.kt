@@ -8,6 +8,10 @@ import janorschke.meyer.game.piece.PiecePosition
 
 class King(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.KING) {
 
+    override fun givesOpponentKingCheck(ownPosition: PiecePosition, kingPosition: PiecePosition): Boolean {
+        return false
+    }
+
     override fun possibleMoves(position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
         for (row in -1..1) {
@@ -17,10 +21,10 @@ class King(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.KING
 
                 // für Schach
                 if (!disableCheckCheck) {
-                    val boardCopy = Board(board)
-                    boardCopy.createBoardMove(position, currentPosition)
-                    // in BoardValidator#isKingInCheck wird possibleMoves aufgerufen => rekursion zwischen 2 Funktionen
-                    if (!BoardValidator.isKingInCheck(boardCopy, color)) possibleMoves.add(currentPosition)
+                    Board(board).apply {
+                        this.createBoardMove(position, currentPosition)
+                        if (!BoardValidator.isKingInCheck(this, color)) possibleMoves.add(currentPosition)
+                    }
                 } else {
                     possibleMoves.add(currentPosition)
                 }

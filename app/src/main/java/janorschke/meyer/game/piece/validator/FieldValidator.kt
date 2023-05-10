@@ -1,13 +1,13 @@
 package janorschke.meyer.game.piece.validator
 
 import janorschke.meyer.game.board.Board
-import janorschke.meyer.game.piece.model.Piece
+import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PiecePosition
 
 /**
  * Validator for a specific field on the chess board for a piece
  */
-class FieldValidator(private val piece: Piece, private val board: Board) {
+class FieldValidator(private val pieceColor: PieceColor, private val board: Board) {
     /**
      * @param position being checked
      * @return true, if position contains a piece of the opponent team
@@ -25,7 +25,7 @@ class FieldValidator(private val piece: Piece, private val board: Board) {
     fun isTeammate(position: PiecePosition): Boolean {
         if (!isInBound(position)) throw IndexOutOfBoundsException("Position is not on the board")
 
-        return board.getField(position)?.color == piece.color
+        return board.getField(position)?.color == pieceColor
     }
 
     /**

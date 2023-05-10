@@ -22,15 +22,31 @@ abstract class Piece(
         /**
          * If true, the piece has already moved
          */
-        var moved: Boolean = false
+        protected var moved: Boolean = false
 ) {
-    protected val fieldValidator = FieldValidator(this, board)
+    protected val fieldValidator = FieldValidator(color, board)
 
     /**
      * Marks the piece as moved
      */
     fun move() {
         moved = true
+    }
+
+    /**
+     * @return true, if the piece has moved
+     */
+    fun hasMoved(): Boolean {
+        return moved
+    }
+
+    /**
+     * @param ownPosition position of the current piece
+     * @param kingPosition position of the opponent king
+     * @return true, if the piece gives check to the opponent king
+     */
+    open fun givesOpponentKingCheck(ownPosition: PiecePosition, kingPosition: PiecePosition): Boolean {
+        return this.possibleMoves(ownPosition, true).contains(kingPosition)
     }
 
     /**

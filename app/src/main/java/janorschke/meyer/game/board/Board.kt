@@ -2,6 +2,7 @@ package janorschke.meyer.game.board
 
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PiecePosition
+import janorschke.meyer.game.piece.PieceSequence
 import janorschke.meyer.game.piece.model.Bishop
 import janorschke.meyer.game.piece.model.King
 import janorschke.meyer.game.piece.model.Knight
@@ -63,9 +64,22 @@ class Board {
         setField(from, null)
         setField(to, fromPiece)
 
-        fromPiece.moved = true
+        fromPiece.move()
 
         return BoardMove(fields.map { it.copyOf() }.toTypedArray(), from, to, fromPiece, toPiece)
+    }
+
+    /**
+     * Searches for the King on the board with the given color
+     * @param color of the piece
+     * @return position of the King
+     */
+    fun findKingPosition(color: PieceColor): PiecePosition {
+        return PieceSequence.piecesByColor(fields, color)
+                .filter { it.piece is King }
+                .map { it.position }
+                .firstOrNull()
+                ?: throw IllegalStateException("King with color $color could not be found!")
     }
 
     /**
