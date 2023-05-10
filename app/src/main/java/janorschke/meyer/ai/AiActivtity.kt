@@ -8,7 +8,7 @@ import janorschke.meyer.databinding.ActivityAiBinding
 import janorschke.meyer.game.GameActivity
 import janorschke.meyer.global.TransferKeys
 
-const val LOG_TAG = "AiActivtity"
+private const val LOG_TAG = "AiActivtity"
 
 class AiActivtity : AppCompatActivity() {
     private lateinit var binding: ActivityAiBinding

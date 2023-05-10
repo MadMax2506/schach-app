@@ -22,14 +22,9 @@
             layout="@layout/player_info"
             android:id="@+id/player_one" />
 
-
-        <!-- TODO LinearLayout is only placeholder - implementation in https://github.com/MadMax2506/android-wahlmodul-project/issues/31 -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical" />
+        <include
+            layout="@layout/move_history"
+            android:id="@+id/moveHistoryWrapper" />
 
         <include
             android:id="@+id/player_two"

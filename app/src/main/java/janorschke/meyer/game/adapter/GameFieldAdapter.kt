@@ -19,7 +19,12 @@ import janorschke.meyer.game.piece.model.Piece
 
 class GameFieldAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
+
     private var possibleMoves: List<PiecePosition> = emptyList()
+
+    init {
+        gameViewModel.setGameFieldAdapter(this)
+    }
 
     override fun getCount(): Int {
         return Board.SIZE
@@ -50,7 +55,7 @@ class GameFieldAdapter(private val context: Context, private val gameViewModel: 
 
         val position = PiecePosition(index)
         holder.view.setBackgroundResource(getViewBackgroundColor(position))
-        if(possibleMoves.contains(position)) {
+        if (possibleMoves.contains(position)) {
             holder.binding.btn.background = ContextCompat.getDrawable(context, R.drawable.chess_possiblemove)!!.mutate()
         } else {
             holder.binding.btn.setBackgroundColor(Color.TRANSPARENT)

@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import janorschke.meyer.databinding.ActivitySettingsBinding
 
-const val LOG_TAG = "SettingsActivity"
+private const val LOG_TAG = "SettingsActivity"
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding

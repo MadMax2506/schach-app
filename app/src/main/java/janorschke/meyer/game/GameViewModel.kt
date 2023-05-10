@@ -1,7 +1,9 @@
 package janorschke.meyer.game
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import janorschke.meyer.game.adapter.GameFieldAdapter
+import janorschke.meyer.game.adapter.MoveHistoryAdapter
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
 import janorschke.meyer.game.board.BoardMove
@@ -9,16 +11,20 @@ import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.player.PlayerInfo
 
+private const val LOG_TAG = "GameViewModel"
+
 /**
  * The GameViewModel represents the view model for a chess game.
  * It manages the game state, handles user input, and communicates with the view layer through a GameFieldAdapter object.
  */
 class GameViewModel : ViewModel() {
-    private lateinit var gameFieldAdapter: GameFieldAdapter
     private val board: Board = Board()
     private val boardHistory: BoardHistory = BoardHistory()
     private var selectedPiecePosition: PiecePosition? = null
+
     private lateinit var playerInfo: PlayerInfo
+    private lateinit var gameFieldAdapter: GameFieldAdapter
+    private lateinit var moveHistoryAdapter: MoveHistoryAdapter
 
     /**
      * @see Board.getField
@@ -38,6 +44,10 @@ class GameViewModel : ViewModel() {
         this.gameFieldAdapter = gameFieldAdapter
     }
 
+    fun setMoveHistoryAdapter(moveHistoryAdapter: MoveHistoryAdapter) {
+        this.moveHistoryAdapter = moveHistoryAdapter
+    }
+
     fun setPlayerColor(playerInfo: PlayerInfo) {
         this.playerInfo = playerInfo
     }
@@ -51,6 +61,9 @@ class GameViewModel : ViewModel() {
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/23
         boardHistory.push(board.createBoardMove(from, to))
+
+        moveHistoryAdapter.notifyDataSetChanged()
+        Log.d(LOG_TAG, "move piece from ${from.getNotation()} to ${to.getNotation()}")
     }
 
     /**
