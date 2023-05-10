@@ -3,30 +3,50 @@ package janorschke.meyer.game
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import janorschke.meyer.game.adapter.GameFieldAdapter
+import janorschke.meyer.game.adapter.MoveHistoryAdapter
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
 import janorschke.meyer.game.board.validator.BoardValidator
+import janorschke.meyer.game.board.BoardMove
 import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.player.PlayerInfo
+
+private const val LOG_TAG = "GameViewModel"
 
 /**
  * The GameViewModel represents the view model for a chess game.
  * It manages the game state, handles user input, and communicates with the view layer through a GameFieldAdapter object.
  */
 class GameViewModel : ViewModel() {
-    private lateinit var gameFieldAdapter: GameFieldAdapter
     private val board: Board = Board()
     private val boardHistory: BoardHistory = BoardHistory()
     private var selectedPiecePosition: PiecePosition? = null
-    private lateinit var playerInfo: PlayerInfo
 
+    private lateinit var playerInfo: PlayerInfo
+    private lateinit var gameFieldAdapter: GameFieldAdapter
+    private lateinit var moveHistoryAdapter: MoveHistoryAdapter
+
+    /**
+     * @see Board.getField
+     */
     fun getField(position: PiecePosition): Piece? {
         return board.getField(position)
     }
 
+    /**
+     * @see BoardHistory.getHistory
+     */
+    fun getBoardHistory(): MutableList<BoardMove> {
+        return boardHistory.getHistory()
+    }
+
     fun setGameFieldAdapter(gameFieldAdapter: GameFieldAdapter) {
         this.gameFieldAdapter = gameFieldAdapter
+    }
+
+    fun setMoveHistoryAdapter(moveHistoryAdapter: MoveHistoryAdapter) {
+        this.moveHistoryAdapter = moveHistoryAdapter
     }
 
     fun setPlayerColor(playerInfo: PlayerInfo) {
@@ -44,6 +64,9 @@ class GameViewModel : ViewModel() {
         val boardMove = board.createBoardMove(from, to)
         boardHistory.push(boardMove)
         boardMove.fromPiece.move()
+
+        moveHistoryAdapter.notifyDataSetChanged()
+        Log.d(LOG_TAG, "move piece from ${from.getNotation()} to ${to.getNotation()}")
     }
 
     /**

@@ -9,11 +9,12 @@ import janorschke.meyer.R
 import janorschke.meyer.ai.AiLevel
 import janorschke.meyer.databinding.ActivityGameBinding
 import janorschke.meyer.game.adapter.GameFieldAdapter
+import janorschke.meyer.game.adapter.MoveHistoryAdapter
 import janorschke.meyer.game.player.PlayerInfo
 import janorschke.meyer.global.TransferKeys
 import janorschke.meyer.home.MainActivity
 
-const val LOG_TAG = "GameActivity"
+private const val LOG_TAG = "GameActivity"
 
 class GameActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
@@ -23,11 +24,10 @@ class GameActivity : AppCompatActivity() {
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // board handling
         val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
-        val gameFieldAdapter = GameFieldAdapter(applicationContext, gameViewModel)
-        gameViewModel.setGameFieldAdapter(gameFieldAdapter)
-        binding.boardWrapper?.board?.adapter = gameFieldAdapter
+
+        GameFieldAdapter(applicationContext, gameViewModel).apply { binding.boardWrapper?.board?.adapter = this }
+        MoveHistoryAdapter(applicationContext, gameViewModel).apply { binding.moveHistoryWrapper?.moveHistory?.adapter = this }
 
         // player handling
         val aiLevelString = intent.extras?.getString(TransferKeys.AI_LEVEL.value)

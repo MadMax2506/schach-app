@@ -6,8 +6,15 @@ import janorschke.meyer.game.piece.model.Piece
  * Provides the history of all board moves and the beaten pieces by a move
  */
 class BoardHistory {
-    private val beatenPieces: ArrayDeque<Piece> = ArrayDeque(listOf())
-    private val history: ArrayDeque<BoardMove> = ArrayDeque(listOf())
+    private val beatenPieces: MutableList<Piece> = mutableListOf()
+    private val history: MutableList<BoardMove> = mutableListOf()
+
+    /**
+     * @return history of the moves as list
+     */
+    fun getHistory(): MutableList<BoardMove> {
+        return history
+    }
 
     /**
      * Add a new move to the history
