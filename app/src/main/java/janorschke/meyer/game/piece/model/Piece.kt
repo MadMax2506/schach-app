@@ -11,7 +11,6 @@ import janorschke.meyer.game.piece.validator.FieldValidator
  * Represents a chess piece
  */
 abstract class Piece(
-        protected val board: Board,
         /**
          * Specifies piece color
          */
@@ -25,22 +24,24 @@ abstract class Piece(
          */
         protected var moved: Boolean = false
 ) {
-    protected val fieldValidator = FieldValidator(color, board)
+    protected val fieldValidator = FieldValidator(color)
 
     /**
+     * @param board current board instance
      * @param position current position
      * @param disableCheckCheck disables the check of a Check in Chess (optional: Default = false)
      * @return possible moves
      */
-    abstract fun possibleMoves(position: PiecePosition, disableCheckCheck: Boolean = false): MutableList<PiecePosition>
+    abstract fun possibleMoves(board: Board, position: PiecePosition, disableCheckCheck: Boolean = false): MutableList<PiecePosition>
 
     /**
+     * @param board current board instance
      * @param ownPosition position of the current piece
      * @param kingPosition position of the opponent king
      * @return true, if the piece gives check to the opponent king
      */
-    open fun givesOpponentKingCheck(ownPosition: PiecePosition, kingPosition: PiecePosition): Boolean {
-        val possibleMoves = this.possibleMoves(ownPosition, true)
+    open fun givesOpponentKingCheck(board: Board, ownPosition: PiecePosition, kingPosition: PiecePosition): Boolean {
+        val possibleMoves = this.possibleMoves(board, ownPosition, true)
         return possibleMoves.contains(kingPosition)
     }
 
@@ -59,19 +60,21 @@ abstract class Piece(
     /**
      * @return true, if you're not allowed to go to that position
      */
-    protected fun isFieldUnavailable(position: PiecePosition): Boolean {
-        return !fieldValidator.isInBound(position) || fieldValidator.isTeammate(position)
+    protected fun isFieldUnavailable(board: Board, position: PiecePosition): Boolean {
+        return !fieldValidator.isInBound(board, position) || fieldValidator.isTeammate(board, position)
     }
 
     /**
      * Add the possible move if it is a valid move
      *
-     * @param disableCheckCheck disables the check of a Check in Chess
+     * @param board current board instance
      * @param currentPosition of the piece
      * @param possiblePosition of the piece
      * @param possibleMoves already added moves
+     * @param disableCheckCheck disables the check of a Check in Chess
      */
     protected fun addPossibleMove(
+            board: Board,
             currentPosition: PiecePosition,
             possiblePosition: PiecePosition,
             possibleMoves: MutableList<PiecePosition>,

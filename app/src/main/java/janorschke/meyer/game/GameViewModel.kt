@@ -6,8 +6,8 @@ import janorschke.meyer.game.adapter.GameFieldAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
-import janorschke.meyer.game.board.validator.BoardValidator
 import janorschke.meyer.game.board.BoardMove
+import janorschke.meyer.game.board.validator.BoardValidator
 import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.player.PlayerInfo
@@ -76,7 +76,7 @@ class GameViewModel : ViewModel() {
      */
     fun onFieldClicked(position: PiecePosition) {
         val piece = board.getField(position)
-        val possibleMoves = piece?.possibleMoves(position) ?: emptyList()
+        val possibleMoves = piece?.possibleMoves(board, position) ?: emptyList()
         val isPlayersPiece = (piece?.color == playerInfo.color)
 
         when {
@@ -96,7 +96,7 @@ class GameViewModel : ViewModel() {
      */
     private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
         val piece = board.getField(fromPosition)
-        val possibleMoves = piece?.possibleMoves(fromPosition) ?: emptyList()
+        val possibleMoves = piece?.possibleMoves(board, fromPosition) ?: emptyList()
 
         if (toPosition in possibleMoves) {
             movePiece(fromPosition, toPosition)

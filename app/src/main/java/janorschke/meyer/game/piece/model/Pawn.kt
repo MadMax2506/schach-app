@@ -5,8 +5,8 @@ import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PieceInfo
 import janorschke.meyer.game.piece.PiecePosition
 
-class Pawn(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.PAWN) {
-    override fun givesOpponentKingCheck(ownPosition: PiecePosition, kingPosition: PiecePosition): Boolean {
+class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
+    override fun givesOpponentKingCheck(board: Board, ownPosition: PiecePosition, kingPosition: PiecePosition): Boolean {
         for (i in arrayOf(-1, 1)) {
             PiecePosition(ownPosition.row + getMoveDirection(), ownPosition.col + i).apply {
                 if (this == kingPosition) return true
@@ -15,28 +15,28 @@ class Pawn(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.PAWN
         return false
     }
 
-    override fun possibleMoves(position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
+    override fun possibleMoves(board: Board, position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
 
         // normal move
         PiecePosition(position.row + getMoveDirection(), position.col).apply {
-            if (fieldValidator.isEmpty(this)) {
-                addPossibleMove(position, this, possibleMoves, disableCheckCheck)
+            if (fieldValidator.isEmpty(board, this)) {
+                addPossibleMove(board, position, this, possibleMoves, disableCheckCheck)
             }
         }
 
         // move from base line
         PiecePosition(position.row + 2 * getMoveDirection(), position.col).apply {
-            if (!moved && fieldValidator.isEmpty(this)) {
-                addPossibleMove(position, this, possibleMoves, disableCheckCheck)
+            if (!moved && fieldValidator.isEmpty(board, this)) {
+                addPossibleMove(board, position, this, possibleMoves, disableCheckCheck)
             }
         }
 
         // beat
         for (i in arrayOf(-1, 1)) {
             PiecePosition(position.row + getMoveDirection(), position.col + i).apply {
-                if (!isFieldUnavailable(this) && fieldValidator.isOpponent(this)) {
-                    addPossibleMove(position, this, possibleMoves, disableCheckCheck)
+                if (!isFieldUnavailable(board, this) && fieldValidator.isOpponent(board, this)) {
+                    addPossibleMove(board, position, this, possibleMoves, disableCheckCheck)
                 }
             }
         }

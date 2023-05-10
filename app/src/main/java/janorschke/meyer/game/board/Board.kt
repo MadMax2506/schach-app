@@ -63,7 +63,7 @@ class Board {
 
         setField(from, null)
         if (fromPiece is Pawn && to.row == fromPiece.color.opponent().borderlineIndex) {
-            setField(to, Queen(this, fromPiece.color))
+            setField(to, Queen(fromPiece.color))
         } else {
             setField(to, fromPiece)
         }
@@ -88,7 +88,7 @@ class Board {
      * @param color of the piece
      * @return the pawn line
      */
-    private fun generatePawnLine(color: PieceColor): Array<Piece?> = Array(LINE_SIZE) { Pawn(this, color) }
+    private fun generatePawnLine(color: PieceColor): Array<Piece?> = Array(LINE_SIZE) { Pawn(color) }
 
     /**
      * @param color of the piece
@@ -96,14 +96,14 @@ class Board {
      */
     private fun generateBaseLine(color: PieceColor): Array<Piece?> {
         return arrayOf(
-                Rook(this, color),
-                Knight(this, color),
-                Bishop(this, color),
-                Queen(this, color),
-                King(this, color),
-                Bishop(this, color),
-                Knight(this, color),
-                Rook(this, color)
+                Rook(color),
+                Knight(color),
+                Bishop(color),
+                Queen(color),
+                King(color),
+                Bishop(color),
+                Knight(color),
+                Rook(color)
         )
     }
 }
