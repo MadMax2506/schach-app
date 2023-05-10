@@ -1,12 +1,12 @@
 package janorschke.meyer.game.board
 
+import janorschke.meyer.game.piece.PieceColor
+import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Bishop
 import janorschke.meyer.game.piece.model.King
 import janorschke.meyer.game.piece.model.Knight
 import janorschke.meyer.game.piece.model.Pawn
 import janorschke.meyer.game.piece.model.Piece
-import janorschke.meyer.game.piece.PieceColor
-import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Queen
 import janorschke.meyer.game.piece.model.Rook
 
@@ -56,9 +56,13 @@ class Board {
         val toPiece = getField(to)
 
         setField(from, null)
-        setField(to, fromPiece)
+        if (fromPiece is Pawn && to.row == fromPiece.color.opponent().borderlineIndex) {
+            setField(to, Queen(this, fromPiece.color))
+        } else {
+            setField(to, fromPiece)
+        }
 
-        fromPiece.moved = true
+        fromPiece.move()
 
         return BoardMove(fields.clone(), from, to, fromPiece, toPiece)
     }
