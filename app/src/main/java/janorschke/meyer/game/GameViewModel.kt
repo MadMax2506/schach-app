@@ -38,7 +38,7 @@ class GameViewModel : ViewModel() {
         this.gameFieldAdapter = gameFieldAdapter
     }
 
-    fun setPlayerInfo(playerInfo: PlayerInfo) {
+    fun setPlayerColor(playerInfo: PlayerInfo) {
         this.playerInfo = playerInfo
     }
 
@@ -83,7 +83,10 @@ class GameViewModel : ViewModel() {
     private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
         val possibleMoves = board.getField(fromPosition)?.possibleMoves(fromPosition) ?: emptyList()
 
-        if (toPosition in possibleMoves) movePiece(fromPosition, toPosition)
+        if (toPosition in possibleMoves) {
+            movePiece(fromPosition, toPosition)
+            setPlayerColor(playerInfo.nextPlayer())
+        }
         setSelectedPiece()
     }
 
