@@ -14,9 +14,9 @@ class Knight(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.KN
                 // proves that the position can be reached by the knight
                 if (abs(i) + abs(j) != 3) continue
 
-                val currentPosition = PiecePosition(position.row + i, position.col + j)
-                if (isFieldUnavailable(currentPosition)) continue
-                addMoves(disableCheckCheck, position, currentPosition, possibleMoves)
+                val possiblePosition = PiecePosition(position.row + i, position.col + j)
+                if (isFieldUnavailable(possiblePosition)) continue
+                addPossibleMove(position, possiblePosition, possibleMoves, disableCheckCheck)
             }
         }
         return possibleMoves

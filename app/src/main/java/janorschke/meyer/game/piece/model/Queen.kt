@@ -7,6 +7,8 @@ import janorschke.meyer.game.piece.PiecePosition
 
 class Queen(board: Board, color: PieceColor) : LineMovingPiece(board, color, PieceInfo.QUEEN) {
     override fun possibleMoves(position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
-        return possibleMovesOnDiagonalLine(position, disableCheckCheck).plus(possibleMovesOnStraightLine(position, disableCheckCheck)).toMutableList()
+        return possibleMovesOnDiagonalLine(position, disableCheckCheck)
+                .plus(possibleMovesOnStraightLine(position, disableCheckCheck))
+                .toMutableList()
     }
 }

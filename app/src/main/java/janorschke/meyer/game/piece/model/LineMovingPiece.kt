@@ -16,26 +16,26 @@ abstract class LineMovingPiece(board: Board, color: PieceColor, pieceInfo: Piece
 
         // right up
         for (i in 1 until Board.LINE_SIZE) {
-            val currentPosition = PiecePosition(position.row + i, position.col + i)
-            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
+            val possiblePosition = PiecePosition(position.row + i, position.col + i)
+            if (addPosition(position, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         // right down
         for (i in 1 until Board.LINE_SIZE) {
-            val currentPosition = PiecePosition(position.row + i, position.col - i)
-            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
+            val possiblePosition = PiecePosition(position.row + i, position.col - i)
+            if (addPosition(position, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         // left up
         for (i in 1 until Board.LINE_SIZE) {
-            val currentPosition = PiecePosition(position.row - i, position.col + i)
-            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
+            val possiblePosition = PiecePosition(position.row - i, position.col + i)
+            if (addPosition(position, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         // left down
         for (i in 1 until Board.LINE_SIZE) {
-            val currentPosition = PiecePosition(position.row - i, position.col - i)
-            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
+            val possiblePosition = PiecePosition(position.row - i, position.col - i)
+            if (addPosition(position, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         return possibleMoves
@@ -46,45 +46,47 @@ abstract class LineMovingPiece(board: Board, color: PieceColor, pieceInfo: Piece
 
         // up
         for (row in 1 until Board.LINE_SIZE) {
-            val currentPosition = PiecePosition(position.row + row, position.col)
-            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
+            val possiblePosition = PiecePosition(position.row + row, position.col)
+            if (addPosition(position, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         // down
         for (row in 1 until Board.LINE_SIZE) {
-            val currentPosition = PiecePosition(position.row - row, position.col)
-            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
+            val possiblePosition = PiecePosition(position.row - row, position.col)
+            if (addPosition(position, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         // right
         for (col in 1 until Board.LINE_SIZE) {
-            val currentPosition = PiecePosition(position.row, position.col + col)
-            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
+            val possiblePosition = PiecePosition(position.row, position.col + col)
+            if (addPosition(position, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         // left
         for (col in 1 until Board.LINE_SIZE) {
-            val currentPosition = PiecePosition(position.row, position.col - col)
-            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
+            val possiblePosition = PiecePosition(position.row, position.col - col)
+            if (addPosition(position, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         return possibleMoves
     }
 
     /**
-     * @param disableCheckCheck
-     * @param position the position of the piece
+     * @param currentPosition the position of the piece
      * @param possiblePosition a possible of the piece
      * @param possibleMoves
+     * @param disableCheckCheck disables the check of a Check in Chess
      * @return true if there are no further possible moves
      */
-    private fun addPosition(disableCheckCheck: Boolean,
-                            position: PiecePosition,
-                            possiblePosition: PiecePosition,
-                            possibleMoves: MutableList<PiecePosition>): Boolean {
+    private fun addPosition(
+            currentPosition: PiecePosition,
+            possiblePosition: PiecePosition,
+            possibleMoves: MutableList<PiecePosition>,
+            disableCheckCheck: Boolean
+    ): Boolean {
         if (isFieldUnavailable(possiblePosition)) return true
 
-        addMoves(disableCheckCheck, position, possiblePosition, possibleMoves)
+        addPossibleMove(currentPosition, possiblePosition, possibleMoves, disableCheckCheck)
         return fieldValidator.isOpponent(possiblePosition)
     }
 }

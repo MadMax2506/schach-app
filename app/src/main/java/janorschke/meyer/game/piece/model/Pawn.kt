@@ -20,21 +20,24 @@ class Pawn(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.PAWN
 
         // normal move
         PiecePosition(position.row + getMoveDirection(), position.col).apply {
-            if (fieldValidator.isEmpty(this))
-                addMoves(disableCheckCheck, position, this, possibleMoves)
+            if (fieldValidator.isEmpty(this)) {
+                addPossibleMove(position, this, possibleMoves, disableCheckCheck)
+            }
         }
 
         // move from base line
         PiecePosition(position.row + 2 * getMoveDirection(), position.col).apply {
-            if (!moved && fieldValidator.isEmpty(this))
-                addMoves(disableCheckCheck, position, this, possibleMoves)
+            if (!moved && fieldValidator.isEmpty(this)) {
+                addPossibleMove(position, this, possibleMoves, disableCheckCheck)
+            }
         }
 
         // beat
         for (i in arrayOf(-1, 1)) {
             PiecePosition(position.row + getMoveDirection(), position.col + i).apply {
-                if (!isFieldUnavailable(this) && fieldValidator.isOpponent(this))
-                    addMoves(disableCheckCheck, position, this, possibleMoves)
+                if (!isFieldUnavailable(this) && fieldValidator.isOpponent(this)) {
+                    addPossibleMove(position, this, possibleMoves, disableCheckCheck)
+                }
             }
         }
         return possibleMoves
