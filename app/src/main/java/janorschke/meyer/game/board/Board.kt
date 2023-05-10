@@ -62,7 +62,11 @@ class Board {
         val toPiece = getField(to)
 
         setField(from, null)
-        setField(to, fromPiece)
+        if (fromPiece is Pawn && to.row == fromPiece.color.opponent().borderlineIndex) {
+            setField(to, Queen(this, fromPiece.color))
+        } else {
+            setField(to, fromPiece)
+        }
 
         return BoardMove(fields.map { it.copyOf() }.toTypedArray(), from, to, fromPiece, toPiece)
     }
