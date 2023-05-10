@@ -24,7 +24,7 @@ import janorschke.meyer.ai.AiActivtity
 import janorschke.meyer.databinding.ActivityMainBinding
 import janorschke.meyer.settings.SettingsActivity
 
-const val LOG_TAG = "MainActivity"
+private const val LOG_TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
