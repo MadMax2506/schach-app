@@ -18,42 +18,27 @@ class Pawn(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.PAWN
     override fun possibleMoves(position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
 
-        // TODO Schach?
-
         // normal move
         PiecePosition(position.row + getMoveDirection(), position.col).apply {
-            if (fieldValidator.isEmpty(this)) possibleMoves.add(this)
+            if (fieldValidator.isEmpty(this))
+                addMoves(disableCheckCheck, position, this, possibleMoves)
         }
 
         // move from base line
         PiecePosition(position.row + 2 * getMoveDirection(), position.col).apply {
-            if (!moved && fieldValidator.isEmpty(this)) possibleMoves.add(this)
+            if (!moved && fieldValidator.isEmpty(this))
+                addMoves(disableCheckCheck, position, this, possibleMoves)
         }
 
         // beat
         for (i in arrayOf(-1, 1)) {
             PiecePosition(position.row + getMoveDirection(), position.col + i).apply {
-                if (!isFieldUnavailable(this) && fieldValidator.isOpponent(this)) possibleMoves.add(this)
+                if (!isFieldUnavailable(this) && fieldValidator.isOpponent(this))
+                    addMoves(disableCheckCheck, position, this, possibleMoves)
             }
         }
-
         return possibleMoves
     }
 
     private fun getMoveDirection() = if (color == PieceColor.WHITE) -1 else 1
-
-    /**
-     *
-     */
-    private fun beatOpponentPiece(position: PiecePosition): MutableList<PiecePosition> {
-        val possibleMoves = mutableListOf<PiecePosition>()
-
-        for (i in arrayOf(-1, 1)) {
-            PiecePosition(position.row + getMoveDirection(), position.col + i).apply {
-                if (!isFieldUnavailable(this) && fieldValidator.isOpponent(this)) possibleMoves.add(this)
-            }
-        }
-
-        return possibleMoves
-    }
 }

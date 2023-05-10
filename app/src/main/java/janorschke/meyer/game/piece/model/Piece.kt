@@ -1,6 +1,7 @@
 package janorschke.meyer.game.piece.model
 
 import janorschke.meyer.game.board.Board
+import janorschke.meyer.game.board.validator.BoardValidator
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PieceInfo
 import janorschke.meyer.game.piece.PiecePosition
@@ -36,9 +37,7 @@ abstract class Piece(
     /**
      * @return true, if the piece has moved
      */
-    fun hasMoved(): Boolean {
-        return moved
-    }
+    fun hasMoved(): Boolean = moved
 
     /**
      * @param ownPosition position of the current piece
@@ -59,7 +58,21 @@ abstract class Piece(
     /**
      * @return true, if you're not allowed to go to that position
      */
-    fun isFieldUnavailable(position: PiecePosition): Boolean {
+    protected fun isFieldUnavailable(position: PiecePosition): Boolean {
         return !fieldValidator.isInBound(position) || fieldValidator.isTeammate(position)
+    }
+
+    protected fun addMoves(disableCheckCheck: Boolean,
+                           position: PiecePosition,
+                           possiblePosition: PiecePosition,
+                           possibleMoves: MutableList<PiecePosition>) {
+        if (!disableCheckCheck) {
+            Board(board).apply {
+                this.createBoardMove(position, possiblePosition)
+                if (!BoardValidator.isKingInCheck(this, color)) possibleMoves.add(possiblePosition)
+            }
+        } else {
+            possibleMoves.add(possiblePosition)
+        }
     }
 }

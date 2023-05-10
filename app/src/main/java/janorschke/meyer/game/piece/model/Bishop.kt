@@ -7,6 +7,6 @@ import janorschke.meyer.game.piece.PiecePosition
 
 class Bishop(board: Board, color: PieceColor) : LineMovingPiece(board, color, PieceInfo.BISHOP) {
     override fun possibleMoves(position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
-        return possibleMovesOnDiagonalLine(position)
+        return possibleMovesOnDiagonalLine(position, disableCheckCheck)
     }
 }

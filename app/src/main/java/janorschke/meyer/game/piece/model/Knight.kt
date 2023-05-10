@@ -16,8 +16,7 @@ class Knight(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.KN
 
                 val currentPosition = PiecePosition(position.row + i, position.col + j)
                 if (isFieldUnavailable(currentPosition)) continue
-                // TODO Steht der König im Schach oder ist die Figur gesesselt
-                possibleMoves.add(currentPosition)
+                addMoves(disableCheckCheck, position, currentPosition, possibleMoves)
             }
         }
         return possibleMoves

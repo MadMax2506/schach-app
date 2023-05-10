@@ -64,8 +64,6 @@ class Board {
         setField(from, null)
         setField(to, fromPiece)
 
-        fromPiece.move()
-
         return BoardMove(fields.map { it.copyOf() }.toTypedArray(), from, to, fromPiece, toPiece)
     }
 

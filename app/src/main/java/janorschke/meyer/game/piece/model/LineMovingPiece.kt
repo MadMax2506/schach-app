@@ -11,76 +11,80 @@ abstract class LineMovingPiece(board: Board, color: PieceColor, pieceInfo: Piece
      * @param position current position
      * @return possible moves on the four diagonal line
      */
-    protected fun possibleMovesOnDiagonalLine(position: PiecePosition): MutableList<PiecePosition> {
+    protected fun possibleMovesOnDiagonalLine(position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
 
         // right up
         for (i in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row + i, position.col + i)
-            if (addPosition(currentPosition, possibleMoves)) break
+            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
         }
 
         // right down
         for (i in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row + i, position.col - i)
-            if (addPosition(currentPosition, possibleMoves)) break
+            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
         }
 
         // left up
         for (i in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row - i, position.col + i)
-            if (addPosition(currentPosition, possibleMoves)) break
+            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
         }
 
         // left down
         for (i in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row - i, position.col - i)
-            if (addPosition(currentPosition, possibleMoves)) break
+            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
         }
 
         return possibleMoves
     }
 
-    fun possibleMovesOnStraightLine(position: PiecePosition): MutableList<PiecePosition> {
+    fun possibleMovesOnStraightLine(position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
 
         // up
         for (row in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row + row, position.col)
-            if (addPosition(currentPosition, possibleMoves)) break
+            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
         }
 
         // down
         for (row in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row - row, position.col)
-            if (addPosition(currentPosition, possibleMoves)) break
+            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
         }
 
         // right
         for (col in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row, position.col + col)
-            if (addPosition(currentPosition, possibleMoves)) break
+            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
         }
 
         // left
         for (col in 1 until Board.LINE_SIZE) {
             val currentPosition = PiecePosition(position.row, position.col - col)
-            if (addPosition(currentPosition, possibleMoves)) break
+            if (addPosition(disableCheckCheck, position, currentPosition, possibleMoves)) break
         }
 
         return possibleMoves
     }
 
     /**
-     * @param position of the pice
+     * @param disableCheckCheck
+     * @param position the position of the piece
+     * @param possiblePosition a possible of the piece
      * @param possibleMoves
      * @return true if there are no further possible moves
      */
-    private fun addPosition(position: PiecePosition, possibleMoves: MutableList<PiecePosition>): Boolean {
-        if (isFieldUnavailable(position)) return true
+    private fun addPosition(disableCheckCheck: Boolean,
+                            position: PiecePosition,
+                            possiblePosition: PiecePosition,
+                            possibleMoves: MutableList<PiecePosition>): Boolean {
+        if (isFieldUnavailable(possiblePosition)) return true
 
-        // TODO Steht der König im Schach oder ist die Figur gesesselt
-        possibleMoves.add(position)
-        return fieldValidator.isOpponent(position)
+        addMoves(disableCheckCheck, position, possiblePosition, possibleMoves)
+        return fieldValidator.isOpponent(possiblePosition)
     }
 }

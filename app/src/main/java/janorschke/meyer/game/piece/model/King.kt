@@ -18,16 +18,7 @@ class King(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.KING
             for (col in -1..1) {
                 val currentPosition = PiecePosition(position.row + row, position.col + col)
                 if (isFieldUnavailable(currentPosition)) continue
-
-                // für Schach
-                if (!disableCheckCheck) {
-                    Board(board).apply {
-                        this.createBoardMove(position, currentPosition)
-                        if (!BoardValidator.isKingInCheck(this, color)) possibleMoves.add(currentPosition)
-                    }
-                } else {
-                    possibleMoves.add(currentPosition)
-                }
+                addMoves(disableCheckCheck, position, currentPosition, possibleMoves)
             }
         }
         return possibleMoves

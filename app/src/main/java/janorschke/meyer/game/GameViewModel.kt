@@ -1,9 +1,11 @@
 package janorschke.meyer.game
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import janorschke.meyer.game.adapter.GameFieldAdapter
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
+import janorschke.meyer.game.board.validator.BoardValidator
 import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.player.PlayerInfo
@@ -39,7 +41,9 @@ class GameViewModel : ViewModel() {
      */
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/23
-        boardHistory.push(board.createBoardMove(from, to))
+        val boardMove = board.createBoardMove(from, to)
+        boardHistory.push(boardMove)
+        boardMove.fromPiece.move()
     }
 
     /**
@@ -70,10 +74,17 @@ class GameViewModel : ViewModel() {
      * @param toPosition the target position to move the chess piece to
      */
     private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
-        val possibleMoves = board.getField(fromPosition)?.possibleMoves(fromPosition) ?: emptyList()
+        val piece = board.getField(fromPosition)
+        val possibleMoves = piece?.possibleMoves(fromPosition) ?: emptyList()
 
         if (toPosition in possibleMoves) {
             movePiece(fromPosition, toPosition)
+
+            if (BoardValidator.isKingCheckmate(board, piece!!.color.opponent())) {
+                Log.d("", "Checkmate")
+            }
+            //TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/53
+
             setPlayerColor(playerInfo.nextPlayer())
         }
         setSelectedPiece()
