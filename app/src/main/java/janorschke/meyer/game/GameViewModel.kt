@@ -1,6 +1,7 @@
 package janorschke.meyer.game
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import janorschke.meyer.game.adapter.GameFieldAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
@@ -60,8 +61,11 @@ class GameViewModel : ViewModel() {
      * @param to target position
      */
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
+        getField(from)!!.move()
+
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/23
-        boardHistory.push(board.createBoardMove(from, to))
+        val boardMove = board.createBoardMove(from, to)
+        boardHistory.push(boardMove)
 
         moveHistoryAdapter.notifyDataSetChanged()
         Log.d(LOG_TAG, "move piece from ${from.getNotation()} to ${to.getNotation()}")
@@ -103,6 +107,11 @@ class GameViewModel : ViewModel() {
 
             if (BoardValidator.isKingCheckmate(board, piece!!.color.opponent())) {
                 Log.d("", "Checkmate")
+                val text = "Hello toast!"
+                val duration = Toast.LENGTH_SHORT
+
+                val toast = Toast.makeText(null, text, duration)
+                toast.show()
             }
             //TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/53
 
