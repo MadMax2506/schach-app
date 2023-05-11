@@ -76,12 +76,11 @@ class Board {
      * @param color of the piece
      * @return position of the King
      */
-    fun findKingPosition(color: PieceColor): PiecePosition {
+    fun findKingPosition(color: PieceColor): PiecePosition? {
         return PieceSequence.piecesByColor(fields, color)
                 .filter { it.piece is King }
                 .map { it.position }
                 .firstOrNull()
-                ?: throw IllegalStateException("King with color $color could not be found!")
     }
 
     /**
