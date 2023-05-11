@@ -12,9 +12,12 @@
         android:textSize="@dimen/h1"
         android:textAlignment="center" />
 
-    <GridView
-        android:id="@+id/beatenPieces"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/beaten_pieces"
+        android:background="@drawable/border"
+        android:paddingVertical="1sp"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="100sp" />
+        android:layout_height="@dimen/beaten_pieces_size" />
 
 </LinearLayout>

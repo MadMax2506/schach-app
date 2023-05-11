@@ -50,15 +50,10 @@ class BoardHistory {
      * Add a new move to the history
      *
      * @param move of a piece
-     * @return true, if a piece is beaten by the move
      */
-    fun push(move: BoardMove): Boolean {
-        val isPieceBeaten = move.toPiece != null
-
-        if (isPieceBeaten) beatenPieces.add(move.toPiece!!)
+    fun push(move: BoardMove) {
+        if (move.toPiece != null) beatenPieces.add(move.toPiece)
         history.add(move)
-
-        return isPieceBeaten
     }
 
     /**

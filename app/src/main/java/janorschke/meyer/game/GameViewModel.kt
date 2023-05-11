@@ -3,9 +3,9 @@ package janorschke.meyer.game
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import janorschke.meyer.game.adapter.BeatenPiecesAdapter
 import janorschke.meyer.game.adapter.BoardAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
+import janorschke.meyer.game.adapter.beaten.BeatenPiecesAdapter
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
 import janorschke.meyer.game.board.BoardMove
@@ -24,8 +24,9 @@ private const val LOG_TAG = "GameViewModel"
 class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val board: Board = Board()
     private val boardHistory: BoardHistory = BoardHistory()
+    private val beatenPiecesAdapters: MutableMap<PieceColor, BeatenPiecesAdapter> = mutableMapOf()
+
     private var selectedPiecePosition: PiecePosition? = null
-    private var beatenPiecesAdapters: MutableList<BeatenPiecesAdapter> = mutableListOf()
 
     private lateinit var playerInfo: PlayerInfo
     private lateinit var boardAdapter: BoardAdapter
@@ -67,7 +68,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         this.moveHistoryAdapter = moveHistoryAdapter
     }
 
-    fun addBeatenPiecesAdapter(beatenPiecesAdapter: BeatenPiecesAdapter) = this.beatenPiecesAdapters.add(beatenPiecesAdapter)
+    fun addBeatenPiecesAdapter(color: PieceColor, beatenPiecesAdapter: BeatenPiecesAdapter) = this.beatenPiecesAdapters.put(color, beatenPiecesAdapter)
 
     fun setPlayerInfo(playerInfo: PlayerInfo) {
         this.playerInfo = playerInfo
@@ -82,15 +83,18 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
         getField(from)!!.move()
 
-        val beatPiece = boardHistory.push(board.createBoardMove(from, to))
+        val boardMove = board.createBoardMove(from, to)
+        boardHistory.push(boardMove)
 
         moveHistoryAdapter.notifyDataSetChanged()
-        if (beatPiece) beatenPiecesAdapters.forEach {
-            it.notifyDataSetChanged()
-            Log.d("", "Update!!")
+        if (boardMove.toPiece != null) {
+            Log.d(LOG_TAG, "${from.getNotation()} beat piece on ${to.getNotation()}")
+            boardMove.toPiece.color.apply {
+                beatenPiecesAdapters[this]?.notifyItemInserted(boardHistory.numberOfBeatenPieceByColor(this) - 1)
+            }
+        } else {
+            Log.d(LOG_TAG, "move piece from ${from.getNotation()} to ${to.getNotation()}")
         }
-
-        Log.d(LOG_TAG, "move piece from ${from.getNotation()} to ${to.getNotation()}")
     }
 
     /**

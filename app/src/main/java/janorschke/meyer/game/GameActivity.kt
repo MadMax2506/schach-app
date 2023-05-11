@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import janorschke.meyer.R
 import janorschke.meyer.ai.AiLevel
 import janorschke.meyer.databinding.ActivityGameBinding
-import janorschke.meyer.game.adapter.BeatenPiecesAdapter
 import janorschke.meyer.game.adapter.BoardAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
+import janorschke.meyer.game.adapter.beaten.BeatenPieceDecorator
+import janorschke.meyer.game.adapter.beaten.BeatenPiecesAdapter
+import janorschke.meyer.game.adapter.beaten.BeatenPiecesLayoutManager
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.player.PlayerInfo
 import janorschke.meyer.global.TransferKeys
@@ -31,8 +34,8 @@ class GameActivity : AppCompatActivity() {
         BoardAdapter(applicationContext, gameViewModel).apply { binding.boardWrapper?.board?.adapter = this }
         MoveHistoryAdapter(applicationContext, gameViewModel).apply { binding.moveHistoryWrapper?.moveHistory?.adapter = this }
 
-        BeatenPiecesAdapter(applicationContext, gameViewModel, PieceColor.BLACK).apply { binding.playerOne?.beatenPieces?.adapter = this }
-        BeatenPiecesAdapter(applicationContext, gameViewModel, PieceColor.WHITE).apply { binding.playerTwo?.beatenPieces?.adapter = this }
+        addBeatenPiecesAdapter(binding.playerOne?.beatenPieces, gameViewModel, PieceColor.BLACK)
+        addBeatenPiecesAdapter(binding.playerTwo?.beatenPieces, gameViewModel, PieceColor.WHITE)
 
         // player handling
         val aiLevelString = intent.extras?.getString(TransferKeys.AI_LEVEL.value)
@@ -48,5 +51,13 @@ class GameActivity : AppCompatActivity() {
             //Spielerfarbe setzen
             gameViewModel.setPlayerInfo(PlayerInfo.WHITE)
         }
+    }
+
+    private fun addBeatenPiecesAdapter(binding: RecyclerView?, gameViewModel: GameViewModel, color: PieceColor) {
+        binding?.adapter = BeatenPiecesAdapter(applicationContext, gameViewModel, color)
+        binding?.layoutManager = BeatenPiecesLayoutManager(this)
+
+        binding?.addItemDecoration(BeatenPieceDecorator())
+        binding?.setHasFixedSize(true)
     }
 }
