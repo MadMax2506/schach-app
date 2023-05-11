@@ -1,8 +1,9 @@
 package janorschke.meyer.game
 
+import android.app.Application
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import janorschke.meyer.game.adapter.GameFieldAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
 import janorschke.meyer.game.board.Board
@@ -19,7 +20,7 @@ private const val LOG_TAG = "GameViewModel"
  * The GameViewModel represents the view model for a chess game.
  * It manages the game state, handles user input, and communicates with the view layer through a GameFieldAdapter object.
  */
-class GameViewModel : ViewModel() {
+class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val board: Board = Board()
     private val boardHistory: BoardHistory = BoardHistory()
     private var selectedPiecePosition: PiecePosition? = null
@@ -104,9 +105,24 @@ class GameViewModel : ViewModel() {
         if (toPosition in possibleMoves) {
             movePiece(fromPosition, toPosition)
 
+            var endOfGame = false
             if (BoardValidator.isKingCheckmate(board, piece!!.color.opponent())) {
-                Log.d("", "Checkmate")
+                Log.d(LOG_TAG, "Checkmate")
+                endOfGame = true
             }
+            if (BoardValidator.isStalemate(board, piece.color.opponent())) {
+                Log.d(LOG_TAG, "Stalemate")
+                endOfGame = true
+            }
+
+            if (endOfGame) {
+                Toast(getApplication<Application>().applicationContext).apply {
+                    this.duration = Toast.LENGTH_SHORT
+                    this.setText("End of Game")
+                    this.show()
+                }
+            }
+
             //TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/53
 
             setPlayerColor(playerInfo.nextPlayer())
