@@ -107,19 +107,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
             if (BoardValidator.isKingCheckmate(board, piece!!.color.opponent())) {
                 Log.d(LOG_TAG, "Checkmate")
-                Toast(getApplication<Application>().applicationContext).apply {
-                    this.duration = Toast.LENGTH_SHORT
-                    this.setText("End of Game")
-                    this.show()
-                }
             }
             if (BoardValidator.isStalemate(board, piece.color.opponent())) {
                 Log.d(LOG_TAG, "Stalemate")
-                Toast(getApplication<Application>().applicationContext).apply {
-                    this.duration = Toast.LENGTH_SHORT
-                    this.setText("End of Game")
-                    this.show()
-                }
             }
 
             //TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/53
