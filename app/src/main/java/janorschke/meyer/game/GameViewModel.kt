@@ -114,19 +114,20 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
         if (toPosition in possibleMoves) {
             movePiece(fromPosition, toPosition)
-
-            if (BoardValidator.isKingCheckmate(board, piece!!.color.opponent())) {
-                Log.d(LOG_TAG, "Checkmate")
-            }
-            if (BoardValidator.isStalemate(board, piece.color.opponent())) {
-                Log.d(LOG_TAG, "Stalemate")
-            }
-
-            //TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/53
-
+            handleEndOfGame(piece)
             setPlayerInfo(playerInfo.nextPlayer())
         }
         setSelectedPiece()
+    }
+
+    private fun handleEndOfGame(piece: Piece?) {
+        if (BoardValidator.isKingCheckmate(board, piece!!.color.opponent())) {
+            Log.d(LOG_TAG, "Checkmate")
+        }
+        if (BoardValidator.isStalemate(board, boardHistory, piece.color.opponent())) {
+            Log.d(LOG_TAG, "Stalemate")
+        }
+        //TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/53
     }
 
     /**
