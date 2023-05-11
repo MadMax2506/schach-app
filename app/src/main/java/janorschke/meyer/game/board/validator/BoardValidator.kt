@@ -37,5 +37,10 @@ abstract class BoardValidator {
                         }
                     }
         }
+
+        fun isStalemate(board: Board, opponent: PieceColor): Boolean {
+            // TODO
+            return false
+        }
     }
 }
