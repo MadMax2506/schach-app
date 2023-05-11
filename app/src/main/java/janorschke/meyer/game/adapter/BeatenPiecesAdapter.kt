@@ -8,10 +8,10 @@ import android.widget.BaseAdapter
 import janorschke.meyer.databinding.GameFieldBinding
 import janorschke.meyer.game.GameViewModel
 import janorschke.meyer.game.board.Board
-import janorschke.meyer.game.piece.PiecePosition
+import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.model.Piece
 
-class BeatenPiecesAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
+class BeatenPiecesAdapter(private val context: Context, private val gameViewModel: GameViewModel, private val color: PieceColor) : BaseAdapter() {
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
 
     init {
@@ -20,9 +20,9 @@ class BeatenPiecesAdapter(private val context: Context, private val gameViewMode
 
     override fun getCount(): Int = Board.SIZE
 
-    override fun getItem(index: Int): Piece? = gameViewModel.getField(PiecePosition(index))
+    override fun getItem(index: Int): Piece = gameViewModel.getBeatenPieceByColor(index, color)
 
-    override fun getItemId(position: Int): Long = position.toLong()
+    override fun getItemId(index: Int): Long = index.toLong()
 
     override fun getView(index: Int, convertView: View?, parent: ViewGroup?): View {
         lateinit var holder: ViewHolder
