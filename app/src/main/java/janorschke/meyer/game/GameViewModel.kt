@@ -111,10 +111,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             }
             if (BoardValidator.isStalemate(board, piece.color.opponent())) {
                 Log.d(LOG_TAG, "Stalemate")
-                endOfGame = true
-            }
-
-            if (endOfGame) {
                 Toast(getApplication<Application>().applicationContext).apply {
                     this.duration = Toast.LENGTH_SHORT
                     this.setText("End of Game")
