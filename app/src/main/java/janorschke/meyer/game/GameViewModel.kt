@@ -64,8 +64,7 @@ class GameViewModel : ViewModel() {
         getField(from)!!.move()
 
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/23
-        val boardMove = board.createBoardMove(from, to)
-        boardHistory.push(boardMove)
+        boardHistory.push(board.createBoardMove(from, to))
 
         moveHistoryAdapter.notifyDataSetChanged()
         Log.d(LOG_TAG, "move piece from ${from.getNotation()} to ${to.getNotation()}")
