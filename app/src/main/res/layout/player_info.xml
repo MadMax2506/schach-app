@@ -12,6 +12,9 @@
         android:textSize="@dimen/h1"
         android:textAlignment="center" />
 
-    <!-- TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/31 -->
+    <GridView
+        android:id="@+id/beatenPieces"
+        android:layout_width="match_parent"
+        android:layout_height="100sp" />
 
 </LinearLayout>
