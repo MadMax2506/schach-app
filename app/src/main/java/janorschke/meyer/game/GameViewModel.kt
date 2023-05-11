@@ -105,7 +105,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         if (toPosition in possibleMoves) {
             movePiece(fromPosition, toPosition)
 
-            var endOfGame = false
             if (BoardValidator.isKingCheckmate(board, piece!!.color.opponent())) {
                 Log.d(LOG_TAG, "Checkmate")
                 endOfGame = true
