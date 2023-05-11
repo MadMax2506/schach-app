@@ -2,7 +2,6 @@ package janorschke.meyer.game
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import janorschke.meyer.game.adapter.GameFieldAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
@@ -32,16 +31,17 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * @see Board.getField
      */
-    fun getField(position: PiecePosition): Piece? {
-        return board.getField(position)
-    }
+    fun getField(position: PiecePosition): Piece? = board.getField(position)
 
     /**
-     * @see BoardHistory.getHistory
+     * @see BoardHistory.numberOfMoves
      */
-    fun getBoardHistory(): MutableList<BoardMove> {
-        return boardHistory.getHistory()
-    }
+    fun numberOfMoves(): Int = boardHistory.numberOfMoves()
+
+    /**
+     * @see BoardHistory.getMoves
+     */
+    fun getMove(index: Int): BoardMove = boardHistory.getMove(index)
 
     fun setGameFieldAdapter(gameFieldAdapter: GameFieldAdapter) {
         this.gameFieldAdapter = gameFieldAdapter

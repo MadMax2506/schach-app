@@ -8,12 +8,22 @@ import janorschke.meyer.game.piece.model.Piece
 class BoardHistory {
     private val beatenPieces: MutableList<Piece> = mutableListOf()
     private val history: MutableList<BoardMove> = mutableListOf()
+
+    /**
+     * @return number of moves
+     */
     fun numberOfMoves(): Int = history.size
 
     /**
      * @return history of the moves as list
      */
-    fun getHistory(): MutableList<BoardMove> = history
+    fun getMoves(): MutableList<BoardMove> = history
+
+    /**
+     * @param index of the move
+     * @return move ons the related place
+     */
+    fun getMove(index: Int): BoardMove = history[index]
 
     /**
      * @param n number of moves
