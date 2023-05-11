@@ -15,11 +15,6 @@ class BoardHistory {
     fun numberOfMoves(): Int = history.size
 
     /**
-     * @return history of the moves as list
-     */
-    fun getMoves(): MutableList<BoardMove> = history
-
-    /**
      * @param index of the move
      * @return move ons the related place
      */

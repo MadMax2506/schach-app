@@ -39,7 +39,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun numberOfMoves(): Int = boardHistory.numberOfMoves()
 
     /**
-     * @see BoardHistory.getMoves
+     * @see BoardHistory.getMove
      */
     fun getMove(index: Int): BoardMove = boardHistory.getMove(index)
 
