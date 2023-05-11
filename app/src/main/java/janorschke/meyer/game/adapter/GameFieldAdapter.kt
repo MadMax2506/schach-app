@@ -21,28 +21,18 @@ import janorschke.meyer.game.piece.model.Piece
 
 class GameFieldAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
+
     private var possibleMoves: List<PiecePosition> = emptyList()
 
     init {
         gameViewModel.setGameFieldAdapter(this)
     }
 
-    override fun getCount(): Int {
-        return Board.SIZE
-    }
+    override fun getCount(): Int = Board.SIZE
 
-    override fun getItem(index: Int): Piece? {
-        return gameViewModel.getField(PiecePosition(index))
-    }
+    override fun getItem(index: Int): Piece? = gameViewModel.getField(PiecePosition(index))
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    fun setPossibleMoves(possibleMoves: List<PiecePosition>) {
-        this.possibleMoves = possibleMoves
-        notifyDataSetChanged()
-    }
+    override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(index: Int, convertView: View?, parent: ViewGroup?): View {
         lateinit var holder: ViewHolder
@@ -71,6 +61,11 @@ class GameFieldAdapter(private val context: Context, private val gameViewModel: 
         holder.binding.btn.setOnClickListener { gameViewModel.onFieldClicked(position) }
 
         return holder.view
+    }
+
+    fun setPossibleMoves(possibleMoves: List<PiecePosition>) {
+        this.possibleMoves = possibleMoves
+        notifyDataSetChanged()
     }
 
     private fun getViewBackgroundColor(position: PiecePosition): Int {

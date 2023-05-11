@@ -17,17 +17,11 @@ class MoveHistoryAdapter(private val context: Context, private val gameViewModel
         gameViewModel.setMoveHistoryAdapter(this)
     }
 
-    override fun getCount(): Int {
-        return gameViewModel.numberOfMoves()
-    }
+    override fun getCount(): Int = gameViewModel.numberOfMoves()
 
-    override fun getItem(index: Int): Any {
-        return gameViewModel.getMove(index)
-    }
+    override fun getItem(index: Int): Any = gameViewModel.getMove(index)
 
-    override fun getItemId(index: Int): Long {
-        return index.toLong()
-    }
+    override fun getItemId(index: Int): Long = index.toLong()
 
     override fun getView(index: Int, convertView: View?, parent: ViewGroup?): View {
         lateinit var holder: ViewHolder

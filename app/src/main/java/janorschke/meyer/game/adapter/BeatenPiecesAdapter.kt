@@ -11,7 +11,6 @@ import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Piece
 
-
 class BeatenPiecesAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
 
@@ -19,17 +18,11 @@ class BeatenPiecesAdapter(private val context: Context, private val gameViewMode
         gameViewModel.addBeatenPiecesAdapter(this)
     }
 
-    override fun getCount(): Int {
-        return Board.SIZE
-    }
+    override fun getCount(): Int = Board.SIZE
 
-    override fun getItem(index: Int): Piece? {
-        return gameViewModel.getField(PiecePosition(index))
-    }
+    override fun getItem(index: Int): Piece? = gameViewModel.getField(PiecePosition(index))
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(index: Int, convertView: View?, parent: ViewGroup?): View {
         lateinit var holder: ViewHolder
