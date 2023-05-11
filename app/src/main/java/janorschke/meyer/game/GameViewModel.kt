@@ -1,12 +1,14 @@
 package janorschke.meyer.game
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import janorschke.meyer.game.adapter.GameFieldAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
 import janorschke.meyer.game.board.BoardMove
+import janorschke.meyer.game.board.validator.BoardValidator
 import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.player.PlayerInfo
@@ -59,6 +61,8 @@ class GameViewModel : ViewModel() {
      * @param to target position
      */
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
+        getField(from)!!.move()
+
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/23
         boardHistory.push(board.createBoardMove(from, to))
 
@@ -75,7 +79,7 @@ class GameViewModel : ViewModel() {
      */
     fun onFieldClicked(position: PiecePosition) {
         val piece = board.getField(position)
-        val possibleMoves = piece?.possibleMoves(position) ?: emptyList()
+        val possibleMoves = piece?.possibleMoves(board, position) ?: emptyList()
         val isPlayersPiece = (piece?.color == playerInfo.color)
 
         when {
@@ -94,10 +98,17 @@ class GameViewModel : ViewModel() {
      * @param toPosition the target position to move the chess piece to
      */
     private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
-        val possibleMoves = board.getField(fromPosition)?.possibleMoves(fromPosition) ?: emptyList()
+        val piece = board.getField(fromPosition)
+        val possibleMoves = piece?.possibleMoves(board, fromPosition) ?: emptyList()
 
         if (toPosition in possibleMoves) {
             movePiece(fromPosition, toPosition)
+
+            if (BoardValidator.isKingCheckmate(board, piece!!.color.opponent())) {
+                Log.d("", "Checkmate")
+            }
+            //TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/53
+
             setPlayerColor(playerInfo.nextPlayer())
         }
         setSelectedPiece()

@@ -1,16 +1,16 @@
 package janorschke.meyer.game.piece.model
 
 import janorschke.meyer.game.board.Board
+import janorschke.meyer.game.board.validator.BoardValidator
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PieceInfo
 import janorschke.meyer.game.piece.PiecePosition
-import janorschke.meyer.game.piece.validator.FieldValidation
+import janorschke.meyer.game.piece.validator.FieldValidator
 
 /**
  * Represents a chess piece
  */
 abstract class Piece(
-        protected val board: Board,
         /**
          * Specifies piece color
          */
@@ -22,9 +22,28 @@ abstract class Piece(
         /**
          * If true, the piece has already moved
          */
-        var moved: Boolean = false
+        protected var moved: Boolean = false
 ) {
-    protected val fieldValidation = FieldValidation(this, board)
+    protected val fieldValidator = FieldValidator(color)
+
+    /**
+     * @param board current board instance
+     * @param position current position
+     * @param disableCheckCheck disables the check of a Check in Chess (optional: Default = false)
+     * @return possible moves
+     */
+    abstract fun possibleMoves(board: Board, position: PiecePosition, disableCheckCheck: Boolean = false): MutableList<PiecePosition>
+
+    /**
+     * @param board current board instance
+     * @param ownPosition position of the current piece
+     * @param kingPosition position of the opponent king
+     * @return true, if the piece gives check to the opponent king
+     */
+    open fun givesOpponentKingCheck(board: Board, ownPosition: PiecePosition, kingPosition: PiecePosition): Boolean {
+        val possibleMoves = this.possibleMoves(board, ownPosition, true)
+        return possibleMoves.contains(kingPosition)
+    }
 
     /**
      * Marks the piece as moved
@@ -34,12 +53,41 @@ abstract class Piece(
     }
 
     /**
-     * @param position current position
-     * @return possible moves
+     * @return true, if the piece has moved
      */
-    abstract fun possibleMoves(position: PiecePosition): MutableList<PiecePosition>
+    fun hasMoved(): Boolean = moved
 
-    fun isFieldUnavailable(position: PiecePosition): Boolean {
-        return !fieldValidation.isInBound(position) || fieldValidation.isTeammate(position)
+    /**
+     * @return true, if you're not allowed to go to that position
+     */
+    protected fun isFieldUnavailable(board: Board, position: PiecePosition): Boolean {
+        return !fieldValidator.isInBound(board, position) || fieldValidator.isTeammate(board, position)
+    }
+
+    /**
+     * Add the possible move if it is a valid move
+     *
+     * @param board current board instance
+     * @param currentPosition of the piece
+     * @param possiblePosition of the piece
+     * @param possibleMoves already added moves
+     * @param disableCheckCheck disables the check of a Check in Chess
+     */
+    protected fun addPossibleMove(
+            board: Board,
+            currentPosition: PiecePosition,
+            possiblePosition: PiecePosition,
+            possibleMoves: MutableList<PiecePosition>,
+            disableCheckCheck: Boolean,
+    ) {
+        if (disableCheckCheck) {
+            possibleMoves.add(possiblePosition)
+            return
+        }
+
+        Board(board).apply {
+            this.createBoardMove(currentPosition, possiblePosition)
+            if (!BoardValidator.isKingInCheck(this, color)) possibleMoves.add(possiblePosition)
+        }
     }
 }

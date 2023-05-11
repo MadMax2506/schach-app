@@ -5,15 +5,14 @@ import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PieceInfo
 import janorschke.meyer.game.piece.PiecePosition
 
-class King(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.KING) {
-    override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
+class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
+    override fun possibleMoves(board: Board, position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
-        for (i in -1..1) {
-            for (j in -1..1) {
-                val currentPosition = PiecePosition(position.row + i, position.col + j)
-                if (isFieldUnavailable(currentPosition)) continue
-                // TODO Steht der König im Schach
-                possibleMoves.add(currentPosition)
+        for (row in -1..1) {
+            for (col in -1..1) {
+                val possiblePosition = PiecePosition(position.row + row, position.col + col)
+                if (isFieldUnavailable(board, possiblePosition)) continue
+                addPossibleMove(board, position, possiblePosition, possibleMoves, disableCheckCheck)
             }
         }
         return possibleMoves

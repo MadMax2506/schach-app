@@ -5,29 +5,43 @@ import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PieceInfo
 import janorschke.meyer.game.piece.PiecePosition
 
-class Pawn(board: Board, color: PieceColor) : Piece(board, color, PieceInfo.PAWN) {
-    override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
-        val possibleMoves = mutableListOf<PiecePosition>()
-        val moveDirection = if (color == PieceColor.WHITE) -1 else 1
+class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
+    override fun givesOpponentKingCheck(board: Board, ownPosition: PiecePosition, kingPosition: PiecePosition): Boolean {
+        for (i in arrayOf(-1, 1)) {
+            PiecePosition(ownPosition.row + getMoveDirection(), ownPosition.col + i).apply {
+                if (this == kingPosition) return true
+            }
+        }
+        return false
+    }
 
-        // TODO Schach?
+    override fun possibleMoves(board: Board, position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
+        val possibleMoves = mutableListOf<PiecePosition>()
 
         // normal move
-        PiecePosition(position.row + moveDirection, position.col).apply {
-            if (fieldValidation.isEmpty(this)) possibleMoves.add(this)
+        PiecePosition(position.row + getMoveDirection(), position.col).apply {
+            if (fieldValidator.isEmpty(board, this)) {
+                addPossibleMove(board, position, this, possibleMoves, disableCheckCheck)
+            }
         }
 
         // move from base line
-        PiecePosition(position.row + 2 * moveDirection, position.col).apply {
-            if (!moved && fieldValidation.isEmpty(this)) possibleMoves.add(this)
+        PiecePosition(position.row + 2 * getMoveDirection(), position.col).apply {
+            if (!moved && fieldValidator.isEmpty(board, this)) {
+                addPossibleMove(board, position, this, possibleMoves, disableCheckCheck)
+            }
         }
 
         // beat
         for (i in arrayOf(-1, 1)) {
-            PiecePosition(position.row + moveDirection, position.col + i).apply {
-                if (!isFieldUnavailable(this) && fieldValidation.isOpponent(this)) possibleMoves.add(this)
+            PiecePosition(position.row + getMoveDirection(), position.col + i).apply {
+                if (!isFieldUnavailable(board, this) && fieldValidator.isOpponent(board, this)) {
+                    addPossibleMove(board, position, this, possibleMoves, disableCheckCheck)
+                }
             }
         }
         return possibleMoves
     }
+
+    private fun getMoveDirection() = if (color == PieceColor.WHITE) -1 else 1
 }

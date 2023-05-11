@@ -5,8 +5,8 @@ import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PieceInfo
 import janorschke.meyer.game.piece.PiecePosition
 
-class Bishop(board: Board, color: PieceColor) : LineMovingPiece(board, color, PieceInfo.BISHOP) {
-    override fun possibleMoves(position: PiecePosition): MutableList<PiecePosition> {
-        return possibleMovesOnDiagonalLine(position)
+class Bishop(color: PieceColor) : LineMovingPiece(color, PieceInfo.BISHOP) {
+    override fun possibleMoves(board: Board, position: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition> {
+        return possibleMovesOnDiagonalLine(board, position, disableCheckCheck)
     }
 }
