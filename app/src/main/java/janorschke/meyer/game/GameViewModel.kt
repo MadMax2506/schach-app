@@ -25,11 +25,11 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val board: Board = Board()
     private val boardHistory: BoardHistory = BoardHistory()
     private var selectedPiecePosition: PiecePosition? = null
+    private var beatenPiecesAdapters: MutableList<BeatenPiecesAdapter> = mutableListOf()
 
     private lateinit var playerInfo: PlayerInfo
     private lateinit var boardAdapter: BoardAdapter
     private lateinit var moveHistoryAdapter: MoveHistoryAdapter
-    private lateinit var beatenPiecesAdapters: MutableList<BeatenPiecesAdapter>
 
     /**
      * @see Board.getField
@@ -47,10 +47,18 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun getMove(index: Int): BoardMove = boardHistory.getMove(index)
 
     /**
+     * @see BoardHistory.numberOfBeatenPieceByColor
+     */
+    fun numberOfBeatenPieceByColor(color: PieceColor): Int = boardHistory.numberOfBeatenPieceByColor(color)
+
+    /**
      * @see BoardHistory.getMove
      */
     fun getBeatenPieceByColor(index: Int, color: PieceColor): Piece = boardHistory.getBeatenPieceByColor(index, color)
 
+    /**
+     * Set
+     */
     fun setBoardAdapter(boardAdapter: BoardAdapter) {
         this.boardAdapter = boardAdapter
     }
@@ -74,10 +82,14 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
         getField(from)!!.move()
 
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/23
-        boardHistory.push(board.createBoardMove(from, to))
+        val beatPiece = boardHistory.push(board.createBoardMove(from, to))
 
         moveHistoryAdapter.notifyDataSetChanged()
+        if (beatPiece) beatenPiecesAdapters.forEach {
+            it.notifyDataSetChanged()
+            Log.d("", "Update!!")
+        }
+
         Log.d(LOG_TAG, "move piece from ${from.getNotation()} to ${to.getNotation()}")
     }
 

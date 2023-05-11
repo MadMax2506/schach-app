@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import janorschke.meyer.R
 import janorschke.meyer.ai.AiLevel
 import janorschke.meyer.databinding.ActivityGameBinding
+import janorschke.meyer.game.adapter.BeatenPiecesAdapter
 import janorschke.meyer.game.adapter.BoardAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
+import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.player.PlayerInfo
 import janorschke.meyer.global.TransferKeys
 import janorschke.meyer.home.MainActivity
@@ -29,7 +31,8 @@ class GameActivity : AppCompatActivity() {
         BoardAdapter(applicationContext, gameViewModel).apply { binding.boardWrapper?.board?.adapter = this }
         MoveHistoryAdapter(applicationContext, gameViewModel).apply { binding.moveHistoryWrapper?.moveHistory?.adapter = this }
 
-        // TODO
+        BeatenPiecesAdapter(applicationContext, gameViewModel, PieceColor.BLACK).apply { binding.playerOne?.beatenPieces?.adapter = this }
+        BeatenPiecesAdapter(applicationContext, gameViewModel, PieceColor.WHITE).apply { binding.playerTwo?.beatenPieces?.adapter = this }
 
         // player handling
         val aiLevelString = intent.extras?.getString(TransferKeys.AI_LEVEL.value)
