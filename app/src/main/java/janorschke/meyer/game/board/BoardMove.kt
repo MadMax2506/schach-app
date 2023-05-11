@@ -1,7 +1,7 @@
 package janorschke.meyer.game.board
 
-import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Piece
+import janorschke.meyer.game.piece.utils.PiecePosition
 
 /**
  * Snapshot for {@link Board} after moving a piece

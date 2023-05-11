@@ -3,7 +3,7 @@ package janorschke.meyer.game.piece.model
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PieceInfo
-import janorschke.meyer.game.piece.PiecePosition
+import janorschke.meyer.game.piece.utils.PiecePosition
 
 class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
     override fun givesOpponentKingCheck(board: Board, ownPosition: PiecePosition, kingPosition: PiecePosition): Boolean {

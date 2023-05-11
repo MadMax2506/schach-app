@@ -2,7 +2,7 @@ package janorschke.meyer.game.board.validator
 
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.piece.PieceColor
-import janorschke.meyer.game.piece.PieceSequence
+import janorschke.meyer.game.piece.utils.PieceSequence
 
 abstract class BoardValidator {
     companion object {

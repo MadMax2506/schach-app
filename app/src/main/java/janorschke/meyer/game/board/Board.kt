@@ -1,8 +1,6 @@
 package janorschke.meyer.game.board
 
 import janorschke.meyer.game.piece.PieceColor
-import janorschke.meyer.game.piece.PiecePosition
-import janorschke.meyer.game.piece.PieceSequence
 import janorschke.meyer.game.piece.model.Bishop
 import janorschke.meyer.game.piece.model.King
 import janorschke.meyer.game.piece.model.Knight
@@ -10,6 +8,8 @@ import janorschke.meyer.game.piece.model.Pawn
 import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.piece.model.Queen
 import janorschke.meyer.game.piece.model.Rook
+import janorschke.meyer.game.piece.utils.PiecePosition
+import janorschke.meyer.game.piece.utils.PieceSequence
 
 class Board {
     companion object {
