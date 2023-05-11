@@ -109,8 +109,12 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             movePiece(fromPosition, toPosition)
 
             if (BoardValidator.isKingCheckmate(board, piece!!.color.opponent())) {
-                Log.d("", "Checkmate")
+                Log.d(LOG_TAG, "Checkmate")
             }
+            if (BoardValidator.isStalemate(board, piece.color.opponent())) {
+                Log.d(LOG_TAG, "Stalemate")
+            }
+
             //TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/53
 
             setPlayerInfo(playerInfo.nextPlayer())
