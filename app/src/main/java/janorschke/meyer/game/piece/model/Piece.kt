@@ -4,7 +4,7 @@ import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.validator.BoardValidator
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.PieceInfo
-import janorschke.meyer.game.piece.PiecePosition
+import janorschke.meyer.game.piece.utils.PiecePosition
 import janorschke.meyer.game.piece.validator.FieldValidator
 
 /**

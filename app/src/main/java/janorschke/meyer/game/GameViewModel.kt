@@ -3,14 +3,15 @@ package janorschke.meyer.game
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import janorschke.meyer.game.adapter.GameFieldAdapter
+import janorschke.meyer.game.adapter.BoardAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
 import janorschke.meyer.game.board.BoardMove
 import janorschke.meyer.game.board.validator.BoardValidator
-import janorschke.meyer.game.piece.PiecePosition
+import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.model.Piece
+import janorschke.meyer.game.piece.utils.PiecePosition
 import janorschke.meyer.game.player.PlayerInfo
 
 private const val LOG_TAG = "GameViewModel"
@@ -25,7 +26,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private var selectedPiecePosition: PiecePosition? = null
 
     private lateinit var playerInfo: PlayerInfo
-    private lateinit var gameFieldAdapter: GameFieldAdapter
+    private lateinit var boardAdapter: BoardAdapter
     private lateinit var moveHistoryAdapter: MoveHistoryAdapter
 
     /**
@@ -43,8 +44,13 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
      */
     fun getMove(index: Int): BoardMove = boardHistory.getMove(index)
 
-    fun setGameFieldAdapter(gameFieldAdapter: GameFieldAdapter) {
-        this.gameFieldAdapter = gameFieldAdapter
+    /**
+     * @see BoardHistory.getMove
+     */
+    fun getBeatenPieceByColor(index: Int, color: PieceColor): Piece = boardHistory.getBeatenPieceByColor(index, color)
+
+    fun setBoardAdapter(boardAdapter: BoardAdapter) {
+        this.boardAdapter = boardAdapter
     }
 
     fun setMoveHistoryAdapter(moveHistoryAdapter: MoveHistoryAdapter) {
@@ -126,6 +132,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
      */
     private fun setSelectedPiece(position: PiecePosition? = null, possibleMoves: List<PiecePosition> = emptyList()) {
         selectedPiecePosition = position
-        gameFieldAdapter.setPossibleMoves(possibleMoves)
+        boardAdapter.setPossibleMoves(possibleMoves)
     }
 }

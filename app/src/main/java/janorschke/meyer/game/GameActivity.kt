@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import janorschke.meyer.R
 import janorschke.meyer.ai.AiLevel
 import janorschke.meyer.databinding.ActivityGameBinding
-import janorschke.meyer.game.adapter.GameFieldAdapter
+import janorschke.meyer.game.adapter.BoardAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
 import janorschke.meyer.game.player.PlayerInfo
 import janorschke.meyer.global.TransferKeys
@@ -26,7 +26,7 @@ class GameActivity : AppCompatActivity() {
 
         val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
 
-        GameFieldAdapter(applicationContext, gameViewModel).apply { binding.boardWrapper?.board?.adapter = this }
+        BoardAdapter(applicationContext, gameViewModel).apply { binding.boardWrapper?.board?.adapter = this }
         MoveHistoryAdapter(applicationContext, gameViewModel).apply { binding.moveHistoryWrapper?.moveHistory?.adapter = this }
 
         // player handling

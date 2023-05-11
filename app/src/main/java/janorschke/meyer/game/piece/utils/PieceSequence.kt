@@ -1,5 +1,6 @@
-package janorschke.meyer.game.piece
+package janorschke.meyer.game.piece.utils
 
+import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.model.Piece
 
 /**

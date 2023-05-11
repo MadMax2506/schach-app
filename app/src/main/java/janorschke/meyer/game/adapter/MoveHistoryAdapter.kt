@@ -21,9 +21,7 @@ class MoveHistoryAdapter(private val context: Context, private val gameViewModel
         return gameViewModel.numberOfMoves()
     }
 
-    override fun getItem(index: Int): Any {
-        return gameViewModel.getMove(index)
-    }
+    override fun getItem(index: Int): BoardMove = gameViewModel.getMove(index)
 
     override fun getItemId(index: Int): Long {
         return index.toLong()
@@ -39,7 +37,7 @@ class MoveHistoryAdapter(private val context: Context, private val gameViewModel
             holder = convertView.tag as ViewHolder
         }
 
-        holder.binding.notation.text = getMoveNotation(gameViewModel.getMove(index))
+        holder.binding.notation.text = getMoveNotation(getItem(index))
 
         return holder.view
     }

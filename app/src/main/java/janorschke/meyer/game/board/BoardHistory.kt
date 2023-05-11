@@ -1,5 +1,6 @@
 package janorschke.meyer.game.board
 
+import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.model.Piece
 
 /**
@@ -16,7 +17,7 @@ class BoardHistory {
 
     /**
      * @param index of the move
-     * @return move ons the related place
+     * @return the nth moth starting by the first one
      */
     fun getMove(index: Int): BoardMove = history[index]
 
@@ -25,6 +26,13 @@ class BoardHistory {
      * @return the n last moves
      */
     fun getLastMoves(n: Int): List<BoardMove> = history.slice(IntRange(numberOfMoves() - 1 - n, numberOfMoves() - 1))
+
+    /**
+     * @param index of the move
+     * @param color of the current color
+     * @return the nth beaten piece of the color
+     */
+    fun getBeatenPieceByColor(index: Int, color: PieceColor): Piece = beatenPieces.filter { it.color == color }[index]
 
     /**
      * Add a new move to the history

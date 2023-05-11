@@ -15,16 +15,17 @@ import janorschke.meyer.databinding.GameFieldBinding
 import janorschke.meyer.game.GameViewModel
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.piece.PieceColor
-import janorschke.meyer.game.piece.PiecePosition
 import janorschke.meyer.game.piece.model.Piece
+import janorschke.meyer.game.piece.utils.PiecePosition
 
 
-class GameFieldAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
+class BoardAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
+
     private var possibleMoves: List<PiecePosition> = emptyList()
 
     init {
-        gameViewModel.setGameFieldAdapter(this)
+        gameViewModel.setBoardAdapter(this)
     }
 
     override fun getCount(): Int {
@@ -55,7 +56,7 @@ class GameFieldAdapter(private val context: Context, private val gameViewModel: 
         }
 
         val position = PiecePosition(index)
-        val piece = gameViewModel.getField(position)
+        val piece = getItem(index)
 
         // field background
         holder.view.setBackgroundResource(getViewBackgroundColor(position))

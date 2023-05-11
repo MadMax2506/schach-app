@@ -1,4 +1,4 @@
-package janorschke.meyer.game.piece
+package janorschke.meyer.game.piece.utils
 
 import janorschke.meyer.game.board.Board
 

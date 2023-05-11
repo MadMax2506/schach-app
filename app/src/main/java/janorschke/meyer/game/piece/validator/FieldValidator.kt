@@ -2,7 +2,7 @@ package janorschke.meyer.game.piece.validator
 
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.piece.PieceColor
-import janorschke.meyer.game.piece.PiecePosition
+import janorschke.meyer.game.piece.utils.PiecePosition
 
 /**
  * Validator for a specific field on the chess board for a piece
