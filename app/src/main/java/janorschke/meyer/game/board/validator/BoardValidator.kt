@@ -17,8 +17,12 @@ abstract class BoardValidator {
          * @return true, if King is in check
          */
         fun isKingInCheck(board: Board, color: PieceColor): Boolean {
+            val kingPosition = board.findKingPosition(color.opponent())
             return PieceSequence.piecesByColor(board.getFields(), color.opponent())
-                    .any { it.piece.givesOpponentKingCheck(board, it.position, board.findKingPosition(color)) }
+                    .any {
+                        it.piece.givesOpponentKingCheck(board, it.position,
+                                kingPosition)
+                    }
         }
 
         /**
