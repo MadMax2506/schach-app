@@ -29,6 +29,8 @@ class GameActivity : AppCompatActivity() {
         GameFieldAdapter(applicationContext, gameViewModel).apply { binding.boardWrapper?.board?.adapter = this }
         MoveHistoryAdapter(applicationContext, gameViewModel).apply { binding.moveHistoryWrapper?.moveHistory?.adapter = this }
 
+        // TODO
+
         // player handling
         val aiLevelString = intent.extras?.getString(TransferKeys.AI_LEVEL.value)
         if (aiLevelString == null) {
@@ -41,7 +43,7 @@ class GameActivity : AppCompatActivity() {
             binding.playerOne?.name?.text = resources.getString(aiLevel.resourceId)
             binding.playerTwo?.name?.text = resources.getString(R.string.default_player_name)
             //Spielerfarbe setzen
-            gameViewModel.setPlayerColor(PlayerInfo.WHITE)
+            gameViewModel.setPlayerInfo(PlayerInfo.WHITE)
         }
     }
 }

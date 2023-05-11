@@ -1,8 +1,9 @@
 package janorschke.meyer.game
 
+import android.app.Application
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import janorschke.meyer.game.adapter.BeatenPiecesAdapter
 import janorschke.meyer.game.adapter.GameFieldAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
 import janorschke.meyer.game.board.Board
@@ -19,7 +20,7 @@ private const val LOG_TAG = "GameViewModel"
  * The GameViewModel represents the view model for a chess game.
  * It manages the game state, handles user input, and communicates with the view layer through a GameFieldAdapter object.
  */
-class GameViewModel : ViewModel() {
+class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val board: Board = Board()
     private val boardHistory: BoardHistory = BoardHistory()
     private var selectedPiecePosition: PiecePosition? = null
@@ -27,6 +28,7 @@ class GameViewModel : ViewModel() {
     private lateinit var playerInfo: PlayerInfo
     private lateinit var gameFieldAdapter: GameFieldAdapter
     private lateinit var moveHistoryAdapter: MoveHistoryAdapter
+    private lateinit var beatenPiecesAdapters: MutableList<BeatenPiecesAdapter>
 
     /**
      * @see Board.getField
@@ -50,7 +52,9 @@ class GameViewModel : ViewModel() {
         this.moveHistoryAdapter = moveHistoryAdapter
     }
 
-    fun setPlayerColor(playerInfo: PlayerInfo) {
+    fun addBeatenPiecesAdapter(beatenPiecesAdapter: BeatenPiecesAdapter) = this.beatenPiecesAdapters.add(beatenPiecesAdapter)
+
+    fun setPlayerInfo(playerInfo: PlayerInfo) {
         this.playerInfo = playerInfo
     }
 
@@ -109,7 +113,7 @@ class GameViewModel : ViewModel() {
             }
             //TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/53
 
-            setPlayerColor(playerInfo.nextPlayer())
+            setPlayerInfo(playerInfo.nextPlayer())
         }
         setSelectedPiece()
     }
