@@ -4,11 +4,12 @@ import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
 import janorschke.meyer.game.board.BoardMove
 import janorschke.meyer.game.piece.PieceColor
+import janorschke.meyer.game.piece.model.King
 import janorschke.meyer.game.piece.utils.PieceSequence
 
 abstract class BoardValidator {
     companion object {
-        private const val N_MOVE_REPITIONS_FOR_STALEMATE = 10
+        private const val N_MOVE_REPETIONS_FOR_STALEMATE = 10
 
         /**
          * @param board current board instance
@@ -47,25 +48,35 @@ abstract class BoardValidator {
          * @param color of the
          */
         fun isStalemate(board: Board, boardHistory: BoardHistory, color: PieceColor): Boolean {
+            val pieceSeqByColor = PieceSequence.piecesByColor(board.getFields(), color)
+
             // check if no possible move for the given color is left
-//            if () {
-//                return true
-//            }
+            pieceSeqByColor.map { it.piece.possibleMoves(board, it.position) }
+                    .flatten()
+                    .toList()
+                    .isEmpty()
+                    .apply { if (this) return true }
 
             // check if not enough pieces
+            pieceSeqByColor.map { it.piece }
+                    .filterNot { it is King }
+                    .toList()
+                    .apply {
+                        if (this.isEmpty()) return true
+                        if (this.size == 1 && this.none { it.pieceInfo.valence == 3 }) return true
+                    }
 
-
-            // check move-repitition
-            if (N_MOVE_REPITIONS_FOR_STALEMATE >= boardHistory.numberOfMoves()) {
+            // check move-repetition
+            if (N_MOVE_REPETIONS_FOR_STALEMATE >= boardHistory.numberOfMoves()) {
                 return false
             }
 
-            val last10moves = boardHistory.getLastMoves(N_MOVE_REPITIONS_FOR_STALEMATE)
+            val last10moves = boardHistory.getLastMoves(N_MOVE_REPETIONS_FOR_STALEMATE)
 
-            val whiteRepitition = hasColorRepeatedMoves(last10moves, PieceColor.WHITE)
-            val blackRepitition = hasColorRepeatedMoves(last10moves, PieceColor.BLACK)
+            val whiteRepetition = hasColorRepeatedMoves(last10moves, PieceColor.WHITE)
+            val blackRepetition = hasColorRepeatedMoves(last10moves, PieceColor.BLACK)
 
-            return whiteRepitition && blackRepitition
+            return whiteRepetition && blackRepetition
         }
 
         private fun hasColorRepeatedMoves(moveHistory: List<BoardMove>, color: PieceColor): Boolean {
