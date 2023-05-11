@@ -2,6 +2,7 @@ package janorschke.meyer.game.board.validator
 
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
+import janorschke.meyer.game.board.BoardMove
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.utils.PieceSequence
 
@@ -60,28 +61,24 @@ abstract class BoardValidator {
             }
 
             val last10moves = boardHistory.getLastMoves(N_MOVE_REPITIONS_FOR_STALEMATE)
-            val whiteMoves = last10moves.filter { it.fromPiece.color == PieceColor.WHITE }
-            val firstWhiteMove = whiteMoves[0]
-            val secondWhiteMove = whiteMoves[1]
-            whiteMoves.forEachIndexed { i, move ->
-                if (i % 2 == 0) {
-                    if(firstWhiteMove != move) return false
-                } else {
-                    if(secondWhiteMove != move) return false
-                }
-            }
 
-            val blackMoves = last10moves.filter { it.fromPiece.color == PieceColor.BLACK }
-            val firstBlackMove = blackMoves[0]
-            val secondBlackMove = blackMoves[1]
-            blackMoves.forEachIndexed { i, move ->
-                if (i % 2 == 0) {
-                    if(firstBlackMove != move) return false
-                } else {
-                    if(secondBlackMove != move) return false
-                }
-            }
-            return true
+            val whiteRepitition = hasColorRepeatedMoves(last10moves, PieceColor.WHITE)
+            val blackRepitition = hasColorRepeatedMoves(last10moves, PieceColor.BLACK)
+
+            return whiteRepitition && blackRepitition
+        }
+
+        private fun hasColorRepeatedMoves(moveHistory: List<BoardMove>, color: PieceColor): Boolean {
+            return moveHistory.filter { it.fromPiece.color == color }
+                    .withIndex()
+                    .all {
+                        if (it.index % 2 == 0) {
+                            if (moveHistory[0] != it.value) return false
+                        } else {
+                            if (moveHistory[1] != it.value) return false
+                        }
+                        return true
+                    }
         }
     }
 }
