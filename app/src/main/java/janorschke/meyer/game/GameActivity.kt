@@ -34,8 +34,8 @@ class GameActivity : AppCompatActivity() {
         BoardAdapter(applicationContext, gameViewModel).apply { binding.boardWrapper?.board?.adapter = this }
         MoveHistoryAdapter(applicationContext, gameViewModel).apply { binding.moveHistoryWrapper?.moveHistory?.adapter = this }
 
-        addBeatenPiecesAdapter(binding.playerOne?.beatenPieces, gameViewModel, PieceColor.BLACK)
-        addBeatenPiecesAdapter(binding.playerTwo?.beatenPieces, gameViewModel, PieceColor.WHITE)
+        addBeatenPiecesAdapter(binding.playerTwo?.beatenPieces, gameViewModel, PieceColor.BLACK)
+        addBeatenPiecesAdapter(binding.playerOne?.beatenPieces, gameViewModel, PieceColor.WHITE)
 
         // player handling
         val aiLevelString = intent.extras?.getString(TransferKeys.AI_LEVEL.value)

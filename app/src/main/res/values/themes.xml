@@ -2,12 +2,10 @@
 
 <resources>
 
-    <style name="Theme.Schach" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.Schach" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:background">@color/dark_brown</item>
-        <!--TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/67 -->
-    </style>
-
-    <style name="Theme.Button" parent="TextAppearance.AppCompat.Widget.Button">
+        <item name="android:colorPrimaryDark">@color/dark_brown</item>
+        <item name="android:textColor">@color/black</item>
         <!--TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/67 -->
     </style>
 </resources>
