@@ -19,24 +19,26 @@ class GameOverDialog(private var winningPlayer: PieceColor?) : DialogFragment() 
                 if (winningPlayer != null) getString(R.string.gameover_dialog_text_win, winningPlayer)
                 else R.string.gameover_dialog_text_stalemate.toString()
 
-        // Set button click listeners
+        setButtonOnClickHandlers()
+
+        return MaterialAlertDialogBuilder(requireContext()).setView(binding.root).create()
+    }
+
+    private fun setButtonOnClickHandlers() {
         binding.buttonNewGame.setOnClickListener {
-            // Handle "New Game" button click
-            dismiss()
-        }
-        binding.buttonBackToMenu.setOnClickListener {
-            // Handle "Back to Main Menu" button click
-            dismiss()
-        }
-        binding.buttonChangeDifficulty.setOnClickListener {
-            // Handle "Change Difficulty" button click
-            dismiss()
-        }
-        binding.buttonShowBoard.setOnClickListener {
-            // Handle "Show Board" button click
             dismiss()
         }
 
-        return MaterialAlertDialogBuilder(requireContext()).setView(binding.root).create()
+        binding.buttonBackToMenu.setOnClickListener {
+            dismiss()
+        }
+
+        binding.buttonChangeDifficulty.setOnClickListener {
+            dismiss()
+        }
+
+        binding.buttonShowBoard.setOnClickListener {
+            dismiss()
+        }
     }
 }
