@@ -57,9 +57,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
      */
     fun getBeatenPieceByColor(index: Int, color: PieceColor): Piece = boardHistory.getBeatenPieceByColor(index, color)
 
-    /**
-     * Set
-     */
     fun setBoardAdapter(boardAdapter: BoardAdapter) {
         this.boardAdapter = boardAdapter
     }
