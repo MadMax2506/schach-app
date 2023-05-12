@@ -83,7 +83,8 @@ abstract class BoardValidator {
         }
 
         /**
-         * Checks with the PieceSequenzFilteredByColor if there are enough pieces to win
+         * Checks if the remaining colors can win the game
+         * @param pieceSeqByColor contains all pieces of an color
          */
         private fun checkIfPlayerHasEnoughPiecesToWin(pieceSeqByColor: Sequence<PieceSequence>): Boolean {
             pieceSeqByColor.map { it.piece }
