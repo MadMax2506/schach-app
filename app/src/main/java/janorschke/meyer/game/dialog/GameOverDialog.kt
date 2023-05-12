@@ -16,8 +16,8 @@ class GameOverDialog(private var winningPlayer: PieceColor?) : DialogFragment() 
         binding = DialogGameoverBinding.inflate(layoutInflater)
 
         binding.textGameOverDialog.text =
-                if (winningPlayer != null) getString(R.string.gameover_dialog_text_win, winningPlayer)
-                else R.string.gameover_dialog_text_stalemate.toString()
+                if (winningPlayer != null) resources.getString(R.string.gameover_dialog_text_win, winningPlayer)
+                else resources.getString(R.string.gameover_dialog_text_stalemate)
 
         setButtonOnClickHandlers()
 
