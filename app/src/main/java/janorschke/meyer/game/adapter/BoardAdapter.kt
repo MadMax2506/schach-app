@@ -1,24 +1,22 @@
 package janorschke.meyer.game.adapter
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.ColorMatrixColorFilter
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.LayerDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import androidx.core.content.ContextCompat
 import janorschke.meyer.R
 import janorschke.meyer.databinding.GameFieldBinding
 import janorschke.meyer.game.GameViewModel
 import janorschke.meyer.game.board.Board
-import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.model.Piece
+import janorschke.meyer.game.piece.utils.PieceDrawables
 import janorschke.meyer.game.piece.utils.PiecePosition
 
-
+/**
+ * Adapter for the board
+ */
 class BoardAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
 
@@ -28,22 +26,11 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
         gameViewModel.setBoardAdapter(this)
     }
 
-    override fun getCount(): Int {
-        return Board.SIZE
-    }
+    override fun getCount(): Int = Board.SIZE
 
-    override fun getItem(index: Int): Piece? {
-        return gameViewModel.getField(PiecePosition(index))
-    }
+    override fun getItem(index: Int): Piece? = gameViewModel.getField(PiecePosition(index))
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    fun setPossibleMoves(possibleMoves: List<PiecePosition>) {
-        this.possibleMoves = possibleMoves
-        notifyDataSetChanged()
-    }
+    override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(index: Int, convertView: View?, parent: ViewGroup?): View {
         lateinit var holder: ViewHolder
@@ -58,62 +45,26 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
         val position = PiecePosition(index)
         val piece = getItem(index)
 
-        // field background
         holder.view.setBackgroundResource(getViewBackgroundColor(position))
-
-        if (possibleMoves.contains(position)) {
-            holder.binding.btn.background = ContextCompat.getDrawable(context, R.drawable.chess_possiblemove)!!.mutate()
-        } else {
-            holder.binding.btn.setBackgroundColor(Color.TRANSPARENT)
-        }
-
-
         holder.binding.btn.background = getPieceBackground(piece, position)
         holder.binding.btn.setOnClickListener { gameViewModel.onFieldClicked(position) }
 
         return holder.view
     }
 
-    private fun getViewBackgroundColor(position: PiecePosition): Int {
-        return if (position.row % 2 != position.col % 2) R.color.brown else R.color.beige
+    fun setPossibleMoves(possibleMoves: List<PiecePosition>) {
+        this.possibleMoves = possibleMoves
+        notifyDataSetChanged()
     }
 
+    private fun getViewBackgroundColor(position: PiecePosition): Int = if (position.row % 2 != position.col % 2) R.color.brown else R.color.beige
+
     private fun getPieceBackground(piece: Piece?, position: PiecePosition): Drawable? {
+        val isPossibleMove = possibleMoves.contains(position)
         if (piece == null) {
-            return if (possibleMoves.contains(position)) {
-                ContextCompat.getDrawable(context, R.drawable.chess_possiblemove)!!.mutate()
-            } else null
+            return if (isPossibleMove) PieceDrawables.getPossibleMove(context) else null
         }
 
-        val pieceImage = ContextCompat.getDrawable(context, piece.pieceInfo.imageId)!!.mutate().also { drawable ->
-            if (piece.color == PieceColor.BLACK) {
-                floatArrayOf(
-                        -1.0f, 0f, 0f, 0f, 255f,  // red
-                        0f, -1.0f, 0f, 0f, 255f,  // green
-                        0f, 0f, -1.0f, 0f, 255f,  // blue
-                        0f, 0f, 0f, 1.0f, 0f // alpha
-                ).apply { drawable.colorFilter = ColorMatrixColorFilter(this) }
-            }
-        }
-
-        val layers = mutableListOf<Drawable>()
-        // Add beat indicator at the bottom
-        if (possibleMoves.contains(position)) {
-            ContextCompat.getDrawable(context, R.drawable.chess_possiblemove)!!
-                    .mutate()
-                    .also { drawable ->
-                        floatArrayOf(
-                                1f, 0.16f, 0.14f, 1f, 1f,  // red
-                                0f, 0f, 0f, 0f, 0f,  // green
-                                0f, 0f, 0f, 0f, 0f,  // blue
-                                1f, 1f, 1f, 1f, 1f // alpha
-                        ).apply { drawable.colorFilter = ColorMatrixColorFilter(this) }
-                    }.apply { layers.add(this) }
-        }
-
-        // Add figure at the top
-        layers.add(pieceImage)
-
-        return LayerDrawable(layers.toTypedArray())
+        return if (isPossibleMove) PieceDrawables.getAttackingPossibleMove(context, piece) else PieceDrawables.getPiece(context, piece)
     }
 }

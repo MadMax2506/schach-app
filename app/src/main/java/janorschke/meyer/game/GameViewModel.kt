@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import janorschke.meyer.game.adapter.BoardAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
+import janorschke.meyer.game.adapter.beaten.BeatenPiecesAdapter
 import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
 import janorschke.meyer.game.board.BoardMove
@@ -23,6 +24,8 @@ private const val LOG_TAG = "GameViewModel"
 class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val board: Board = Board()
     private val boardHistory: BoardHistory = BoardHistory()
+    private val beatenPiecesAdapters: MutableMap<PieceColor, BeatenPiecesAdapter> = mutableMapOf()
+
     private var selectedPiecePosition: PiecePosition? = null
 
     private lateinit var playerInfo: PlayerInfo
@@ -45,6 +48,11 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     fun getMove(index: Int): BoardMove = boardHistory.getMove(index)
 
     /**
+     * @see BoardHistory.numberOfBeatenPieceByColor
+     */
+    fun numberOfBeatenPieceByColor(color: PieceColor): Int = boardHistory.numberOfBeatenPieceByColor(color)
+
+    /**
      * @see BoardHistory.getMove
      */
     fun getBeatenPieceByColor(index: Int, color: PieceColor): Piece = boardHistory.getBeatenPieceByColor(index, color)
@@ -57,7 +65,11 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         this.moveHistoryAdapter = moveHistoryAdapter
     }
 
-    fun setPlayerColor(playerInfo: PlayerInfo) {
+    fun addBeatenPiecesAdapter(color: PieceColor, beatenPiecesAdapter: BeatenPiecesAdapter) {
+        this.beatenPiecesAdapters.put(color, beatenPiecesAdapter)
+    }
+
+    fun setPlayerInfo(playerInfo: PlayerInfo) {
         this.playerInfo = playerInfo
     }
 
@@ -70,11 +82,18 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
         getField(from)!!.move()
 
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/23
-        boardHistory.push(board.createBoardMove(from, to))
+        val boardMove = board.createBoardMove(from, to)
+        boardHistory.push(boardMove)
 
         moveHistoryAdapter.notifyDataSetChanged()
-        Log.d(LOG_TAG, "move piece from ${from.getNotation()} to ${to.getNotation()}")
+        if (boardMove.toPiece != null) {
+            Log.d(LOG_TAG, "${from.getNotation()} beat piece on ${to.getNotation()}")
+            boardMove.toPiece.color.apply {
+                beatenPiecesAdapters[this]?.notifyItemInserted(boardHistory.numberOfBeatenPieceByColor(this) - 1)
+            }
+        } else {
+            Log.d(LOG_TAG, "move piece from ${from.getNotation()} to ${to.getNotation()}")
+        }
     }
 
     /**
@@ -111,7 +130,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         if (toPosition in possibleMoves) {
             movePiece(fromPosition, toPosition)
             handleEndOfGame(piece)
-            setPlayerColor(playerInfo.nextPlayer())
+            setPlayerInfo(playerInfo.nextPlayer())
         }
         setSelectedPiece()
     }

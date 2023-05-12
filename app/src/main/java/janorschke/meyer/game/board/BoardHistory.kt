@@ -28,11 +28,23 @@ class BoardHistory {
     fun getLastMoves(n: Int): List<BoardMove> = history.slice(IntRange(numberOfMoves() - 1 - n, numberOfMoves() - 1))
 
     /**
+     * @param color of the pieces
+     * @return number of beaten pieces
+     */
+    fun numberOfBeatenPieceByColor(color: PieceColor): Int = getBeatenPiecesByColor(color).size
+
+    /**
      * @param index of the move
-     * @param color of the current color
+     * @param color of the pieces
      * @return the nth beaten piece of the color
      */
-    fun getBeatenPieceByColor(index: Int, color: PieceColor): Piece = beatenPieces.filter { it.color == color }[index]
+    fun getBeatenPieceByColor(index: Int, color: PieceColor): Piece = getBeatenPiecesByColor(color)[index]
+
+    /**
+     * @param color of the pieces
+     * @return all beaten pieces for a color
+     */
+    private fun getBeatenPiecesByColor(color: PieceColor): List<Piece> = beatenPieces.filter { it.color == color }
 
     /**
      * Add a new move to the history

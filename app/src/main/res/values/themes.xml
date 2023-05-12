@@ -2,7 +2,10 @@
 
 <resources>
 
-    <style name="Theme.Schach" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--TODO Light Theme erstellen-->
+    <style name="Theme.Schach" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:background">@color/dark_brown</item>
+        <item name="android:colorPrimaryDark">@color/dark_brown</item>
+        <item name="android:textColor">@color/black</item>
+        <!--TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/67 -->
     </style>
 </resources>
