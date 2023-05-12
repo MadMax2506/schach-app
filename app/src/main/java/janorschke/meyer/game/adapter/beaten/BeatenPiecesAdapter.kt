@@ -11,6 +11,9 @@ import janorschke.meyer.game.piece.utils.PieceDrawables
 
 /**
  * Adapter for the beaten pieces
+ * @param context
+ * @param gameViewModel
+ * @param color of the beaten pieces from the oppenent
  */
 class BeatenPiecesAdapter(private val context: Context, private val gameViewModel: GameViewModel, private val color: PieceColor) : RecyclerView.Adapter<BeatenPiecesAdapter.ViewHolder>() {
     data class ViewHolder(val binding: BeatenPieceBinding) : RecyclerView.ViewHolder(binding.root)

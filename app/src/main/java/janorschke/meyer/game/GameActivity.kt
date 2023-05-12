@@ -34,8 +34,8 @@ class GameActivity : AppCompatActivity() {
         BoardAdapter(applicationContext, gameViewModel).apply { binding.boardWrapper?.board?.adapter = this }
         MoveHistoryAdapter(applicationContext, gameViewModel).apply { binding.moveHistoryWrapper?.moveHistory?.adapter = this }
 
-        addBeatenPiecesAdapter(binding.playerTwo?.beatenPieces, gameViewModel, PieceColor.BLACK)
-        addBeatenPiecesAdapter(binding.playerOne?.beatenPieces, gameViewModel, PieceColor.WHITE)
+        addBeatenPiecesAdapter(binding.playerOne?.beatenPieces, gameViewModel, PieceColor.BLACK)
+        addBeatenPiecesAdapter(binding.playerTwo?.beatenPieces, gameViewModel, PieceColor.WHITE)
 
         // player handling
         val aiLevelString = intent.extras?.getString(TransferKeys.AI_LEVEL.value)
@@ -58,9 +58,11 @@ class GameActivity : AppCompatActivity() {
      * Add the adpater and all related decorator and layout manager to the view
      *
      * @param binding of the related beaten pieces view
+     * @param gameViewModel
+     * @param color of the own pieces
      */
     private fun addBeatenPiecesAdapter(binding: RecyclerView?, gameViewModel: GameViewModel, color: PieceColor) {
-        binding?.adapter = BeatenPiecesAdapter(applicationContext, gameViewModel, color)
+        binding?.adapter = BeatenPiecesAdapter(applicationContext, gameViewModel, color.opponent())
         binding?.layoutManager = BeatenPiecesLayoutManager(this)
 
         binding?.addItemDecoration(BeatenPieceDecorator())
