@@ -68,7 +68,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         this.moveHistoryAdapter = moveHistoryAdapter
     }
 
-    fun addBeatenPiecesAdapter(color: PieceColor, beatenPiecesAdapter: BeatenPiecesAdapter) = this.beatenPiecesAdapters.put(color, beatenPiecesAdapter)
+    fun addBeatenPiecesAdapter(color: PieceColor, beatenPiecesAdapter: BeatenPiecesAdapter) {
+        this.beatenPiecesAdapters.put(color, beatenPiecesAdapter)
+    }
 
     fun setPlayerInfo(playerInfo: PlayerInfo) {
         this.playerInfo = playerInfo
