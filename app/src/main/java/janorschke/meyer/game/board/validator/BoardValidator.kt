@@ -47,9 +47,12 @@ abstract class BoardValidator {
 
         /**
          * @param board current board instance
-         * @param color of the
+         * @param color pieceColor of the player that has the next turn
+         * @param boardHistory history to check the move-repetition from
          */
         fun isStalemate(board: Board, boardHistory: BoardHistory, color: PieceColor): Boolean {
+            if (isKingInCheck(board, color)) return false
+
             val pieceSeqByColor = PieceSequence.piecesByColor(board.getFields(), color)
 
             // check if no possible move for the given color is left
@@ -60,13 +63,11 @@ abstract class BoardValidator {
                     .apply { if (this) return true }
 
             // check if not enough pieces
-            pieceSeqByColor.map { it.piece }
-                    .filterNot { it is King }
-                    .toList()
-                    .apply {
-                        if (this.isEmpty()) return true
-                        if (this.size == 1 && this.none { it.pieceInfo.valence == 3 }) return true
-                    }
+            val firstPlayerHasEnoughPieces = checkIfPlayerHasEnoughPiecesToWin(pieceSeqByColor)
+            val secondPlayerHasEnoughPieces = checkIfPlayerHasEnoughPiecesToWin(
+                    PieceSequence.piecesByColor(board.getFields(), color.opponent()))
+
+            if (!firstPlayerHasEnoughPieces && !secondPlayerHasEnoughPieces) return true
 
             // check move-repetition
             if (N_MOVE_REPETIONS_FOR_STALEMATE >= boardHistory.numberOfMoves()) {
@@ -79,6 +80,20 @@ abstract class BoardValidator {
             val blackRepetition = hasColorRepeatedMoves(last10moves, PieceColor.BLACK)
 
             return whiteRepetition && blackRepetition
+        }
+
+        /**
+         * Checks with the PieceSequenzFilteredByColor if there are enough pieces to win
+         */
+        private fun checkIfPlayerHasEnoughPiecesToWin(pieceSeqByColor: Sequence<PieceSequence>): Boolean {
+            pieceSeqByColor.map { it.piece }
+                    .filterNot { it is King }
+                    .toList()
+                    .apply {
+                        if (this.isEmpty()) return false
+                        if (this.size == 1 && this[0].pieceInfo.valence == 3) return false
+                    }
+            return true
         }
 
         private fun hasColorRepeatedMoves(moveHistory: List<BoardMove>, color: PieceColor): Boolean {
