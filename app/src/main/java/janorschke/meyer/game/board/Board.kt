@@ -11,28 +11,20 @@ import janorschke.meyer.game.piece.model.Rook
 import janorschke.meyer.game.piece.utils.PiecePosition
 import janorschke.meyer.game.piece.utils.PieceSequence
 
-class Board {
-    companion object {
-        const val SIZE = 64
-        const val LINE_SIZE = 8
-    }
+/**
+ * Singleton class for the board
+ */
+object Board {
+    const val SIZE = 64
+    const val LINE_SIZE = 8
 
     private var fields: Array<Array<Piece?>> = Array(LINE_SIZE) { Array(LINE_SIZE) { null } }
 
-    constructor() {
+    init {
         fields[0] = generateBaseLine(PieceColor.BLACK)
         fields[1] = generatePawnLine(PieceColor.BLACK)
         fields[6] = generatePawnLine(PieceColor.WHITE)
         fields[7] = generateBaseLine(PieceColor.WHITE)
-    }
-
-    /**
-     * Copy constructor to create a new Board object based on an existing one.
-     *
-     * @param board Board object to copy
-     */
-    constructor(board: Board) {
-        this.fields = board.fields.map { it.copyOf() }.toTypedArray()
     }
 
     /**
@@ -104,5 +96,10 @@ class Board {
                 Knight(color),
                 Rook(color)
         )
+    }
+
+    class Simulation {
+        private val fields: Array<Array<Piece?>> = getFields().map { it.copyOf() }.toTypedArray()
+
     }
 }
