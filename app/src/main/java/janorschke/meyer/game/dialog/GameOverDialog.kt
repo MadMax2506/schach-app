@@ -15,7 +15,7 @@ class GameOverDialog(private var winningPlayer: PieceColor?) : DialogFragment() 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogGameoverBinding.inflate(layoutInflater)
 
-        binding.textGameOverDialog.text =
+        binding.textGameOverDialog?.text =
                 if (winningPlayer != null) resources.getString(R.string.gameover_dialog_text_win, winningPlayer)
                 else resources.getString(R.string.gameover_dialog_text_stalemate)
 
@@ -25,19 +25,19 @@ class GameOverDialog(private var winningPlayer: PieceColor?) : DialogFragment() 
     }
 
     private fun setButtonOnClickHandlers() {
-        binding.buttonNewGame.setOnClickListener {
+        binding.buttonNewGame?.setOnClickListener {
             dismiss()
         }
 
-        binding.buttonBackToMenu.setOnClickListener {
+        binding.buttonBackToMenu?.setOnClickListener {
             dismiss()
         }
 
-        binding.buttonChangeDifficulty.setOnClickListener {
+        binding.buttonChangeDifficulty?.setOnClickListener {
             dismiss()
         }
 
-        binding.buttonShowBoard.setOnClickListener {
+        binding.buttonShowBoard?.setOnClickListener {
             dismiss()
         }
     }
