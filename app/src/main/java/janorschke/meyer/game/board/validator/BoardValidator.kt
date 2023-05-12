@@ -13,7 +13,7 @@ abstract class BoardValidator {
 
         /**
          * @param board current board instance
-         * @param color of the king that is in check
+         * @param color of the king that can be in check
          * @return true, if King is in check
          */
         fun isKingInCheck(board: Board, color: PieceColor): Boolean {
@@ -25,7 +25,7 @@ abstract class BoardValidator {
 
         /**
          * @param board current board instance
-         * @param color of the king that is in checkmate
+         * @param color of the king that can be in checkmate
          * @return true if the King of the given color is in checkmate, false otherwise
          */
         fun isKingCheckmate(board: Board, color: PieceColor): Boolean {
