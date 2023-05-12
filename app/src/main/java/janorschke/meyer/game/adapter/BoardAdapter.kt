@@ -14,7 +14,9 @@ import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.piece.utils.PieceDrawables
 import janorschke.meyer.game.piece.utils.PiecePosition
 
-
+/**
+ * Adapter for the board
+ */
 class BoardAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
 

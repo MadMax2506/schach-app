@@ -5,6 +5,10 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 
+/**
+ * Decorates the items in the adapter
+ * @see BeatenPiecesAdapter
+ */
 class BeatenPieceDecorator : RecyclerView.ItemDecoration() {
     companion object {
         private const val SPACE = -60

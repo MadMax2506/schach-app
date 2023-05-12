@@ -48,11 +48,17 @@ class GameActivity : AppCompatActivity() {
 
             binding.playerOne?.name?.text = resources.getString(aiLevel.resourceId)
             binding.playerTwo?.name?.text = resources.getString(R.string.default_player_name)
+
             //Spielerfarbe setzen
             gameViewModel.setPlayerInfo(PlayerInfo.WHITE)
         }
     }
 
+    /**
+     * Add the adpater and all related decorator and layout manager to the view
+     *
+     * @param binding of the related beaten pieces view
+     */
     private fun addBeatenPiecesAdapter(binding: RecyclerView?, gameViewModel: GameViewModel, color: PieceColor) {
         binding?.adapter = BeatenPiecesAdapter(applicationContext, gameViewModel, color)
         binding?.layoutManager = BeatenPiecesLayoutManager(this)

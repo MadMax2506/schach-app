@@ -10,6 +10,9 @@ import janorschke.meyer.game.GameViewModel
 import janorschke.meyer.game.board.BoardMove
 import janorschke.meyer.game.piece.model.Pawn
 
+/**
+ * Adapter for the move history
+ */
 class MoveHistoryAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
     private data class ViewHolder(val binding: MoveHistoryFieldBinding, val view: View)
 
@@ -43,15 +46,16 @@ class MoveHistoryAdapter(private val context: Context, private val gameViewModel
      * @return a valid notion for the move
      */
     private fun getMoveNotation(move: BoardMove): String {
-        val sb = StringBuilder()
+        StringBuilder()
+                .apply {
+                    this.append(context.resources.getString(move.fromPiece.pieceInfo.notationId))
+                    if (move.toPiece != null) {
+                        if (move.fromPiece is Pawn) this.append(move.from.getColNotation())
+                        this.append("x")
+                    }
+                    this.append(move.to.getNotation())
 
-        sb.append(context.resources.getString(move.fromPiece.pieceInfo.notationId))
-        if (move.toPiece != null) {
-            if (move.fromPiece is Pawn) sb.append(move.from.getColNotation())
-            sb.append("x")
-        }
-        sb.append(move.to.getNotation())
-
-        return sb.toString()
+                    return this.toString()
+                }
     }
 }

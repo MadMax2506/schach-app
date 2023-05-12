@@ -9,6 +9,9 @@ import janorschke.meyer.game.GameViewModel
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.utils.PieceDrawables
 
+/**
+ * Adapter for the beaten pieces
+ */
 class BeatenPiecesAdapter(private val context: Context, private val gameViewModel: GameViewModel, private val color: PieceColor) : RecyclerView.Adapter<BeatenPiecesAdapter.ViewHolder>() {
     data class ViewHolder(val binding: BeatenPieceBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -17,14 +20,17 @@ class BeatenPiecesAdapter(private val context: Context, private val gameViewMode
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = BeatenPieceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        BeatenPieceBinding
+                .inflate(LayoutInflater.from(parent.context), parent, false)
+                .apply { return ViewHolder(this) }
     }
 
     override fun getItemCount(): Int = gameViewModel.numberOfBeatenPieceByColor(color)
 
     override fun onBindViewHolder(holder: ViewHolder, index: Int) {
-        val piece = PieceDrawables.getPiece(context, gameViewModel.getBeatenPieceByColor(index, color))
-        holder.binding.beatenPiece.setImageDrawable(piece)
+        PieceDrawables
+                .getPiece(context, gameViewModel.getBeatenPieceByColor(index, color))
+                .apply { holder.binding.beatenPiece.setImageDrawable(this) }
+
     }
 }
