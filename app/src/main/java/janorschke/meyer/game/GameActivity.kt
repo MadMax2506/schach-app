@@ -30,7 +30,7 @@ class GameActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
-
+        gameViewModel.setFragmentManager(supportFragmentManager)
         BoardAdapter(applicationContext, gameViewModel).apply { binding.boardWrapper?.board?.adapter = this }
         MoveHistoryAdapter(applicationContext, gameViewModel).apply { binding.moveHistoryWrapper?.moveHistory?.adapter = this }
 

@@ -43,7 +43,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_ai_kevin_otto"
-            android:theme="@style/MyTheme.Button"
+            android:theme="@style/LightTheme.Button"
             android:layout_width="@dimen/button_width"
             android:layout_height="wrap_content"
             android:text="@string/ai_kevin_otto"
@@ -53,7 +53,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_ai_max"
-            android:theme="@style/MyTheme.Button"
+            android:theme="@style/LightTheme.Button"
             android:layout_width="@dimen/button_width"
             android:layout_height="wrap_content"
             android:text="@string/ai_max"
@@ -72,7 +72,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_ai_chris"
-        android:theme="@style/MyTheme.Button"
+        android:theme="@style/LightTheme.Button"
         android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
         android:text="@string/ai_chris"

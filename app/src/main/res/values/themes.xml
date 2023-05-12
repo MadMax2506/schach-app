@@ -2,7 +2,7 @@
 
 <resources>
 
-    <style name="MyTheme.Schach" parent="Theme.Material3.Light.NoActionBar">
+    <style name="LightTheme.Schach" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:background">@color/dark_brown</item>
         <item name="android:colorPrimaryDark">@color/dark_brown</item>
         <item name="android:textColor">@color/black</item>
@@ -14,7 +14,7 @@
         <!--TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/67 -->
     </style>
 
-    <style name="MyTheme.Button" parent="ThemeOverlay.Material3.Button">
+    <style name="LightTheme.Button" parent="ThemeOverlay.Material3.Button">
         <item name="colorPrimary">@color/white</item>
         <item name="colorOnPrimary">@color/black</item>
     </style>

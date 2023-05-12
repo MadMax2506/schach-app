@@ -14,7 +14,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_ai"
-        android:theme="@style/MyTheme.Button"
+        android:theme="@style/LightTheme.Button"
         android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
         android:layout_marginTop="40sp"
@@ -24,7 +24,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_online"
-        android:theme="@style/MyTheme.Button"
+        android:theme="@style/LightTheme.Button"
         android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
         android:layout_marginTop="20sp"

@@ -2,6 +2,7 @@ package janorschke.meyer.game
 
 import android.app.Application
 import android.util.Log
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
 import janorschke.meyer.game.adapter.BoardAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
@@ -10,12 +11,14 @@ import janorschke.meyer.game.board.Board
 import janorschke.meyer.game.board.BoardHistory
 import janorschke.meyer.game.board.BoardMove
 import janorschke.meyer.game.board.validator.BoardValidator
+import janorschke.meyer.game.dialog.GameOverDialog
 import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.piece.utils.PiecePosition
 import janorschke.meyer.game.player.PlayerInfo
 
 private const val LOG_TAG = "GameViewModel"
+private const val GAMEOVER_DIALOG_TAG = "GameOverDialog"
 
 /**
  * The GameViewModel represents the view model for a chess game.
@@ -27,7 +30,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val beatenPiecesAdapters: MutableMap<PieceColor, BeatenPiecesAdapter> = mutableMapOf()
 
     private var selectedPiecePosition: PiecePosition? = null
-
+    private lateinit var fragmentManager: FragmentManager
     private lateinit var playerInfo: PlayerInfo
     private lateinit var boardAdapter: BoardAdapter
     private lateinit var moveHistoryAdapter: MoveHistoryAdapter
@@ -71,6 +74,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setPlayerInfo(playerInfo: PlayerInfo) {
         this.playerInfo = playerInfo
+    }
+
+    fun setFragmentManager(fragmentManager: FragmentManager) {
+        this.fragmentManager = fragmentManager
     }
 
     /**
@@ -138,10 +145,16 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private fun handleEndOfGame(piece: Piece?) {
         if (BoardValidator.isKingCheckmate(board, piece!!.color.opponent())) {
             Log.d(LOG_TAG, "Checkmate")
+            showGameOverDialog(winner = piece.color)
         } else if (BoardValidator.isStalemate(board, boardHistory, piece.color.opponent())) {
             Log.d(LOG_TAG, "Stalemate")
+            showGameOverDialog()
         }
-        //TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/53
+    }
+
+    private fun showGameOverDialog(winner: PieceColor? = null) {
+        val dialog = GameOverDialog(winner)
+        dialog.show(fragmentManager, GAMEOVER_DIALOG_TAG)
     }
 
     /**
