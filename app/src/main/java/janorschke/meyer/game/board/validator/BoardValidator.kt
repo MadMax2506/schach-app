@@ -48,7 +48,7 @@ abstract class BoardValidator {
         /**
          * @param board current board instance
          * @param color of the player who has the next turn
-         * @param boardHistory history to check the move-repetition from
+         * @param boardHistory to check the move-repetition
          */
         fun isStalemate(board: Board, boardHistory: BoardHistory, color: PieceColor): Boolean {
             if (isKingInCheck(board, color)) return false
