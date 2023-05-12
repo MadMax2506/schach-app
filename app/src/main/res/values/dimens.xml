@@ -10,4 +10,5 @@
     <dimen name="h2">30sp</dimen>
 
     <dimen name="dialog_button_text_size">16sp</dimen>
+    <dimen name="dialog_button_text_size_land">12sp</dimen>
 </resources>
