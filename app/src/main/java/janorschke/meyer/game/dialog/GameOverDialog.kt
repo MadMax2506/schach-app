@@ -36,9 +36,5 @@ class GameOverDialog(private var winningPlayer: PieceColor?) : DialogFragment() 
         binding.buttonChangeDifficulty?.setOnClickListener {
             dismiss()
         }
-
-        binding.buttonShowBoard?.setOnClickListener {
-            dismiss()
-        }
     }
 }
