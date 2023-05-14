@@ -1,16 +1,20 @@
 package janorschke.meyer.service.repository
 
 import android.util.Log
-import janorschke.meyer.service.model.Move
-import janorschke.meyer.service.model.board.BoardCopy
-import janorschke.meyer.service.model.board.BoardGame
-import janorschke.meyer.service.model.piece.Pawn
-import janorschke.meyer.service.model.piece.lineMoving.Queen
+import janorschke.meyer.enums.GameStatus
+import janorschke.meyer.service.model.game.Game
+import janorschke.meyer.service.model.game.board.Board
+import janorschke.meyer.service.model.game.board.History
+import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.game.piece.Pawn
+import janorschke.meyer.service.model.game.piece.lineMoving.Queen
 import janorschke.meyer.service.utils.board.PiecePosition
 
 private const val LOG_TAG = "BoardRepository"
 
-object BoardRepository {
+class BoardRepository(private val board: Board, private val history: History, private val game: Game) {
+    private val gameRepository: GameRepository = GameRepository(board, history, game)
+
     /**
      * Moves a chess piece from the source position to the target position, if the target position is valid.
      *
@@ -18,13 +22,16 @@ object BoardRepository {
      * @param toPosition the target position to move the chess piece to
      */
     fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
-        val piece = BoardGame.getField(fromPosition)
-        val possibleMoves = piece?.possibleMoves(BoardGame, fromPosition) ?: emptyList()
+        val piece = board.getField(fromPosition)
+        val possibleMoves = piece?.possibleMoves(board, fromPosition) ?: emptyList()
 
         if (toPosition in possibleMoves) {
             movePiece(fromPosition, toPosition)
-            GameRepository.checkEndOfGame(piece!!)
+            gameRepository.checkEndOfGame(piece!!)
+
+            if (game.getStatus() == GameStatus.RUNNING) game.setColor(game.getColor().opponent())
         }
+        game.setSelectedPiece()
     }
 
     /**
@@ -35,7 +42,7 @@ object BoardRepository {
      */
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
         val boardMove = createBoardMove(from, to)
-        janorschke.meyer.service.model.History.push(boardMove)
+        history.push(boardMove)
 
         if (boardMove.toPiece != null) {
             Log.d(LOG_TAG, "${from.getNotation()} beat piece on ${to.getNotation()}")
@@ -53,19 +60,19 @@ object BoardRepository {
      * @return board move
      */
     private fun createBoardMove(from: PiecePosition, to: PiecePosition): Move {
-        val fromPiece = BoardGame.getField(from)!!
-        val toPiece = BoardGame.getField(to)
+        val fromPiece = board.getField(from)!!
+        val toPiece = board.getField(to)
 
         fromPiece.move()
 
-        BoardGame.setField(from, null)
+        board.setField(from, null)
         if (fromPiece is Pawn && to.row == fromPiece.color.opponent().borderlineIndex) {
-            BoardGame.setField(to, Queen(fromPiece.color))
+            board.setField(to, Queen(fromPiece.color))
         } else {
-            BoardGame.setField(to, fromPiece)
+            board.setField(to, fromPiece)
         }
 
-        BoardCopy(BoardGame).getFields().apply {
+        Board(board).getFields().apply {
             return Move(this, from, to, fromPiece, toPiece)
         }
     }

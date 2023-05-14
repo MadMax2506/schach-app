@@ -1,6 +1,6 @@
-package janorschke.meyer.service.model
+package janorschke.meyer.service.model.game.board
 
-import janorschke.meyer.service.model.piece.Piece
+import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.utils.board.PiecePosition
 
 /**

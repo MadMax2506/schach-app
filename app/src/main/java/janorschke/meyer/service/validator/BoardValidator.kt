@@ -1,10 +1,10 @@
 package janorschke.meyer.service.validator
 
-import janorschke.meyer.service.model.Move
-import janorschke.meyer.service.model.board.Board
-import janorschke.meyer.service.model.board.BoardCopy
-import janorschke.meyer.service.model.piece.King
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.service.model.game.board.Board
+import janorschke.meyer.service.model.game.board.History
+import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.game.piece.King
 import janorschke.meyer.service.utils.piece.PieceSequence
 
 object BoardValidator {
@@ -36,7 +36,7 @@ object BoardValidator {
         PieceSequence.allPiecesByColor(board, color)
                 .forEach {
                     it.piece.possibleMoves(board, it.position).forEach { move ->
-                        BoardCopy(board).apply {
+                        Board(board).apply {
                             this.createBoardMove(it.position, move)
                             // if King is not in check after this move, then it's not checkmate
                             if (!isKingInCheck(this, color)) return false
@@ -48,12 +48,12 @@ object BoardValidator {
 
     /**
      * @param board instance
-     * @param boardHistory to check the move-repetition
+     * @param history to check the move-repetition
      * @param color of the player who has the next turn
      *
      * @return true, if the game with the rest pieces is stalemate
      */
-    fun isStalemate(board: Board, color: PieceColor): Boolean {
+    fun isStalemate(board: Board, history: History, color: PieceColor): Boolean {
         if (isKingInCheck(board, color)) return false
 
         val pieceSequence = PieceSequence.allPiecesByColor(board, color)
@@ -70,8 +70,8 @@ object BoardValidator {
         if (!checkIfPlayerCanWin(pieceSequence) && !checkIfPlayerCanWin(pieceSequenceOpponent)) return true
 
         // check move-repetition
-        if (N_MOVE_REPETITIONS_FOR_STALEMATE >= janorschke.meyer.service.model.History.numberOfMoves()) return false
-        janorschke.meyer.service.model.History.getLastMoves(N_MOVE_REPETITIONS_FOR_STALEMATE).apply {
+        if (N_MOVE_REPETITIONS_FOR_STALEMATE >= history.numberOfMoves()) return false
+        history.getLastMoves(N_MOVE_REPETITIONS_FOR_STALEMATE).apply {
             return hasColorRepeatedMoves(this, PieceColor.WHITE) && hasColorRepeatedMoves(this, PieceColor.BLACK)
         }
     }

@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import androidx.core.content.ContextCompat
 import janorschke.meyer.R
-import janorschke.meyer.service.model.piece.Piece
+import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.enums.PieceColor
 
 object PieceDrawables {

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import janorschke.meyer.databinding.BeatenPieceBinding
-import janorschke.meyer.service.model.piece.Piece
+import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.utils.piece.PieceDrawables
 
 /**

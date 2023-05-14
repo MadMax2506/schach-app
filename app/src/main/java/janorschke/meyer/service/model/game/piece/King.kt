@@ -1,8 +1,8 @@
-package janorschke.meyer.service.model.piece
+package janorschke.meyer.service.model.game.piece
 
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
-import janorschke.meyer.service.model.board.Board
+import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.utils.board.PiecePosition
 
 class King(color: PieceColor) : Piece(color, PieceInfo.KING) {

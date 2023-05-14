@@ -1,9 +1,8 @@
-package janorschke.meyer.service.model.piece
+package janorschke.meyer.service.model.game.piece
 
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
-import janorschke.meyer.service.model.board.Board
-import janorschke.meyer.service.model.board.BoardCopy
+import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.utils.board.PiecePosition
 import janorschke.meyer.service.validator.BoardValidator
 import janorschke.meyer.service.validator.FieldValidator
@@ -99,7 +98,7 @@ abstract class Piece(
             return
         }
 
-        BoardCopy(board).apply {
+        Board(board).apply {
             this.createBoardMove(currentPosition, possiblePosition)
             if (!BoardValidator.isKingInCheck(this, color)) possibleMoves.add(possiblePosition)
         }

@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import janorschke.meyer.databinding.MoveHistoryFieldBinding
-import janorschke.meyer.service.model.Move
-import janorschke.meyer.service.model.piece.Pawn
+import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.game.piece.Pawn
 
 /**
  * Adapter for the move history

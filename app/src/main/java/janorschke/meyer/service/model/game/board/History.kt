@@ -1,12 +1,12 @@
-package janorschke.meyer.service.model
+package janorschke.meyer.service.model.game.board
 
-import janorschke.meyer.service.model.piece.Piece
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.service.model.game.piece.Piece
 
 /**
  * Provides the history of all board moves and the beaten pieces by a move
  */
-object History {
+class History {
     private val beatenPieces: MutableList<Piece> = mutableListOf()
     private val moves: MutableList<Move> = mutableListOf()
 
@@ -30,15 +30,9 @@ object History {
 
     /**
      * @param color of the pieces
-     * @return number of beaten pieces
-     */
-    fun numberOfBeatenPieceByColor(color: PieceColor): Int = getBeatenPiecesByColor(color).size
-
-    /**
-     * @param color of the pieces
      * @return all beaten pieces for a color
      */
-    fun getBeatenPiecesByColor(color: PieceColor): MutableList<Piece> = beatenPieces.filter { it.color == color }.toMutableList()
+    fun getBeatenPieces(color: PieceColor): MutableList<Piece> = beatenPieces.filter { it.color == color }.toMutableList()
 
     /**
      * Add a new move to the history

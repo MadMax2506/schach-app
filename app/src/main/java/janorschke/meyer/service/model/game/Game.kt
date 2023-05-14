@@ -1,8 +1,20 @@
-package janorschke.meyer.service.model
+package janorschke.meyer.service.model.game
 
+import janorschke.meyer.enums.GameStatus
+import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.utils.board.PiecePosition
 
-object SelectedPiece {
+class Game {
+    /**
+     * Color of the player who is moving
+     */
+    private var color: PieceColor = PieceColor.WHITE
+
+    /**
+     * Current status of the game
+     */
+    private var status: GameStatus = GameStatus.RUNNING
+
     /**
      * Current selected position
      */
@@ -13,11 +25,23 @@ object SelectedPiece {
      */
     private var possibleMoves: MutableList<PiecePosition> = mutableListOf()
 
-    fun reset() {
-        selectedPosition = null
-        possibleMoves.clear()
+    /**
+     * Sets color of the current player
+     *
+     * @param color of the player
+     */
+    fun setColor(color: PieceColor) {
+        this.color = color
     }
 
+    /**
+     * Sets status of the game
+     *
+     * @param status of the game
+     */
+    fun setStatus(status: GameStatus) {
+        this.status = status
+    }
 
     /**
      * Sets the selected piece and shows the possible moves through the GameFieldAdapter.
@@ -29,6 +53,10 @@ object SelectedPiece {
         this.selectedPosition = selectedPosition
         this.possibleMoves = possibleMoves
     }
+
+    fun getColor() = color
+
+    fun getStatus() = status
 
     fun getSelectedPosition() = selectedPosition
 
