@@ -24,6 +24,7 @@ class GameOverDialog(private var winningPlayer: PieceColor? = null) : DialogFrag
 
     private lateinit var binding: DialogGameoverBinding
     private lateinit var aiLevel: AiLevel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         savedInstanceState?.let {
