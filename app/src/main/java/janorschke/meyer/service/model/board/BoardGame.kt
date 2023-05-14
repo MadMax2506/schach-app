@@ -4,17 +4,21 @@ import janorschke.meyer.service.model.piece.King
 import janorschke.meyer.service.model.piece.Knight
 import janorschke.meyer.service.model.piece.Pawn
 import janorschke.meyer.service.model.piece.Piece
-import janorschke.meyer.service.model.piece.PieceColor
+import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.piece.lineMoving.Bishop
 import janorschke.meyer.service.model.piece.lineMoving.Queen
 import janorschke.meyer.service.model.piece.lineMoving.Rook
 
 object BoardGame : Board() {
     init {
-        fields[0] = generateBaseLine(PieceColor.BLACK)
-        fields[1] = generatePawnLine(PieceColor.BLACK)
-        fields[6] = generatePawnLine(PieceColor.WHITE)
-        fields[7] = generateBaseLine(PieceColor.WHITE)
+        reset()
+    }
+
+    fun reset() {
+        boardFields[0] = generateBaseLine(PieceColor.BLACK)
+        boardFields[1] = generatePawnLine(PieceColor.BLACK)
+        boardFields[6] = generatePawnLine(PieceColor.WHITE)
+        boardFields[7] = generateBaseLine(PieceColor.WHITE)
     }
 
     /**

@@ -8,24 +8,45 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import janorschke.meyer.R
 import janorschke.meyer.databinding.GameFieldBinding
+import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.board.Board
 import janorschke.meyer.service.model.piece.Piece
 import janorschke.meyer.service.utils.board.PiecePosition
 import janorschke.meyer.service.utils.piece.PieceDrawables
+import janorschke.meyer.view.listener.GameFieldOnClickListener
+import janorschke.meyer.viewModel.BoardViewModel
+import janorschke.meyer.viewModel.SelectedPieceViewModel
 
 /**
  * Adapter to display a chess board
  *
  * @param context of the application
  */
-class BoardAdapter(private val context: Context) : BaseAdapter() {
+class BoardAdapter(
+        private val context: Context,
+        private val selectedPieceViewModel: SelectedPieceViewModel,
+        private val boardViewModel: BoardViewModel
+) : BaseAdapter() {
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
 
-    private var fields: Array<Array<Piece?>> = Array(Board.LINE_SIZE) { Array(Board.LINE_SIZE) { null } }
-    private var possibleMoves: MutableList<PiecePosition> = mutableListOf()
+    private var selectedPosition: PiecePosition? = null
+
+    private lateinit var playerColor: PieceColor
+    private lateinit var fields: Array<Array<Piece?>>
+    private lateinit var possibleMoves: MutableList<PiecePosition>
 
     fun setFields(fields: Array<Array<Piece?>>) {
         this.fields = fields
+        notifyDataSetChanged()
+    }
+
+    fun setPlayerColor(playerColor: PieceColor) {
+        this.playerColor = playerColor
+        notifyDataSetChanged()
+    }
+
+    fun setSelectedPosition(selectedPosition: PiecePosition?) {
+        this.selectedPosition = selectedPosition
         notifyDataSetChanged()
     }
 
@@ -57,7 +78,7 @@ class BoardAdapter(private val context: Context) : BaseAdapter() {
 
         holder.view.setBackgroundResource(getViewBackgroundColor(position))
         holder.binding.btn.background = getPieceBackground(piece, position)
-        // holder.binding.btn.setOnClickListener { gameViewModel.onFieldClicked(position) }
+        holder.binding.btn.setOnClickListener(GameFieldOnClickListener(position, fields, playerColor, selectedPosition, selectedPieceViewModel, boardViewModel))
 
         return holder.view
     }

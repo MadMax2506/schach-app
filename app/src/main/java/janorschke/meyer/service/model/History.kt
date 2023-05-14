@@ -1,7 +1,7 @@
 package janorschke.meyer.service.model
 
 import janorschke.meyer.service.model.piece.Piece
-import janorschke.meyer.service.model.piece.PieceColor
+import janorschke.meyer.enums.PieceColor
 
 /**
  * Provides the history of all board moves and the beaten pieces by a move

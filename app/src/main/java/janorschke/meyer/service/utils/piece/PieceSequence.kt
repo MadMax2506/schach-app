@@ -2,7 +2,7 @@ package janorschke.meyer.service.utils.piece
 
 import janorschke.meyer.service.model.board.Board
 import janorschke.meyer.service.model.piece.Piece
-import janorschke.meyer.service.model.piece.PieceColor
+import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.utils.board.PiecePosition
 
 /**

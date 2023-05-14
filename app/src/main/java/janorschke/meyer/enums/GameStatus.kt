@@ -1,4 +1,4 @@
-package janorschke.meyer.service.model.game
+package janorschke.meyer.enums
 
 enum class GameStatus {
     RUNNING,

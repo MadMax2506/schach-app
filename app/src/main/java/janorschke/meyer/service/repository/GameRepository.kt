@@ -1,8 +1,8 @@
 package janorschke.meyer.service.repository
 
 import janorschke.meyer.service.model.board.BoardGame
-import janorschke.meyer.service.model.game.Game
-import janorschke.meyer.service.model.game.GameStatus
+import janorschke.meyer.service.model.Game
+import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.service.model.piece.Piece
 import janorschke.meyer.service.validator.BoardValidator
 

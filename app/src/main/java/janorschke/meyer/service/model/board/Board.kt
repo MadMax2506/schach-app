@@ -2,7 +2,7 @@ package janorschke.meyer.service.model.board
 
 import janorschke.meyer.service.model.piece.King
 import janorschke.meyer.service.model.piece.Piece
-import janorschke.meyer.service.model.piece.PieceColor
+import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.utils.board.PiecePosition
 import janorschke.meyer.service.utils.piece.PieceSequence
 
@@ -15,21 +15,21 @@ abstract class Board {
         const val SIZE = LINE_SIZE * LINE_SIZE
     }
 
-    protected var fields: Array<Array<Piece?>> = Array(LINE_SIZE) { Array(LINE_SIZE) { null } }
+    protected var boardFields: Array<Array<Piece?>> = Array(LINE_SIZE) { Array(LINE_SIZE) { null } }
 
     /**
      * @return the whole chess board
      */
-    fun getFields(): Array<Array<Piece?>> = fields
+    fun getFields(): Array<Array<Piece?>> = boardFields
 
     /**
      * @param position target
      * @return piece on the target
      */
-    fun getField(position: PiecePosition): Piece? = fields[position.row][position.col]
+    fun getField(position: PiecePosition): Piece? = boardFields[position.row][position.col]
 
     fun setField(position: PiecePosition, piece: Piece?) {
-        fields[position.row][position.col] = piece
+        boardFields[position.row][position.col] = piece
     }
 
     /**
@@ -38,7 +38,7 @@ abstract class Board {
      * @return position of the King
      */
     fun findKingPosition(color: PieceColor): PiecePosition? {
-        return PieceSequence.allPiecesByColor(fields, color)
+        return PieceSequence.allPiecesByColor(boardFields, color)
                 .filter { it.piece is King }
                 .map { it.position }
                 .firstOrNull()

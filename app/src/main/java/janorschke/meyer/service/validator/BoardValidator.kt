@@ -4,7 +4,7 @@ import janorschke.meyer.service.model.Move
 import janorschke.meyer.service.model.board.Board
 import janorschke.meyer.service.model.board.BoardCopy
 import janorschke.meyer.service.model.piece.King
-import janorschke.meyer.service.model.piece.PieceColor
+import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.utils.piece.PieceSequence
 
 object BoardValidator {

@@ -2,7 +2,6 @@ package janorschke.meyer.viewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import janorschke.meyer.service.model.Move
 
@@ -12,10 +11,9 @@ import janorschke.meyer.service.model.Move
  * @param application for the current activity
  */
 class MoveHistoryViewModel(application: Application) : AndroidViewModel(application) {
-    private val boardHistoryObservable: LiveData<MutableList<Move>>
+    private val boardHistoryObservable: MutableLiveData<MutableList<Move>> = MutableLiveData()
 
     init {
-        boardHistoryObservable = MutableLiveData()
         boardHistoryObservable.value = janorschke.meyer.service.model.History.getMoves()
     }
 

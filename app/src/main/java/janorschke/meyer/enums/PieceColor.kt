@@ -1,4 +1,4 @@
-package janorschke.meyer.service.model.piece
+package janorschke.meyer.enums
 
 enum class PieceColor(val borderlineIndex: Int) {
     WHITE(7),

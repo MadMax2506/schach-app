@@ -2,10 +2,10 @@ package janorschke.meyer.viewModel.beatenPieces
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.service.model.History
 import janorschke.meyer.service.model.piece.Piece
-import janorschke.meyer.service.model.piece.PieceColor
 
 /**
  * View model for the beaten pieces
@@ -14,14 +14,11 @@ import janorschke.meyer.service.model.piece.PieceColor
  * @param color of the own pieces
  */
 class BeatenPiecesViewModel(application: Application, private val color: PieceColor) : AndroidViewModel(application) {
-    private val beatenPiecesObservable: LiveData<MutableList<Piece>>
-    private val pawnDifferentOpponent: LiveData<Int>
+    private val beatenPiecesObservable: MutableLiveData<MutableList<Piece>> = MutableLiveData()
+    private val pawnDifferentOpponent: MutableLiveData<Int> = MutableLiveData()
 
     init {
-        beatenPiecesObservable = MutableLiveData()
-        beatenPiecesObservable.value = janorschke.meyer.service.model.History.getBeatenPiecesByColor(color)
-
-        pawnDifferentOpponent = MutableLiveData()
+        beatenPiecesObservable.value = History.getBeatenPiecesByColor(color)
         pawnDifferentOpponent.value = 0 // TODO
     }
 

@@ -9,11 +9,9 @@ import janorschke.meyer.R
 import janorschke.meyer.databinding.ActivityGameBinding
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameMode
+import janorschke.meyer.enums.GameStatus
+import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.TransferKeys
-import janorschke.meyer.service.model.game.GameStatus
-import janorschke.meyer.service.model.piece.PieceColor
-import janorschke.meyer.service.model.player.AiPlayer
-import janorschke.meyer.service.model.player.Player
 import janorschke.meyer.view.adapter.BoardAdapter
 import janorschke.meyer.view.adapter.MoveHistoryAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPieceDecorator
@@ -22,6 +20,7 @@ import janorschke.meyer.view.adapter.beatenPieces.BeatenPiecesLayoutManager
 import janorschke.meyer.viewModel.BoardViewModel
 import janorschke.meyer.viewModel.GameViewModel
 import janorschke.meyer.viewModel.MoveHistoryViewModel
+import janorschke.meyer.viewModel.SelectedPieceViewModel
 import janorschke.meyer.viewModel.beatenPieces.BeatenPiecesViewModel
 
 private const val LOG_TAG = "GameActivity"
@@ -30,55 +29,66 @@ private const val LOG_TAG = "GameActivity"
  * Activity for an chess game
  */
 class GameActivity : AppCompatActivity() {
-    private val boardAdapter = BoardAdapter(applicationContext)
-    private val moveHistoryAdapter = MoveHistoryAdapter(applicationContext)
-    private val beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)
-    private val beatenPiecesByBlackAdapter = BeatenPiecesAdapter(applicationContext)
-
     private lateinit var binding: ActivityGameBinding
+
+    private lateinit var boardAdapter: BoardAdapter
+    private lateinit var moveHistoryAdapter: MoveHistoryAdapter
+    private lateinit var beatenPiecesByWhiteAdapter: BeatenPiecesAdapter
+    private lateinit var beatenPiecesByBlackAdapter: BeatenPiecesAdapter
+
+    private lateinit var gameViewModel: GameViewModel
+    private lateinit var selectedPieceViewModel: SelectedPieceViewModel
     private lateinit var boardViewModel: BoardViewModel
     private lateinit var moveHistoryViewModel: MoveHistoryViewModel
     private lateinit var beatenPiecesByWhiteViewModel: BeatenPiecesViewModel
     private lateinit var beatenPiecesByBlackViewModel: BeatenPiecesViewModel
-    private lateinit var gameViewModel: GameViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         // Player
-        var players: Pair<Player?, Player?> = Pair(null, null)
         intent.extras?.getString(TransferKeys.GAME_MODE.toString()).let { gameModeStr ->
-            if (gameModeStr == null) return
+            if (gameModeStr == null) throw IllegalArgumentException("Wrong game mode")
 
             enumValueOf<GameMode>(gameModeStr).apply {
-                players = when {
+                when {
                     this == GameMode.AI -> aiGameMode()
-                    else -> Pair(null, null)
                     // TODO further modes
                 }
             }
         }
         // TODO Handle Players
 
+        // General adapter
+        gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
+        selectedPieceViewModel = ViewModelProvider(this)[SelectedPieceViewModel::class.java]
+
         // Board
-        binding.boardWrapper?.board?.adapter = boardAdapter
         boardViewModel = ViewModelProvider(this)[BoardViewModel::class.java]
 
+        boardAdapter = BoardAdapter(applicationContext, selectedPieceViewModel, boardViewModel)
+        binding.boardWrapper?.board?.adapter = boardAdapter
+
         // Move History
-        binding.moveHistoryWrapper?.moveHistory?.adapter = moveHistoryAdapter
         moveHistoryViewModel = ViewModelProvider(this)[MoveHistoryViewModel::class.java]
 
-        // Beaten Pieces
-        beatenPiecesAdapter(binding.playerTwo?.beatenPieces, beatenPiecesByWhiteAdapter)
+        moveHistoryAdapter = MoveHistoryAdapter(applicationContext)
+        binding.moveHistoryWrapper?.moveHistory?.adapter = moveHistoryAdapter
+
+        // Beaten Pieces By White
         beatenPiecesByWhiteViewModel = BeatenPiecesViewModel(application, PieceColor.WHITE)
 
-        beatenPiecesAdapter(binding.playerOne?.beatenPieces, beatenPiecesByBlackAdapter)
-        beatenPiecesByBlackViewModel = BeatenPiecesViewModel(application, PieceColor.BLACK)
+        beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)
+        beatenPiecesAdapter(binding.playerTwo?.beatenPieces, beatenPiecesByWhiteAdapter)
 
-        // Game
-        gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
+        // Beaten Pieces By Black
+        beatenPiecesByBlackAdapter = BeatenPiecesAdapter(applicationContext)
+
+        beatenPiecesByBlackViewModel = BeatenPiecesViewModel(application, PieceColor.BLACK)
+        beatenPiecesAdapter(binding.playerOne?.beatenPieces, beatenPiecesByBlackAdapter)
 
         // Observer
         observeViewModels()
@@ -89,15 +99,13 @@ class GameActivity : AppCompatActivity() {
      *
      * @return a pair of the two players
      */
-    private fun aiGameMode(): Pair<Player?, Player?> {
+    private fun aiGameMode() {
         intent.extras?.getString(TransferKeys.AI_LEVEL.toString()).let { aiLevelStr ->
-            if (aiLevelStr == null) return Pair(null, null)
+            if (aiLevelStr == null) throw IllegalArgumentException("Wrong ai level")
 
             enumValueOf<AiLevel>(aiLevelStr).apply {
-                return Pair(
-                        AiPlayer(this.resourceId, PieceColor.BLACK),
-                        AiPlayer(R.string.default_player_name, PieceColor.WHITE)
-                )
+                binding.playerOne?.name?.text = resources.getString(this.resourceId)
+                binding.playerTwo?.name?.text = resources.getString(R.string.default_player_name)
             }
         }
     }
@@ -123,24 +131,29 @@ class GameActivity : AppCompatActivity() {
      * Observer for the view models
      */
     private fun observeViewModels() {
-        gameViewModel.getGameStatusPosition().observe(this) { status ->
+        gameViewModel.getGameStatus().observe(this) { status ->
             if (status == GameStatus.CHECKMATE) {
                 Log.d(LOG_TAG, "Checkmate")
 
-                // TODO Handle Checkmate
+                // TODO Show Checkmate
             } else if (status == GameStatus.STALEMATE) {
                 Log.d(LOG_TAG, "Stalemate")
 
-                // TODO Handle Stalemate
+                // TODO Show Stalemate
             }
         }
 
-        gameViewModel.getSelectedPosition().observe(this) { selectedPosition ->
-            Log.d(LOG_TAG, "Update selected positions")
-            // TODO
+        gameViewModel.getPlayerColor().observe(this) { playerColor ->
+            Log.d(LOG_TAG, "Update player color")
+            boardAdapter.setPlayerColor(playerColor)
         }
 
-        gameViewModel.getPossibleMovesObservable().observe(this) { moves ->
+        selectedPieceViewModel.getSelectedPosition().observe(this) { selectedPosition ->
+            Log.d(LOG_TAG, "Update selected positions")
+            boardAdapter.setSelectedPosition(selectedPosition)
+        }
+
+        selectedPieceViewModel.getPossibleMovesObservable().observe(this) { moves ->
             Log.d(LOG_TAG, "Update possible moves")
             boardAdapter.setPossibleMoves(moves)
         }

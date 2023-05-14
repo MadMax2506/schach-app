@@ -2,10 +2,11 @@ package janorschke.meyer.viewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import janorschke.meyer.service.model.board.BoardGame
 import janorschke.meyer.service.model.piece.Piece
+import janorschke.meyer.service.repository.BoardRepository
+import janorschke.meyer.service.utils.board.PiecePosition
 
 /**
  * View model of the board
@@ -13,11 +14,17 @@ import janorschke.meyer.service.model.piece.Piece
  * @param application for the current activity
  */
 class BoardViewModel(application: Application) : AndroidViewModel(application) {
-    private val fieldsObservable: LiveData<Array<Array<Piece?>>>
+    private val fieldsObservable: MutableLiveData<Array<Array<Piece?>>> = MutableLiveData()
 
     init {
-        fieldsObservable = MutableLiveData()
         fieldsObservable.value = BoardGame.getFields()
+    }
+
+    /**
+     * @see BoardRepository.tryToMovePiece
+     */
+    fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
+        BoardRepository.tryToMovePiece(fromPosition, toPosition)
     }
 
     /**

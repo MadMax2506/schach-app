@@ -2,7 +2,7 @@ package janorschke.meyer.viewModel.beatenPieces
 
 import android.app.Application
 import androidx.lifecycle.ViewModelProvider
-import janorschke.meyer.service.model.piece.PieceColor
+import janorschke.meyer.enums.PieceColor
 
 /**
  * Factory to generate a beaten pieces view model

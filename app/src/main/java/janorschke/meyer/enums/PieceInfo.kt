@@ -1,4 +1,4 @@
-package janorschke.meyer.service.model.piece
+package janorschke.meyer.enums
 
 import janorschke.meyer.R
 

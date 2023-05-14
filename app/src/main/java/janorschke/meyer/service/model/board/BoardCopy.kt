@@ -2,12 +2,17 @@ package janorschke.meyer.service.model.board
 
 import janorschke.meyer.service.model.Move
 import janorschke.meyer.service.model.piece.Pawn
+import janorschke.meyer.service.model.piece.Piece
 import janorschke.meyer.service.model.piece.lineMoving.Queen
 import janorschke.meyer.service.utils.board.PiecePosition
 
-class BoardCopy(board: Board) : Board() {
-    init {
-        fields = board.getFields().map { it.copyOf() }.toTypedArray()
+class BoardCopy : Board {
+    constructor(board: Board) {
+        boardFields = board.getFields().map { it.copyOf() }.toTypedArray()
+    }
+
+    constructor(fields: Array<Array<Piece?>>) {
+        boardFields = fields
     }
 
     /**
@@ -28,6 +33,6 @@ class BoardCopy(board: Board) : Board() {
             setField(to, fromPiece)
         }
 
-        return Move(fields.map { it.copyOf() }.toTypedArray(), from, to, fromPiece, toPiece)
+        return Move(boardFields.map { it.copyOf() }.toTypedArray(), from, to, fromPiece, toPiece)
     }
 }
