@@ -20,12 +20,10 @@ import janorschke.meyer.service.utils.board.PiecePosition
  */
 class GameViewModel(application: Application) : AndroidViewModel(application) {
     val playerColor: MutableLiveData<PieceColor> = MutableLiveData()
-    val status: MutableLiveData<GameStatus?> = MutableLiveData()
+    val status: MutableLiveData<GameStatus> = MutableLiveData()
     val selectedPosition: MutableLiveData<PiecePosition?> = MutableLiveData()
     val possibleMoves: MutableLiveData<MutableList<PiecePosition>> = MutableLiveData()
-
     val fields: MutableLiveData<Array<Array<Piece?>>> = MutableLiveData()
-
     val moves: MutableLiveData<MutableList<Move>> = MutableLiveData()
     val beatenPiecesByWhite: MutableLiveData<MutableList<Piece>> = MutableLiveData()
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
@@ -66,19 +64,53 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
      */
     private fun setValues() {
         // game settings
-        playerColor.value = game.getColor()
-        status.value = game.getStatus()
-        selectedPosition.value = game.getSelectedPosition()
-        possibleMoves.value = game.getPossibleMoves()
+        updateIfDifferent(playerColor, game.getColor())
+        updateIfDifferent(status, game.getStatus())
+        updateIfDifferent(selectedPosition, game.getSelectedPosition())
+        updateListIfDifferent(possibleMoves, game.getPossibleMoves())
 
         // board
-        fields.value = board.getFields()
+        updateDeepArrayIfDifferent(fields, board.getFields())
 
         // history
-        moves.value = history.getMoves()
-        beatenPiecesByWhite.value = history.getBeatenPieces(PieceColor.WHITE.opponent())
-        beatenPiecesByBlack.value = history.getBeatenPieces(PieceColor.BLACK.opponent())
+        updateListIfDifferent(moves, history.getMoves())
+        updateListIfDifferent(beatenPiecesByWhite, history.getBeatenPieces(PieceColor.WHITE.opponent()))
+        updateListIfDifferent(beatenPiecesByBlack, history.getBeatenPieces(PieceColor.BLACK.opponent()))
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/70
-        // pawnDifferent.value =
+        // updateIfDifferent(pawnDifferent, ...)
+    }
+
+    /**
+     * Updates the live data if it is different to the given data
+     *
+     * @param liveData
+     * @param data
+     */
+    private fun <T> updateIfDifferent(liveData: MutableLiveData<T>, data: T) {
+        if (liveData.value != data) {
+            liveData.value = data
+        }
+    }
+
+    /**
+     * Updates the mutable list of live data if it is different to the given data
+     *
+     * @param liveData
+     * @param data
+     */
+    private fun <T> updateListIfDifferent(liveData: MutableLiveData<MutableList<T>>, data: MutableList<T>) {
+        if (data.size != liveData.value?.size || data != liveData.value) liveData.value = data.toMutableList()
+    }
+
+    /**
+     * Updates the deep array of live data if it is different to the given data
+     *
+     * @param liveData
+     * @param data
+     */
+    private fun updateDeepArrayIfDifferent(liveData: MutableLiveData<Array<Array<Piece?>>>, data: Array<Array<Piece?>>) {
+        if (!liveData.value.contentDeepEquals(data)) {
+            liveData.value = data.map { it.copyOf() }.toTypedArray()
+        }
     }
 }

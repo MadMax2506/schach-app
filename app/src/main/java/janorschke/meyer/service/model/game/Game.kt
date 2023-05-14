@@ -50,8 +50,14 @@ class Game {
      * @param possibleMoves the possible moves for the selected piece
      */
     fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PiecePosition> = mutableListOf()) {
-        this.selectedPosition = selectedPosition
-        this.possibleMoves = possibleMoves
+        if (status == GameStatus.RUNNING) {
+            this.selectedPosition = selectedPosition
+            this.possibleMoves = possibleMoves
+            return
+        }
+        
+        this.selectedPosition = null
+        this.possibleMoves = mutableListOf()
     }
 
     fun getColor() = color

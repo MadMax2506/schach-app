@@ -1,5 +1,6 @@
 package janorschke.meyer.view.adapter.beatenPieces
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -18,8 +19,10 @@ class BeatenPiecesAdapter(private val context: Context) : RecyclerView.Adapter<B
 
     private var beatenPieces: MutableList<Piece> = mutableListOf()
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setBeatenPieces(beatenPieces: MutableList<Piece>) {
         this.beatenPieces = beatenPieces
+        this.notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
