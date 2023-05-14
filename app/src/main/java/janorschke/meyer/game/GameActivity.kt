@@ -44,7 +44,8 @@ class GameActivity : AppCompatActivity() {
             Log.e(LOG_TAG, "Invalid ai level")
         } else {
             val aiLevel = enumValueOf<AiLevel>(aiLevelString)
-            Log.d(LOG_TAG, "Start game with ai-level=${aiLevel}")
+            gameViewModel.setAiLevel(aiLevel)
+            Log.d(LOG_TAG, "Start game with ai-level=$aiLevel")
 
             binding.playerOne?.name?.text = resources.getString(aiLevel.resourceId)
             binding.playerTwo?.name?.text = resources.getString(R.string.default_player_name)

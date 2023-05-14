@@ -1,9 +1,11 @@
 package janorschke.meyer.game
 
 import android.app.Application
+import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
+import janorschke.meyer.ai.AiLevel
 import janorschke.meyer.game.adapter.BoardAdapter
 import janorschke.meyer.game.adapter.MoveHistoryAdapter
 import janorschke.meyer.game.adapter.beaten.BeatenPiecesAdapter
@@ -16,6 +18,7 @@ import janorschke.meyer.game.piece.PieceColor
 import janorschke.meyer.game.piece.model.Piece
 import janorschke.meyer.game.piece.utils.PiecePosition
 import janorschke.meyer.game.player.PlayerInfo
+import janorschke.meyer.global.TransferKeys
 
 private const val LOG_TAG = "GameViewModel"
 private const val GAMEOVER_DIALOG_TAG = "GameOverDialog"
@@ -34,6 +37,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private lateinit var playerInfo: PlayerInfo
     private lateinit var boardAdapter: BoardAdapter
     private lateinit var moveHistoryAdapter: MoveHistoryAdapter
+    private lateinit var aiLevel: AiLevel
 
     /**
      * @see Board.getField
@@ -59,6 +63,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
      * @see BoardHistory.getMove
      */
     fun getBeatenPieceByColor(index: Int, color: PieceColor): Piece = boardHistory.getBeatenPieceByColor(index, color)
+
+    fun setAiLevel(aiLevel: AiLevel) {
+        this.aiLevel = aiLevel
+    }
 
     fun setBoardAdapter(boardAdapter: BoardAdapter) {
         this.boardAdapter = boardAdapter
@@ -154,6 +162,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun showGameOverDialog(winner: PieceColor? = null) {
         val dialog = GameOverDialog(winner)
+        dialog.arguments = Bundle().apply {
+            putString(TransferKeys.AI_LEVEL.value, aiLevel.name)
+        }
         dialog.show(fragmentManager, GAMEOVER_DIALOG_TAG)
     }
 

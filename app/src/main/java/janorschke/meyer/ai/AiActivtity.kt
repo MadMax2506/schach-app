@@ -23,13 +23,12 @@ class AiActivtity : AppCompatActivity() {
     }
 
     private fun startGame(aiLevel: AiLevel) {
-        val intent = Intent(this, GameActivity::class.java).apply {
+        Intent(this, GameActivity::class.java).apply {
             Log.d(LOG_TAG, "Change activity")
-            putExtras(Bundle().apply {
-                putString(TransferKeys.AI_LEVEL.value, aiLevel.toString())
+            this.putExtras(Bundle().apply {
+                this.putString(TransferKeys.AI_LEVEL.value, aiLevel.name)
             })
+            startActivity(this)
         }
-
-        startActivity(intent)
     }
 }
