@@ -11,6 +11,7 @@ import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameMode
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.TransferKeys
+import janorschke.meyer.game.dialog.GameOverDialog
 import janorschke.meyer.view.adapter.BoardAdapter
 import janorschke.meyer.view.adapter.MoveHistoryAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPieceDecorator
@@ -106,6 +107,15 @@ class GameActivity : AppCompatActivity() {
         return adapter
     }
 
+    private val GAMEOVER_DIALOG_TAG = "GameOverDialog"
+    private fun showGameOverDialog(winner: PieceColor? = null) {
+        val dialog = GameOverDialog(winner)
+        dialog.arguments = Bundle().apply {
+            putString(TransferKeys.AI_LEVEL.name, aiLevel.name)
+        }
+        dialog.show(fragmentManager, GAMEOVER_DIALOG_TAG)
+    }
+
     /**
      * Observer for the view models
      *
@@ -115,10 +125,10 @@ class GameActivity : AppCompatActivity() {
         viewModel.status.observe(this) { status ->
             if (status == GameStatus.CHECKMATE) {
                 Log.d(LOG_TAG, "Checkmate")
-                // TODO Show Checkmate
+                showGameOverDialog()
             } else if (status == GameStatus.STALEMATE) {
                 Log.d(LOG_TAG, "Stalemate")
-                // TODO Show Stalemate
+                showGameOverDialog()
             }
         }
 
