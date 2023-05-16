@@ -157,8 +157,8 @@ class GameActivity : AppCompatActivity() {
             beatenPiecesByBlackAdapter.setBeatenPieces(beatenPieces)
         }
 
-        viewModel.pawnDifferent.observe(this) { pawnDifferent ->
-            Log.d(LOG_TAG, "Update pawn different")
+        viewModel.pawnDifference.observe(this) { pawnDifference ->
+            Log.d(LOG_TAG, "Update pawn difference")
             // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/70
         }
     }

@@ -27,7 +27,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     val moves: MutableLiveData<MutableList<Move>> = MutableLiveData()
     val beatenPiecesByWhite: MutableLiveData<MutableList<Piece>> = MutableLiveData()
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
-    val pawnDifferent: MutableLiveData<Pair<Int, Int>> = MutableLiveData()
+    val pawnDifference: MutableLiveData<Pair<Int, Int>> = MutableLiveData()
 
     private val game = Game()
     private val board = Board()
