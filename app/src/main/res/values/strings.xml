@@ -26,12 +26,4 @@
     <!-- game -->
     <string name="default_player_name">Du</string>
 
-    <!-- game-over dialog -->
-    <string name="gameover_dialog_new_game">Neues Spiel</string>
-    <string name="gameover_dialog_return_to_main_menu">Zurück zum Hauptmenü</string>
-    <string name="gameover_dialog_change_difficulty">Schwierigkeitsgrad ändern</string>
-    <string name="gameover_dialog_show_board">Spielbrett anzeigen</string>
-    <string name="gameover_dialog_text_win">Schachmatt! %s gewinnt!</string>
-    <string name="gameover_dialog_text_stalemate">Patt!</string>
-
 </resources>
