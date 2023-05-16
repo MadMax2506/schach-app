@@ -69,7 +69,7 @@ class GameActivity : AppCompatActivity() {
         beatenPiecesAdapter(binding.playerOne?.beatenPieces, beatenPiecesByBlackAdapter)
 
         // Observer
-        // IMPORTANT: It need to be after all adapter initializations
+        // IMPORTANT: It needs to be after all adapter initializations
         observeViewModel(gameViewModel)
     }
 
