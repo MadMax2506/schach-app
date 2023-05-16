@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.buttonAi?.setOnClickListener {
-            Log.d(LOG_TAG, "Start AiActivtity")
+            Log.d(LOG_TAG, "Start AiActivity")
             startActivity(Intent(this, AiActivity::class.java))
         }
 
