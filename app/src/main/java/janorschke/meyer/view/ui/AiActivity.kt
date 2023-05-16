@@ -9,7 +9,7 @@ import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameMode
 import janorschke.meyer.enums.TransferKeys
 
-private const val LOG_TAG = "AiActivtity"
+private const val LOG_TAG = "AiActivity"
 
 class AiActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAiBinding
