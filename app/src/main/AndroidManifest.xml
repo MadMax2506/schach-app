@@ -14,7 +14,7 @@
         android:theme="@style/MyTheme.Schach"
         tools:targetApi="31">
         <activity
-            android:name=".home.MainActivity"
+            android:name=".view.ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,9 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ai.AiActivtity" />
-        <activity android:name=".settings.SettingsActivity" />
-        <activity android:name=".game.GameActivity" />
+        <activity android:name=".view.ui.AiActivity" />
+        <activity android:name=".view.ui.SettingsActivity" />
+        <activity android:name=".view.ui.GameActivity" />
     </application>
 
 </manifest>
