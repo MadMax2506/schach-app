@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="beaten_pieces_size">30sp</dimen>
-    
+    <dimen name="beaten_pieces_list_width">30sp</dimen>
+
     <dimen name="h1">30sp</dimen>
     <dimen name="h2">20sp</dimen>
 </resources>
