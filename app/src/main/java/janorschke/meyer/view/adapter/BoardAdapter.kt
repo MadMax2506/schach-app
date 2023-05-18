@@ -28,7 +28,6 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
 
     private lateinit var fields: Array<Array<Piece?>>
     private lateinit var playerColor: PieceColor
-    private lateinit var otherPlayerColor: PieceColor
     private lateinit var possibleMoves: MutableList<PiecePosition>
 
     fun setSelectedPosition(selectedPosition: PiecePosition?) {
@@ -43,11 +42,6 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
 
     fun setPlayerColor(playerColor: PieceColor) {
         this.playerColor = playerColor
-        notifyDataSetChanged()
-    }
-
-    fun setOtherPlayerColor(playerColor: PieceColor) {
-        this.otherPlayerColor = playerColor
         notifyDataSetChanged()
     }
 

@@ -23,6 +23,7 @@ import janorschke.meyer.viewModel.GameViewModel
 import janorschke.meyer.viewModel.GameViewModelFactory
 
 private const val LOG_TAG = "GameActivity"
+private const val GAMEOVER_DIALOG_TAG: String = "GameOverDialog"
 
 /**
  * Activity for an chess game
@@ -35,6 +36,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var beatenPiecesByBlackAdapter: BeatenPiecesAdapter
     private lateinit var viewModel: GameViewModel
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,7 +45,7 @@ class GameActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Game Mode
-        intent.extras?.getString(TransferKeys.GAME_MODE.toString()).let { gameModeStr ->
+        intent.extras?.getString(TransferKeys.GAME_MODE.name).let { gameModeStr ->
             if (gameModeStr == null) throw IllegalArgumentException("Wrong game mode")
 
             enumValueOf<GameMode>(gameModeStr).apply {
@@ -117,9 +119,16 @@ class GameActivity : AppCompatActivity() {
         return adapter
     }
 
-    private val GAMEOVER_DIALOG_TAG: String = "GameOverDialog"
-    private fun showGameOverDialog(winningColor: PieceColor? = null, player: Player, otherPlayer: Player) {
-        GameOverDialog(winningColor, player, otherPlayer).show(supportFragmentManager, GAMEOVER_DIALOG_TAG)
+    /**
+     * Shows the GameOverDialog to display the game result.
+     *
+     * @param winningColor The color of the winning player. If the game is a Stalemate, the winningColor is null.
+     * @param playerWhite
+     * @param playerBlack
+     * @see GameOverDialog.onCreateDialog
+     */
+    private fun showGameOverDialog(winningColor: PieceColor? = null, playerWhite: Player, playerBlack: Player) {
+        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack).show(supportFragmentManager, GAMEOVER_DIALOG_TAG)
     }
 
     /**
@@ -129,21 +138,16 @@ class GameActivity : AppCompatActivity() {
         viewModel.status.observe(this) { status ->
             if (status == GameStatus.CHECKMATE) {
                 Log.d(LOG_TAG, "Checkmate")
-                showGameOverDialog(viewModel.player.value?.color, viewModel.player.value!!, viewModel.otherPlayer.value!!)
+                showGameOverDialog(viewModel.activePlayer.value?.color, viewModel.playerWhite.value!!, viewModel.playerBlack.value!!)
             } else if (status == GameStatus.STALEMATE) {
                 Log.d(LOG_TAG, "Stalemate")
-                showGameOverDialog(player = viewModel.player.value!!, otherPlayer = viewModel.otherPlayer.value!!)
+                showGameOverDialog(playerWhite = viewModel.playerWhite.value!!, playerBlack = viewModel.playerBlack.value!!)
             }
         }
 
-        viewModel.player.observe(this) { player ->
+        viewModel.activePlayer.observe(this) { player ->
             Log.d(LOG_TAG, "Update player")
             boardAdapter.setPlayerColor(player.color)
-        }
-
-        viewModel.otherPlayer.observe(this) { otherPlayer ->
-            Log.d(LOG_TAG, "Update other-player")
-            boardAdapter.setOtherPlayerColor(otherPlayer.color)
         }
 
         viewModel.selectedPosition.observe(this) { selectedPosition ->

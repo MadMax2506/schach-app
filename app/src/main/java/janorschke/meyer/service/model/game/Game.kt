@@ -6,8 +6,9 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.utils.board.PiecePosition
 
 class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) {
-    private val playerWhite = Player(PieceColor.WHITE, textResourceWhite, aiLevelWhite)
-    private val playerBlack = Player(PieceColor.BLACK, textResourceBlack, aiLevelBlack)
+
+    val playerWhite = Player(PieceColor.WHITE, textResourceWhite, aiLevelWhite)
+    val playerBlack = Player(PieceColor.BLACK, textResourceBlack, aiLevelBlack)
 
     /**
      * Color of the player who is moving
@@ -65,7 +66,6 @@ class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel
     }
 
     fun getPlayer() = if (color == PieceColor.WHITE) playerWhite else playerBlack
-    fun getOtherPlayer() = if (color == PieceColor.WHITE) playerBlack else playerWhite
 
     fun getColor() = color
 

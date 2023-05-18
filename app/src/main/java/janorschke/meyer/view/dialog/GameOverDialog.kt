@@ -1,7 +1,9 @@
 package janorschke.meyer.game.dialog
 
+import android.R.attr.value
 import android.app.Dialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.DialogFragment
@@ -16,19 +18,43 @@ import janorschke.meyer.service.model.game.Player
 import janorschke.meyer.view.ui.AiActivity
 import janorschke.meyer.view.ui.GameActivity
 import janorschke.meyer.view.ui.MainActivity
+import java.io.Serializable
 
 
 private const val LOG_TAG = "GameOverDialog"
 
-class GameOverDialog(private val winningColor: PieceColor?, private val player: Player, private val otherPlayer: Player) : DialogFragment() {
+class GameOverDialog : DialogFragment() {
     private lateinit var binding: DialogGameoverBinding
     private var aiLevel: AiLevel? = null
+
+    companion object {
+        private const val ARG_WINNINGCOLOR = "winningColor"
+        private const val ARG_PLAYERWHITE = "playerWhite"
+        private const val ARG_PLAYERBLACK = "playerBlack"
+
+        fun newInstance(winningColor: PieceColor?, playerWhite: Player, playerBlack: Player): GameOverDialog {
+            val dialog = GameOverDialog()
+            val args = Bundle().apply {
+                putSerializable(ARG_WINNINGCOLOR, winningColor)
+                putSerializable(ARG_PLAYERWHITE, playerWhite)
+                putSerializable(ARG_PLAYERBLACK, playerBlack)
+            }
+            dialog.arguments = args
+            return dialog
+        }
+    }
+
+    private inline fun <reified T : Serializable> Bundle.serializable(key: String): T? = when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializable(key, T::class.java)
+        else -> @Suppress("DEPRECATION") getSerializable(key) as? T
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = DialogGameoverBinding.inflate(layoutInflater)
 
-        val playerWhite = if (player.color == PieceColor.WHITE) player else otherPlayer
-        val playerBlack = if (player.color == PieceColor.BLACK) player else otherPlayer
+        val winningColor = arguments?.serializable(ARG_WINNINGCOLOR) as PieceColor?
+        val playerWhite = (arguments?.serializable(ARG_PLAYERWHITE) as Player?)!!
+        val playerBlack = (arguments?.serializable(ARG_PLAYERBLACK) as Player?)!!
 
         aiLevel = playerWhite.aiLevel ?: playerBlack.aiLevel
 
