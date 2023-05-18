@@ -23,13 +23,13 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
         PiecePosition(currentPosition.row + getMoveDirection(), currentPosition.col).apply {
             if (FieldValidator.isEmpty(board, this)) {
                 addPossibleMove(board, currentPosition, this, possibleMoves, disableCheckCheck)
-            }
-        }
 
-        // move from base line
-        PiecePosition(currentPosition.row + 2 * getMoveDirection(), currentPosition.col).apply {
-            if (!moved && FieldValidator.isEmpty(board, this)) {
-                addPossibleMove(board, currentPosition, this, possibleMoves, disableCheckCheck)
+                // move from base line only possible if normal move is also possible
+                PiecePosition(currentPosition.row + 2 * getMoveDirection(), currentPosition.col).apply {
+                    if (!moved && FieldValidator.isEmpty(board, this)) {
+                        addPossibleMove(board, currentPosition, this, possibleMoves, disableCheckCheck)
+                    }
+                }
             }
         }
 
