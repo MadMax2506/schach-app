@@ -68,17 +68,17 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         updateIfDifferent(playerColor, game.getColor())
         updateIfDifferent(status, game.getStatus())
         updateIfDifferent(selectedPosition, game.getSelectedPosition())
-        updateListIfDifferent(possibleMoves, game.getPossibleMoves())
+        updateIfDifferent(possibleMoves, game.getPossibleMoves())
 
         // board
-        updateDeepArrayIfDifferent(fields, board.getFields())
+        updateIfDifferent(fields, board.getFields())
+        updateIfDifferent(pawnDifferenceWhite, board.getPawnDifferenceByColor(PieceColor.WHITE))
+        updateIfDifferent(pawnDifferenceBlack, board.getPawnDifferenceByColor(PieceColor.BLACK))
 
         // history
-        updateListIfDifferent(moves, history.getMoves())
-        updateListIfDifferent(beatenPiecesByWhite, history.getBeatenPieces(PieceColor.WHITE.opponent()))
-        updateListIfDifferent(beatenPiecesByBlack, history.getBeatenPieces(PieceColor.BLACK.opponent()))
-        updateIfDifferent(pawnDifferenceWhite, history.getPawnDifferenceByColor(PieceColor.WHITE))
-        updateIfDifferent(pawnDifferenceBlack, history.getPawnDifferenceByColor(PieceColor.BLACK))
+        updateIfDifferent(moves, history.getMoves())
+        updateIfDifferent(beatenPiecesByWhite, history.getBeatenPieces(PieceColor.WHITE.opponent()))
+        updateIfDifferent(beatenPiecesByBlack, history.getBeatenPieces(PieceColor.BLACK.opponent()))
     }
 
     /**
@@ -99,7 +99,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
      * @param liveData
      * @param data
      */
-    private fun <T> updateListIfDifferent(liveData: MutableLiveData<MutableList<T>>, data: MutableList<T>) {
+    private fun <T> updateIfDifferent(liveData: MutableLiveData<MutableList<T>>, data: MutableList<T>) {
         if (data.size != liveData.value?.size || data != liveData.value) liveData.value = data.toMutableList()
     }
 
@@ -109,7 +109,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
      * @param liveData
      * @param data
      */
-    private fun updateDeepArrayIfDifferent(liveData: MutableLiveData<Array<Array<Piece?>>>, data: Array<Array<Piece?>>) {
+    private fun updateIfDifferent(liveData: MutableLiveData<Array<Array<Piece?>>>, data: Array<Array<Piece?>>) {
         if (!liveData.value.contentDeepEquals(data)) {
             liveData.value = data.map { it.copyOf() }.toTypedArray()
         }

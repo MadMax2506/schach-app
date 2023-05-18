@@ -120,8 +120,7 @@ class GameActivity : AppCompatActivity() {
     private fun setPawnDifference(binding: PlayerInfoBinding, value: Int) {
         when {
             value > 0 -> binding.pawnDifference.text = "+$value"
-            value < 0 -> binding.pawnDifference.text = "$value"
-            else -> binding.pawnDifference.text = "-"
+            else -> binding.pawnDifference.text = "$value"
         }
     }
 

@@ -35,19 +35,6 @@ class History {
     fun getBeatenPieces(color: PieceColor) = beatenPieces.filter { it.color == color }.toMutableList()
 
     /**
-     * @param color of the pieces
-     * @return pawn difference of the pieces by the given color
-     */
-    fun getPawnDifferenceByColor(color: PieceColor): Int {
-        if (beatenPieces.size == 0) return 0
-
-        val valanceOfOpponentBeatenPieces = getBeatenPieces(color.opponent()).sumOf { it.pieceInfo.valence }
-        val valenceOfOwnBeatenPieces = getBeatenPieces(color).sumOf { it.pieceInfo.valence }
-
-        return valanceOfOpponentBeatenPieces - valenceOfOwnBeatenPieces
-    }
-
-    /**
      * Add a new move to the history
      *
      * @param move of a piece
