@@ -143,7 +143,7 @@ class GameActivity : AppCompatActivity() {
 
         viewModel.otherPlayer.observe(this) { otherPlayer ->
             Log.d(LOG_TAG, "Update other-player")
-            boardAdapter.setPlayerColor(otherPlayer.color)
+            boardAdapter.setOtherPlayerColor(otherPlayer.color)
         }
 
         viewModel.selectedPosition.observe(this) { selectedPosition ->
