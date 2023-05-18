@@ -40,7 +40,7 @@ class History {
      * @param move of a piece
      */
     fun push(move: Move) {
-        if (move.toPiece != null) beatenPieces.add(move.toPiece)
+        if (move.toPiece != null) beatenPieces.also { it.add(move.toPiece) }.sortByDescending { it.pieceInfo.valence }
         moves.add(move)
     }
 
