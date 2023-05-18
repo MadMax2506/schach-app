@@ -10,14 +10,17 @@ import janorschke.meyer.databinding.ActivityGameBinding
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameMode
 import janorschke.meyer.enums.GameStatus
+import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.TransferKeys
 import janorschke.meyer.game.dialog.GameOverDialog
+import janorschke.meyer.service.model.game.Player
 import janorschke.meyer.view.adapter.BoardAdapter
 import janorschke.meyer.view.adapter.MoveHistoryAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPieceDecorator
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPiecesAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPiecesLayoutManager
 import janorschke.meyer.viewModel.GameViewModel
+import janorschke.meyer.viewModel.GameViewModelFactory
 
 private const val LOG_TAG = "GameActivity"
 
@@ -30,6 +33,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var moveHistoryAdapter: MoveHistoryAdapter
     private lateinit var beatenPiecesByWhiteAdapter: BeatenPiecesAdapter
     private lateinit var beatenPiecesByBlackAdapter: BeatenPiecesAdapter
+    private lateinit var viewModel: GameViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +41,6 @@ class GameActivity : AppCompatActivity() {
         // Binding
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // View Model
-        val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
 
         // Game Mode
         intent.extras?.getString(TransferKeys.GAME_MODE.toString()).let { gameModeStr ->
@@ -54,7 +55,7 @@ class GameActivity : AppCompatActivity() {
         }
 
         // Board
-        boardAdapter = BoardAdapter(applicationContext, gameViewModel)
+        boardAdapter = BoardAdapter(applicationContext, viewModel)
         binding.boardWrapper?.board?.adapter = boardAdapter
 
         // Move History
@@ -71,7 +72,7 @@ class GameActivity : AppCompatActivity() {
 
         // Observer
         // IMPORTANT: It needs to be after all adapter initializations
-        observeViewModel(gameViewModel)
+        observeViewModel()
     }
 
     /**
@@ -80,12 +81,21 @@ class GameActivity : AppCompatActivity() {
      * @return a pair of the two players
      */
     private fun aiGameMode() {
-        intent.extras?.getString(TransferKeys.AI_LEVEL.toString()).let { aiLevelStr ->
+        intent.extras?.getString(TransferKeys.AI_LEVEL.name).let { aiLevelStr ->
             if (aiLevelStr == null) throw IllegalArgumentException("Wrong ai level")
 
-            enumValueOf<AiLevel>(aiLevelStr).apply {
-                binding.playerOne?.name?.text = resources.getString(this.resourceId)
-                binding.playerTwo?.name?.text = resources.getString(R.string.default_player_name)
+            enumValueOf<AiLevel>(aiLevelStr).let {
+                val textResourceWhite = R.string.default_player_name
+                val textResourceBlack = it.resourceId
+
+                // ViewModel
+                viewModel = ViewModelProvider(
+                        this,
+                        GameViewModelFactory(application, textResourceWhite, textResourceBlack, null, it)
+                )[GameViewModel::class.java]
+
+                binding.playerOne?.name?.text = resources.getString(textResourceBlack)
+                binding.playerTwo?.name?.text = resources.getString(textResourceWhite)
             }
         }
     }
@@ -107,34 +117,33 @@ class GameActivity : AppCompatActivity() {
         return adapter
     }
 
-    private val GAMEOVER_DIALOG_TAG = "GameOverDialog"
-    private fun showGameOverDialog(winner: PieceColor? = null) {
-        val dialog = GameOverDialog(winner)
-        dialog.arguments = Bundle().apply {
-            putString(TransferKeys.AI_LEVEL.name, aiLevel.name)
-        }
-        dialog.show(fragmentManager, GAMEOVER_DIALOG_TAG)
+    private val GAMEOVER_DIALOG_TAG: String = "GameOverDialog"
+    private fun showGameOverDialog(winningColor: PieceColor? = null, player: Player, otherPlayer: Player) {
+        GameOverDialog(winningColor, player, otherPlayer).show(supportFragmentManager, GAMEOVER_DIALOG_TAG)
     }
 
     /**
      * Observer for the view models
-     *
-     * @param viewModel of the activity
      */
-    private fun observeViewModel(viewModel: GameViewModel) {
+    private fun observeViewModel() {
         viewModel.status.observe(this) { status ->
             if (status == GameStatus.CHECKMATE) {
                 Log.d(LOG_TAG, "Checkmate")
-                showGameOverDialog()
+                showGameOverDialog(viewModel.player.value?.color, viewModel.player.value!!, viewModel.otherPlayer.value!!)
             } else if (status == GameStatus.STALEMATE) {
                 Log.d(LOG_TAG, "Stalemate")
-                showGameOverDialog()
+                showGameOverDialog(player = viewModel.player.value!!, otherPlayer = viewModel.otherPlayer.value!!)
             }
         }
 
-        viewModel.playerColor.observe(this) { playerColor ->
-            Log.d(LOG_TAG, "Update player color")
-            boardAdapter.setPlayerColor(playerColor)
+        viewModel.player.observe(this) { player ->
+            Log.d(LOG_TAG, "Update player")
+            boardAdapter.setPlayerColor(player.color)
+        }
+
+        viewModel.otherPlayer.observe(this) { otherPlayer ->
+            Log.d(LOG_TAG, "Update other-player")
+            boardAdapter.setPlayerColor(otherPlayer.color)
         }
 
         viewModel.selectedPosition.observe(this) { selectedPosition ->

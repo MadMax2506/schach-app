@@ -3,9 +3,11 @@ package janorschke.meyer.viewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.Game
+import janorschke.meyer.service.model.game.Player
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
@@ -18,8 +20,9 @@ import janorschke.meyer.service.utils.board.PiecePosition
  *
  * @param application for the current activity
  */
-class GameViewModel(application: Application) : AndroidViewModel(application) {
-    val playerColor: MutableLiveData<PieceColor> = MutableLiveData()
+class GameViewModel(application: Application, textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) : AndroidViewModel(application) {
+    val player: MutableLiveData<Player> = MutableLiveData()
+    val otherPlayer: MutableLiveData<Player> = MutableLiveData()
     val status: MutableLiveData<GameStatus> = MutableLiveData()
     val selectedPosition: MutableLiveData<PiecePosition?> = MutableLiveData()
     val possibleMoves: MutableLiveData<MutableList<PiecePosition>> = MutableLiveData()
@@ -29,7 +32,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
     val pawnDifference: MutableLiveData<Pair<Int, Int>> = MutableLiveData()
 
-    private val game = Game()
+    private val game = Game(textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
     private val boardRepository = BoardRepository(board, history, game)
@@ -64,7 +67,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
      */
     private fun setValues() {
         // game settings
-        updateIfDifferent(playerColor, game.getColor())
+        updateIfDifferent(player, game.getPlayer())
+        updateIfDifferent(otherPlayer, game.getOtherPlayer())
         updateIfDifferent(status, game.getStatus())
         updateIfDifferent(selectedPosition, game.getSelectedPosition())
         updateListIfDifferent(possibleMoves, game.getPossibleMoves())
