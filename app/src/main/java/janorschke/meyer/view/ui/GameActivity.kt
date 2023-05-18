@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import janorschke.meyer.R
 import janorschke.meyer.databinding.ActivityGameBinding
+import janorschke.meyer.databinding.PlayerInfoBinding
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameMode
 import janorschke.meyer.enums.GameStatus
@@ -25,6 +26,8 @@ private const val LOG_TAG = "GameActivity"
  */
 class GameActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
+    private lateinit var playerInfoWhite: PlayerInfoBinding
+    private lateinit var playerInfoBlack: PlayerInfoBinding
     private lateinit var boardAdapter: BoardAdapter
     private lateinit var moveHistoryAdapter: MoveHistoryAdapter
     private lateinit var beatenPiecesByWhiteAdapter: BeatenPiecesAdapter
@@ -36,6 +39,10 @@ class GameActivity : AppCompatActivity() {
         // Binding
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Player infos
+        playerInfoWhite = binding.playerTwo!!
+        playerInfoBlack = binding.playerOne!!
 
         // View Model
         val gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
@@ -62,11 +69,11 @@ class GameActivity : AppCompatActivity() {
 
         // Beaten Pieces By White
         beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)
-        beatenPiecesAdapter(binding.playerTwo?.beatenPieces, beatenPiecesByWhiteAdapter)
+        beatenPiecesAdapter(playerInfoWhite.beatenPieces, beatenPiecesByWhiteAdapter)
 
         // Beaten Pieces By Black
         beatenPiecesByBlackAdapter = BeatenPiecesAdapter(applicationContext)
-        beatenPiecesAdapter(binding.playerOne?.beatenPieces, beatenPiecesByBlackAdapter)
+        beatenPiecesAdapter(playerInfoBlack.beatenPieces, beatenPiecesByBlackAdapter)
 
         // Observer
         // IMPORTANT: It needs to be after all adapter initializations
@@ -83,8 +90,8 @@ class GameActivity : AppCompatActivity() {
             if (aiLevelStr == null) throw IllegalArgumentException("Wrong ai level")
 
             enumValueOf<AiLevel>(aiLevelStr).apply {
-                binding.playerOne?.name?.text = resources.getString(this.resourceId)
-                binding.playerTwo?.name?.text = resources.getString(R.string.default_player_name)
+                playerInfoWhite.name.text = resources.getString(R.string.default_player_name)
+                playerInfoBlack.name.text = resources.getString(this.resourceId)
             }
         }
     }
@@ -104,6 +111,18 @@ class GameActivity : AppCompatActivity() {
         binding?.setHasFixedSize(true)
 
         return adapter
+    }
+
+    /**
+     * @param binding of the player info
+     * @param value of the difference
+     */
+    private fun setPawnDifference(binding: PlayerInfoBinding, value: Int) {
+        when {
+            value > 0 -> binding.pawnDifference.text = "+$value"
+            value < 0 -> binding.pawnDifference.text = "$value"
+            else -> binding.pawnDifference.text = "-"
+        }
     }
 
     /**
@@ -157,9 +176,14 @@ class GameActivity : AppCompatActivity() {
             beatenPiecesByBlackAdapter.setBeatenPieces(beatenPieces)
         }
 
-        viewModel.pawnDifference.observe(this) { pawnDifference ->
-            Log.d(LOG_TAG, "Update pawn difference")
-            // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/70
+        viewModel.pawnDifferenceWhite.observe(this) { pawnDifference ->
+            Log.d(LOG_TAG, "Update pawn difference white")
+            setPawnDifference(playerInfoWhite, pawnDifference)
+        }
+
+        viewModel.pawnDifferenceBlack.observe(this) { pawnDifference ->
+            Log.d(LOG_TAG, "Update pawn difference black")
+            setPawnDifference(playerInfoBlack, pawnDifference)
         }
     }
 }

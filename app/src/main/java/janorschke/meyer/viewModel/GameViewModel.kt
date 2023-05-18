@@ -26,8 +26,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     val fields: MutableLiveData<Array<Array<Piece?>>> = MutableLiveData()
     val moves: MutableLiveData<MutableList<Move>> = MutableLiveData()
     val beatenPiecesByWhite: MutableLiveData<MutableList<Piece>> = MutableLiveData()
+    val pawnDifferenceWhite: MutableLiveData<Int> = MutableLiveData()
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
-    val pawnDifference: MutableLiveData<Pair<Int, Int>> = MutableLiveData()
+    val pawnDifferenceBlack: MutableLiveData<Int> = MutableLiveData()
 
     private val game = Game()
     private val board = Board()
@@ -76,8 +77,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         updateListIfDifferent(moves, history.getMoves())
         updateListIfDifferent(beatenPiecesByWhite, history.getBeatenPieces(PieceColor.WHITE.opponent()))
         updateListIfDifferent(beatenPiecesByBlack, history.getBeatenPieces(PieceColor.BLACK.opponent()))
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/70
-        // updateIfDifferent(pawnDifferent, ...)
+        updateIfDifferent(pawnDifferenceWhite, history.getPawnDifferenceByColor(PieceColor.WHITE))
+        updateIfDifferent(pawnDifferenceBlack, history.getPawnDifferenceByColor(PieceColor.BLACK))
     }
 
     /**

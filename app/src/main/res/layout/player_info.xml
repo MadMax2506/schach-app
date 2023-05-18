@@ -16,9 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/beaten_pieces_size">
 
-        <!-- TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/70  -->
         <com.google.android.material.chip.Chip
-            android:id="@+id/advantage"
+            android:id="@+id/pawn_difference"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
