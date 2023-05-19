@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300sp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/beige"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="24sp">
+
+    <TextView
+        android:id="@+id/text_game_over_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24sp"
+        android:background="@color/beige"
+        android:text="@null"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/h2" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_new_game"
+        android:layout_width="@dimen/dialog_button_width"
+        android:layout_height="@dimen/dialog_button_height"
+        android:layout_marginBottom="8sp"
+        android:text="@string/gameover_dialog_new_game"
+        android:textSize="@dimen/dialog_button_text_size"
+        android:theme="@style/MyTheme.Button" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_change_difficulty"
+        android:layout_width="@dimen/dialog_button_width"
+        android:layout_height="@dimen/dialog_button_height"
+        android:layout_marginBottom="8sp"
+        android:text="@string/gameover_dialog_change_difficulty"
+        android:textSize="@dimen/dialog_button_text_size"
+        android:theme="@style/MyTheme.Button" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_back_to_menu"
+        android:layout_width="@dimen/dialog_button_width"
+        android:layout_height="@dimen/dialog_button_height"
+        android:layout_marginBottom="8sp"
+        android:text="@string/gameover_dialog_return_to_main_menu"
+        android:textSize="@dimen/dialog_button_text_size"
+        android:theme="@style/MyTheme.Button" />
+</LinearLayout>

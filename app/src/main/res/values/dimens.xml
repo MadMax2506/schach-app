@@ -8,4 +8,9 @@
 
     <dimen name="h1">40sp</dimen>
     <dimen name="h2">30sp</dimen>
+
+    <!-- Dialog -->
+    <dimen name="dialog_button_text_size">15sp</dimen>
+    <dimen name="dialog_button_width">180sp</dimen>
+    <dimen name="dialog_button_height">55sp</dimen>
 </resources>
