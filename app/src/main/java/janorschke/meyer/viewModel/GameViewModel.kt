@@ -13,6 +13,8 @@ import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.repository.BoardRepository
+import janorschke.meyer.service.repository.GameRepository
+import janorschke.meyer.service.repository.ai.AiRepositoryFactory
 import janorschke.meyer.service.utils.board.PiecePosition
 
 /**
@@ -20,7 +22,14 @@ import janorschke.meyer.service.utils.board.PiecePosition
  *
  * @param application for the current activity
  */
-class GameViewModel(application: Application, textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) : AndroidViewModel(application) {
+class GameViewModel(
+        application: Application,
+        textResourceWhite: Int,
+        textResourceBlack: Int,
+        aiLevelWhite: AiLevel?,
+        aiLevelBlack: AiLevel?
+) : AndroidViewModel(application) {
+    // live data for the view
     val activePlayer: MutableLiveData<Player> = MutableLiveData()
     val playerWhite: MutableLiveData<Player> = MutableLiveData()
     val playerBlack: MutableLiveData<Player> = MutableLiveData()
@@ -37,7 +46,9 @@ class GameViewModel(application: Application, textResourceWhite: Int, textResour
     private val game = Game(textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
-    private val boardRepository = BoardRepository(board, history, game)
+    private val aiRepository = AiRepositoryFactory(game, board).create()
+    private val gameRepository = GameRepository(board, history, game)
+    private val boardRepository = BoardRepository(board, history, game, gameRepository, aiRepository)
 
     init {
         playerWhite.value = game.playerWhite
@@ -95,9 +106,7 @@ class GameViewModel(application: Application, textResourceWhite: Int, textResour
      * @param data
      */
     private fun <T> updateIfDifferent(liveData: MutableLiveData<T>, data: T) {
-        if (liveData.value != data) {
-            liveData.value = data
-        }
+        if (liveData.value != data) liveData.value = data
     }
 
     /**
@@ -117,8 +126,6 @@ class GameViewModel(application: Application, textResourceWhite: Int, textResour
      * @param data
      */
     private fun updateIfDifferent(liveData: MutableLiveData<Array<Array<Piece?>>>, data: Array<Array<Piece?>>) {
-        if (!liveData.value.contentDeepEquals(data)) {
-            liveData.value = data.map { it.copyOf() }.toTypedArray()
-        }
+        if (!liveData.value.contentDeepEquals(data)) liveData.value = data.map { it.copyOf() }.toTypedArray()
     }
 }

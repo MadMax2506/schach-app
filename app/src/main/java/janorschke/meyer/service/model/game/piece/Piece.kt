@@ -58,7 +58,7 @@ abstract class Piece(
     /**
      * Marks the piece as moved
      */
-    fun move() {
+    fun markAsMove() {
         moved = true
     }
 

@@ -14,9 +14,16 @@ class GameRepository(private val board: Board, private val history: History, pri
      * Check if the game is finished
      *
      * @param piece which has moved
+     * @return true if the game is finished
      */
-    fun checkEndOfGame(piece: Piece) {
-        if (BoardValidator.isKingCheckmate(board, piece.color.opponent())) game.setStatus(GameStatus.CHECKMATE)
-        else if (BoardValidator.isStalemate(board, history, piece.color.opponent())) game.setStatus(GameStatus.STALEMATE)
+    fun checkEndOfGame(piece: Piece): Boolean {
+        if (BoardValidator.isKingCheckmate(board, piece.color.opponent())) {
+            game.setStatus(GameStatus.CHECKMATE)
+            return true
+        } else if (BoardValidator.isStalemate(board, history, piece.color.opponent())) {
+            game.setStatus(GameStatus.STALEMATE)
+            return true
+        }
+        return false
     }
 }
