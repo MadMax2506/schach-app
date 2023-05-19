@@ -77,7 +77,7 @@ class BoardRepository(
         val fromPiece = board.getField(from)!!
         val toPiece = board.getField(to)
 
-        fromPiece.move() // mark piece as moved
+        fromPiece.markAsMove() // mark piece as moved
 
         board.setField(from, null)
         if (fromPiece is Pawn && to.row == fromPiece.color.opponent().borderlineIndex) {
