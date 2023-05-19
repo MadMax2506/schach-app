@@ -26,13 +26,13 @@ class History {
      * @param n number of moves
      * @return the n last moves
      */
-    fun getLastMoves(n: Int): MutableList<Move> = moves.slice(IntRange(numberOfMoves() - 1 - n, numberOfMoves() - 1)).toMutableList()
+    fun getLastMoves(n: Int) = moves.slice(IntRange(numberOfMoves() - 1 - n, numberOfMoves() - 1)).toMutableList()
 
     /**
      * @param color of the pieces
      * @return all beaten pieces for a color
      */
-    fun getBeatenPieces(color: PieceColor): MutableList<Piece> = beatenPieces.filter { it.color == color }.toMutableList()
+    fun getBeatenPieces(color: PieceColor) = beatenPieces.filter { it.color == color }.toMutableList()
 
     /**
      * Add a new move to the history

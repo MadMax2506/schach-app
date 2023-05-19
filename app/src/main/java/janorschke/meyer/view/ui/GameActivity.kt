@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import janorschke.meyer.R
 import janorschke.meyer.databinding.ActivityGameBinding
+import janorschke.meyer.databinding.PlayerInfoBinding
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameMode
 import janorschke.meyer.enums.GameStatus
@@ -30,6 +31,8 @@ private const val GAMEOVER_DIALOG_TAG: String = "GameOverDialog"
  */
 class GameActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
+    private lateinit var playerInfoWhite: PlayerInfoBinding
+    private lateinit var playerInfoBlack: PlayerInfoBinding
     private lateinit var boardAdapter: BoardAdapter
     private lateinit var moveHistoryAdapter: MoveHistoryAdapter
     private lateinit var beatenPiecesByWhiteAdapter: BeatenPiecesAdapter
@@ -43,6 +46,10 @@ class GameActivity : AppCompatActivity() {
         // Binding
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Player binding
+        playerInfoWhite = binding.playerTwo!!
+        playerInfoBlack = binding.playerOne!!
 
         // Game Mode
         intent.extras?.getString(TransferKeys.GAME_MODE.name).let { gameModeStr ->
@@ -66,11 +73,11 @@ class GameActivity : AppCompatActivity() {
 
         // Beaten Pieces By White
         beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)
-        beatenPiecesAdapter(binding.playerTwo?.beatenPieces, beatenPiecesByWhiteAdapter)
+        beatenPiecesAdapter(playerInfoWhite.beatenPieces, beatenPiecesByWhiteAdapter)
 
         // Beaten Pieces By Black
         beatenPiecesByBlackAdapter = BeatenPiecesAdapter(applicationContext)
-        beatenPiecesAdapter(binding.playerOne?.beatenPieces, beatenPiecesByBlackAdapter)
+        beatenPiecesAdapter(playerInfoBlack.beatenPieces, beatenPiecesByBlackAdapter)
 
         // Observer
         // IMPORTANT: It needs to be after all adapter initializations
@@ -96,8 +103,8 @@ class GameActivity : AppCompatActivity() {
                         GameViewModelFactory(application, textResourceWhite, textResourceBlack, null, it)
                 )[GameViewModel::class.java]
 
-                binding.playerOne?.name?.text = resources.getString(textResourceBlack)
-                binding.playerTwo?.name?.text = resources.getString(textResourceWhite)
+                playerInfoWhite.name.text = resources.getString(textResourceWhite)
+                playerInfoBlack.name.text = resources.getString(textResourceBlack)
             }
         }
     }
@@ -129,6 +136,18 @@ class GameActivity : AppCompatActivity() {
      */
     private fun showGameOverDialog(winningColor: PieceColor? = null, playerWhite: Player, playerBlack: Player) {
         GameOverDialog.newInstance(winningColor, playerWhite, playerBlack).show(supportFragmentManager, GAMEOVER_DIALOG_TAG)
+    }
+
+    /**
+     * @param binding of the player info
+     * @param value of the difference
+     */
+    private fun setPawnDifference(binding: PlayerInfoBinding, value: Int) {
+        when {
+            value > 0 -> binding.pawnDifference.text = "+$value "
+            value < 0 -> binding.pawnDifference.text = "$value "
+            else -> binding.pawnDifference.text = " 0 "
+        }
     }
 
     /**
@@ -180,9 +199,14 @@ class GameActivity : AppCompatActivity() {
             beatenPiecesByBlackAdapter.setBeatenPieces(beatenPieces)
         }
 
-        viewModel.pawnDifference.observe(this) { pawnDifference ->
-            Log.d(LOG_TAG, "Update pawn difference")
-            // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/70
+        viewModel.pawnDifferenceWhite.observe(this) { pawnDifference ->
+            Log.d(LOG_TAG, "Update pawn difference white")
+            setPawnDifference(playerInfoWhite, pawnDifference)
+        }
+
+        viewModel.pawnDifferenceBlack.observe(this) { pawnDifference ->
+            Log.d(LOG_TAG, "Update pawn difference black")
+            setPawnDifference(playerInfoBlack, pawnDifference)
         }
     }
 }
