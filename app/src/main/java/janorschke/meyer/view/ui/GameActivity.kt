@@ -12,13 +12,13 @@ import janorschke.meyer.enums.GameMode
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.TransferKeys
-import janorschke.meyer.game.dialog.GameOverDialog
 import janorschke.meyer.service.model.game.Player
 import janorschke.meyer.view.adapter.BoardAdapter
 import janorschke.meyer.view.adapter.MoveHistoryAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPieceDecorator
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPiecesAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPiecesLayoutManager
+import janorschke.meyer.view.dialog.GameOverDialog
 import janorschke.meyer.viewModel.GameViewModel
 import janorschke.meyer.viewModel.GameViewModelFactory
 
