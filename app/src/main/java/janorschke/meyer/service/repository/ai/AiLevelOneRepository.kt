@@ -15,18 +15,18 @@ private const val LOG_TAG = "AiLevelOneRepository"
  */
 class AiLevelOneRepository(color: PieceColor, board: Board) : AiRepository(color, board, AiLevel.KEVIN_OTTO) {
     override fun calculateNextMove(): Move {
-        Board(board).let { boardSimulation ->
+        Board(board).let { boardCopy ->
             // TODO
             // val boardEvaluation = super.evaluateBoard(this)
 
             Log.d(LOG_TAG, "Calculate the next move for $aiLevel")
 
             // TODO temporary code part
-            val temp = PieceSequence.allPiecesByColor(boardSimulation, color)
-                    .filter { it.piece.possibleMoves(boardSimulation, it.position).isNotEmpty() }
-                    .map { Pair(it.position, it.piece.possibleMoves(boardSimulation, it.position).first()) }
+            val temp = PieceSequence.allPiecesByColor(boardCopy, color)
+                    .filter { it.piece.possibleMoves(boardCopy, it.position).isNotEmpty() }
+                    .map { Pair(it.position, it.piece.possibleMoves(boardCopy, it.position).first()) }
                     .first()
-            return boardSimulation.createBoardMove(temp.first, temp.second)
+            return boardCopy.createBoardMove(temp.first, temp.second)
         }
     }
 }
