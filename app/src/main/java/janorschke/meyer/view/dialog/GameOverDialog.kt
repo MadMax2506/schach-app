@@ -28,11 +28,11 @@ class GameOverDialog : BaseDialog() {
         private const val ARG_PLAYER_BLACK = "playerBlack"
 
         fun newInstance(winningColor: PieceColor?, playerWhite: Player, playerBlack: Player): GameOverDialog {
-            return GameOverDialog().also {
-                it.arguments = Bundle().apply {
-                    putSerializable(ARG_WINNING_COLOR, winningColor)
-                    putSerializable(ARG_PLAYER_WHITE, playerWhite)
-                    putSerializable(ARG_PLAYER_BLACK, playerBlack)
+            return GameOverDialog().also { dialog ->
+                dialog.arguments = Bundle().also { bundle ->
+                    bundle.putSerializable(ARG_WINNING_COLOR, winningColor)
+                    bundle.putSerializable(ARG_PLAYER_WHITE, playerWhite)
+                    bundle.putSerializable(ARG_PLAYER_BLACK, playerBlack)
                 }
             }
         }
@@ -68,33 +68,33 @@ class GameOverDialog : BaseDialog() {
 
     private fun setButtonOnClickHandlers() {
         binding.buttonNewGame.setOnClickListener {
-            Intent(requireContext(), GameActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                putExtras(Bundle().apply {
+            Intent(requireContext(), GameActivity::class.java).let { intent ->
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.putExtras(Bundle().also { bundle ->
                     if (aiLevel != null) {
                         Log.d(LOG_TAG, "Start new game with ai-level=$aiLevel")
 
-                        putString(TransferKeys.AI_LEVEL.name, aiLevel!!.name)
-                        putString(TransferKeys.GAME_MODE.name, GameMode.AI.name)
+                        bundle.putString(TransferKeys.AI_LEVEL.name, aiLevel!!.name)
+                        bundle.putString(TransferKeys.GAME_MODE.name, GameMode.AI.name)
                     }
                 })
-                startActivity(this)
+                startActivity(intent)
             }
         }
 
         binding.buttonBackToMenu.setOnClickListener {
-            Intent(requireContext(), MainActivity::class.java).apply {
+            Intent(requireContext(), MainActivity::class.java).let { intent ->
                 Log.d(LOG_TAG, "Going back to MainActivity")
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(this)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
             }
         }
 
         binding.buttonChangeDifficulty.setOnClickListener {
-            Intent(requireContext(), AiActivity::class.java).apply {
+            Intent(requireContext(), AiActivity::class.java).let { intent ->
                 Log.d(LOG_TAG, "Going back to AiActivity")
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(this)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
             }
         }
     }
