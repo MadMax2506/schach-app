@@ -52,9 +52,7 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
 
     override fun getCount(): Int = Board.SIZE
 
-    override fun getItem(index: Int): Piece? {
-        PiecePosition(index).apply { return fields[this.row][this.col] }
-    }
+    override fun getItem(index: Int) = PiecePosition(index).let { fields[it.row][it.col] }
 
     override fun getItemId(position: Int): Long = position.toLong()
 

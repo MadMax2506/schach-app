@@ -24,15 +24,14 @@ class AiActivity : AppCompatActivity() {
     }
 
     private fun startGame(aiLevel: AiLevel) {
-        Intent(this, GameActivity::class.java).apply {
+        Intent(this, GameActivity::class.java).let { intent ->
             Log.d(LOG_TAG, "Start new game with the ai-level $aiLevel")
 
-            putExtras(Bundle().apply {
-                putString(TransferKeys.AI_LEVEL.toString(), aiLevel.toString())
-                putString(TransferKeys.GAME_MODE.toString(), GameMode.AI.toString())
+            intent.putExtras(Bundle().also { bundle ->
+                bundle.putString(TransferKeys.AI_LEVEL.toString(), aiLevel.toString())
+                bundle.putString(TransferKeys.GAME_MODE.toString(), GameMode.AI.toString())
             })
-
-            startActivity(this)
+            startActivity(intent)
         }
     }
 }

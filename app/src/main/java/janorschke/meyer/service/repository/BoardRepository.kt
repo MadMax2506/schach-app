@@ -72,8 +72,8 @@ class BoardRepository(private val board: Board, private val history: History, pr
             board.setField(to, fromPiece)
         }
 
-        Board(board).getFields().apply {
-            return Move(this, from, to, fromPiece, toPiece)
+        Board(board).let { boardCopy ->
+            return Move(boardCopy.getFields(), from, to, fromPiece, toPiece)
         }
     }
 }
