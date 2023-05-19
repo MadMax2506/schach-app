@@ -36,10 +36,10 @@ object BoardValidator {
         PieceSequence.allPiecesByColor(board, color)
                 .forEach {
                     it.piece.possibleMoves(board, it.position).forEach { move ->
-                        Board(board).apply {
-                            this.createBoardMove(it.position, move)
+                        Board(board).let { boardCopy ->
+                            boardCopy.createBoardMove(it.position, move)
                             // if King is not in check after this move, then it's not checkmate
-                            if (!isKingInCheck(this, color)) return false
+                            if (!isKingInCheck(boardCopy, color)) return false
                         }
                     }
                 }
@@ -64,15 +64,15 @@ object BoardValidator {
                 .flatten()
                 .toList()
                 .isEmpty()
-                .apply { if (this) return true }
+                .let { isEmpty -> if (isEmpty) return true }
 
         // check if both player has enough pieces
         if (!checkIfPlayerCanWin(pieceSequence) && !checkIfPlayerCanWin(pieceSequenceOpponent)) return true
 
         // check move-repetition
         if (N_MOVE_REPETITIONS_FOR_STALEMATE >= history.numberOfMoves()) return false
-        history.getLastMoves(N_MOVE_REPETITIONS_FOR_STALEMATE).apply {
-            return hasColorRepeatedMoves(this, PieceColor.WHITE) && hasColorRepeatedMoves(this, PieceColor.BLACK)
+        history.getLastMoves(N_MOVE_REPETITIONS_FOR_STALEMATE).let { moves ->
+            return hasColorRepeatedMoves(moves, PieceColor.WHITE) && hasColorRepeatedMoves(moves, PieceColor.BLACK)
         }
     }
 
@@ -85,9 +85,9 @@ object BoardValidator {
         pieceSequence.map { it.piece }
                 .filterNot { it is King }
                 .toList()
-                .apply {
-                    if (this.isEmpty()) return false
-                    if (this.size == 1 && this[0].pieceInfo.valence == 3) return false
+                .let { pieces ->
+                    if (pieces.isEmpty()) return false
+                    if (pieces.size == 1 && pieces[0].pieceInfo.valence == 3) return false
                 }
         return true
     }

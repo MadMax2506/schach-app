@@ -50,16 +50,15 @@ class MoveHistoryAdapter(private val context: Context) : BaseAdapter() {
      * @return a valid notion for the move
      */
     private fun getMoveNotation(move: Move): String {
-        StringBuilder()
-                .apply {
-                    this.append(context.resources.getString(move.fromPiece.pieceInfo.notationId))
-                    if (move.toPiece != null) {
-                        if (move.fromPiece is Pawn) this.append(move.from.getColNotation())
-                        this.append("x")
-                    }
-                    this.append(move.to.getNotation())
+        StringBuilder().let {
+            it.append(context.resources.getString(move.fromPiece.pieceInfo.notationId))
+            if (move.toPiece != null) {
+                if (move.fromPiece is Pawn) it.append(move.from.getColNotation())
+                it.append("x")
+            }
+            it.append(move.to.getNotation())
 
-                    return this.toString()
-                }
+            return it.toString()
+        }
     }
 }

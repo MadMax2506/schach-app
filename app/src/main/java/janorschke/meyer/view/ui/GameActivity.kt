@@ -55,9 +55,9 @@ class GameActivity : AppCompatActivity() {
         intent.extras?.getString(TransferKeys.GAME_MODE.name).let { gameModeStr ->
             if (gameModeStr == null) throw IllegalArgumentException("Wrong game mode")
 
-            enumValueOf<GameMode>(gameModeStr).apply {
+            enumValueOf<GameMode>(gameModeStr).let { gameMode ->
                 when {
-                    this == GameMode.AI -> aiGameMode()
+                    gameMode == GameMode.AI -> aiGameMode()
                     // TODO further modes
                 }
             }
@@ -113,7 +113,7 @@ class GameActivity : AppCompatActivity() {
      * Add the adapter and all related decorator, layout manager to the view
      *
      * @param binding of the related view
-     * @param color of the own pieces
+     * @param adapter for the beaten pieces
      */
     private fun beatenPiecesAdapter(binding: RecyclerView?, adapter: BeatenPiecesAdapter): BeatenPiecesAdapter {
         // Adapter and Layouts
@@ -143,9 +143,10 @@ class GameActivity : AppCompatActivity() {
      * @param value of the difference
      */
     private fun setPawnDifference(binding: PlayerInfoBinding, value: Int) {
+        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/91
         when {
-            value > 0 -> binding.pawnDifference.text = "+$value "
-            value < 0 -> binding.pawnDifference.text = "$value "
+            value > 0 -> binding.pawnDifference.text = String.format("+%s ", value)
+            value < 0 -> binding.pawnDifference.text = String.format("%s ", value)
             else -> binding.pawnDifference.text = " 0 "
         }
     }

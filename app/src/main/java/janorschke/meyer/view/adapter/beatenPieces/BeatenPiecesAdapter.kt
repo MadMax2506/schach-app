@@ -26,17 +26,14 @@ class BeatenPiecesAdapter(private val context: Context) : RecyclerView.Adapter<B
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        BeatenPieceBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
-                .apply { return ViewHolder(this) }
+        BeatenPieceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                .let { binding -> return ViewHolder(binding) }
     }
 
     override fun getItemCount(): Int = beatenPieces.size
 
     override fun onBindViewHolder(holder: ViewHolder, index: Int) {
-        PieceDrawables
-                .getPiece(context, beatenPieces[index])
-                .apply { holder.binding.beatenPiece.setImageDrawable(this) }
-
+        PieceDrawables.getPiece(context, beatenPieces[index])
+                .let { drawable -> holder.binding.beatenPiece.setImageDrawable(drawable) }
     }
 }

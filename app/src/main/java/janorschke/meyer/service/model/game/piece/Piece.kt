@@ -98,9 +98,9 @@ abstract class Piece(
             return
         }
 
-        Board(board).apply {
-            this.createBoardMove(currentPosition, possiblePosition)
-            if (!BoardValidator.isKingInCheck(this, color)) possibleMoves.add(possiblePosition)
+        Board(board).let { boardCopy ->
+            boardCopy.createBoardMove(currentPosition, possiblePosition)
+            if (!BoardValidator.isKingInCheck(boardCopy, color)) possibleMoves.add(possiblePosition)
         }
     }
 }

@@ -24,15 +24,14 @@ object PieceDrawables {
     fun getAttackingPossibleMove(context: Context, piece: Piece): Drawable {
         val layers = mutableListOf<Drawable>()
 
-        getPossibleMove(context)
-                .also { drawable ->
-                    floatArrayOf(
-                            1f, 0.16f, 0.14f, 1f, 1f,  // red
-                            0f, 0f, 0f, 0f, 0f,  // green
-                            0f, 0f, 0f, 0f, 0f,  // blue
-                            1f, 1f, 1f, 1f, 1f // alpha
-                    ).apply { drawable.colorFilter = ColorMatrixColorFilter(this) }
-                }.apply { layers.add(this) }
+        getPossibleMove(context).also { drawable ->
+            floatArrayOf(
+                    1f, 0.16f, 0.14f, 1f, 1f,  // red
+                    0f, 0f, 0f, 0f, 0f,  // green
+                    0f, 0f, 0f, 0f, 0f,  // blue
+                    1f, 1f, 1f, 1f, 1f // alpha
+            ).let { colorMatrix -> drawable.colorFilter = ColorMatrixColorFilter(colorMatrix) }
+        }.let { drawable -> layers.add(drawable) }
 
         // Add figure at the top
         layers.add(getPiece(context, piece))
@@ -46,15 +45,17 @@ object PieceDrawables {
      * @return the drawable of an piece
      */
     fun getPiece(context: Context, piece: Piece): Drawable {
-        return ContextCompat.getDrawable(context, piece.pieceInfo.imageId)!!.mutate().also { drawable ->
-            if (piece.color == PieceColor.BLACK) {
-                floatArrayOf(
-                        -1.0f, 0f, 0f, 0f, 255f,  // red
-                        0f, -1.0f, 0f, 0f, 255f,  // green
-                        0f, 0f, -1.0f, 0f, 255f,  // blue
-                        0f, 0f, 0f, 1.0f, 0f // alpha
-                ).apply { drawable.colorFilter = ColorMatrixColorFilter(this) }
-            }
-        }
+        return ContextCompat.getDrawable(context, piece.pieceInfo.imageId)!!
+                .mutate()
+                .also { drawable ->
+                    if (piece.color == PieceColor.BLACK) {
+                        floatArrayOf(
+                                -1.0f, 0f, 0f, 0f, 255f,  // red
+                                0f, -1.0f, 0f, 0f, 255f,  // green
+                                0f, 0f, -1.0f, 0f, 255f,  // blue
+                                0f, 0f, 0f, 1.0f, 0f // alpha
+                        ).let { colorMatrix -> drawable.colorFilter = ColorMatrixColorFilter(colorMatrix) }
+                    }
+                }
     }
 }
