@@ -14,8 +14,7 @@ import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.repository.BoardRepository
 import janorschke.meyer.service.repository.GameRepository
-import janorschke.meyer.service.repository.ai.AiLevelOneRepository
-import janorschke.meyer.service.repository.ai.AiRepository
+import janorschke.meyer.service.repository.ai.AiRepositoryFactory
 import janorschke.meyer.service.utils.board.PiecePosition
 
 /**
@@ -23,7 +22,14 @@ import janorschke.meyer.service.utils.board.PiecePosition
  *
  * @param application for the current activity
  */
-class GameViewModel(application: Application, textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) : AndroidViewModel(application) {
+class GameViewModel(
+        application: Application,
+        textResourceWhite: Int,
+        textResourceBlack: Int,
+        aiLevelWhite: AiLevel?,
+        aiLevelBlack: AiLevel?
+) : AndroidViewModel(application) {
+    // live data for the view
     val activePlayer: MutableLiveData<Player> = MutableLiveData()
     val playerWhite: MutableLiveData<Player> = MutableLiveData()
     val playerBlack: MutableLiveData<Player> = MutableLiveData()
@@ -39,22 +45,11 @@ class GameViewModel(application: Application, textResourceWhite: Int, textResour
     private val game = Game(textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
-    private val aiRepository: AiRepository
-    private val gameRepository: GameRepository
-    private val boardRepository: BoardRepository
+    private val aiRepository = AiRepositoryFactory(game, board).create()
+    private val gameRepository = GameRepository(board, history, game)
+    private val boardRepository = BoardRepository(board, history, game, gameRepository, aiRepository)
 
     init {
-        // player
-        playerWhite.value = game.playerWhite
-        playerBlack.value = game.playerBlack
-
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/88
-        // Get level with help of the players
-        aiRepository = AiLevelOneRepository(PieceColor.BLACK)
-        gameRepository = GameRepository(board, history, game)
-        boardRepository = BoardRepository(board, history, game, gameRepository, aiRepository)
-
-        // Live data
         setValues()
     }
 
@@ -85,6 +80,8 @@ class GameViewModel(application: Application, textResourceWhite: Int, textResour
     private fun setValues() {
         // game settings
         updateIfDifferent(activePlayer, game.getPlayer())
+        updateIfDifferent(playerWhite, game.playerWhite)
+        updateIfDifferent(playerBlack, game.playerBlack)
         updateIfDifferent(status, game.getStatus())
         updateIfDifferent(selectedPosition, game.getSelectedPosition())
         updateListIfDifferent(possibleMoves, game.getPossibleMoves())

@@ -13,8 +13,8 @@ private const val LOG_TAG = "AiLevelThreeRepository"
  * Represents a heavy ai
  * @see AiLevel.CHRIS
  */
-class AiLevelThreeRepository(color: PieceColor) : AiRepository(color, AiLevel.CHRIS) {
-    override fun calculateNextMove(board: Board): Move {
+class AiLevelThreeRepository(color: PieceColor, board: Board) : AiRepository(color, board, AiLevel.CHRIS) {
+    override fun calculateNextMove(): Move {
         Board(board).apply {
             // TODO
             // val boardEvaluation = super.evaluateBoard(this)
@@ -23,6 +23,7 @@ class AiLevelThreeRepository(color: PieceColor) : AiRepository(color, AiLevel.CH
 
             // TODO temporary code part
             val temp = PieceSequence.allPiecesByColor(this, color)
+                    .filter { it.piece.possibleMoves(this, it.position).isNotEmpty() }
                     .map { Pair(it.position, it.piece.possibleMoves(this, it.position).first()) }
                     .first()
             return this.createBoardMove(temp.first, temp.second)

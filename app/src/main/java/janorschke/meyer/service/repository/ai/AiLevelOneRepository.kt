@@ -13,8 +13,8 @@ private const val LOG_TAG = "AiLevelOneRepository"
  * Represents a simple ai
  * @see AiLevel.KEVIN_OTTO
  */
-class AiLevelOneRepository(color: PieceColor) : AiRepository(color, AiLevel.KEVIN_OTTO) {
-    override fun calculateNextMove(board: Board): Move {
+class AiLevelOneRepository(color: PieceColor, board: Board) : AiRepository(color, board, AiLevel.KEVIN_OTTO) {
+    override fun calculateNextMove(): Move {
         Board(board).apply {
             // TODO
             // val boardEvaluation = super.evaluateBoard(this)
@@ -23,6 +23,7 @@ class AiLevelOneRepository(color: PieceColor) : AiRepository(color, AiLevel.KEVI
 
             // TODO temporary code part
             val temp = PieceSequence.allPiecesByColor(this, color)
+                    .filter { it.piece.possibleMoves(this, it.position).isNotEmpty() }
                     .map { Pair(it.position, it.piece.possibleMoves(this, it.position).first()) }
                     .first()
             return this.createBoardMove(temp.first, temp.second)

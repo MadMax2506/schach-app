@@ -55,14 +55,8 @@ class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel
      * @param possibleMoves the possible moves for the selected piece
      */
     fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PiecePosition> = mutableListOf()) {
-        if (status == GameStatus.RUNNING) {
-            this.selectedPosition = selectedPosition
-            this.possibleMoves = possibleMoves
-            return
-        }
-
-        this.selectedPosition = null
-        this.possibleMoves = mutableListOf()
+        this.selectedPosition = selectedPosition
+        this.possibleMoves = possibleMoves
     }
 
     fun getPlayer() = if (color == PieceColor.WHITE) playerWhite else playerBlack

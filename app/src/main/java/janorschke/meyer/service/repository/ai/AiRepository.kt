@@ -12,18 +12,16 @@ private const val LOG_TAG = "AiRepository"
 /**
  * Handles the ai moves
  */
-abstract class AiRepository(protected val color: PieceColor, protected val aiLevel: AiLevel) {
+abstract class AiRepository(val color: PieceColor, protected val board: Board, val aiLevel: AiLevel) {
     /**
-     * @param board instance
      * @return the next possible move
      */
-    abstract fun calculateNextMove(board: Board): Move
+    abstract fun calculateNextMove(): Move
 
     /**
-     * @param board instance
      * @return all evaluated moves for the ai
      */
-    protected fun evaluateBoard(board: Board): MutableList<AiBoardEvaluation> {
+    protected fun evaluateBoard(): MutableList<AiBoardEvaluation> {
         Log.d(LOG_TAG, "Evaluate the board")
 
         TODO("evaluateBoard is not implemented")

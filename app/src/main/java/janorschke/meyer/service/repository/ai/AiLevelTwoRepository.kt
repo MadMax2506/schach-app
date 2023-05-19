@@ -13,16 +13,17 @@ private const val LOG_TAG = "AiLevelTwoRepository"
  * Represents a medium ai
  * @see AiLevel.MAX
  */
-class AiLevelTwoRepository(color: PieceColor) : AiRepository(color, AiLevel.MAX) {
-    override fun calculateNextMove(board: Board): Move {
+class AiLevelTwoRepository(color: PieceColor, board: Board) : AiRepository(color, board, AiLevel.MAX) {
+    override fun calculateNextMove(): Move {
         Board(board).apply {
             // TODO
             // val boardEvaluation = super.evaluateBoard(this)
 
             Log.d(LOG_TAG, "Calculate the next move for $aiLevel")
-            
+
             // TODO temporary code part
             val temp = PieceSequence.allPiecesByColor(this, color)
+                    .filter { it.piece.possibleMoves(this, it.position).isNotEmpty() }
                     .map { Pair(it.position, it.piece.possibleMoves(this, it.position).first()) }
                     .first()
             return this.createBoardMove(temp.first, temp.second)
