@@ -1,10 +1,15 @@
 package janorschke.meyer.service.model.game
 
+import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.utils.board.PiecePosition
 
-class Game {
+class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) {
+
+    val playerWhite = Player(PieceColor.WHITE, textResourceWhite, aiLevelWhite)
+    val playerBlack = Player(PieceColor.BLACK, textResourceBlack, aiLevelBlack)
+
     /**
      * Color of the player who is moving
      */
@@ -55,10 +60,12 @@ class Game {
             this.possibleMoves = possibleMoves
             return
         }
-        
+
         this.selectedPosition = null
         this.possibleMoves = mutableListOf()
     }
+
+    fun getPlayer() = if (color == PieceColor.WHITE) playerWhite else playerBlack
 
     fun getColor() = color
 

@@ -4,4 +4,9 @@
     
     <dimen name="h1">30sp</dimen>
     <dimen name="h2">20sp</dimen>
+
+    <!-- Dialog -->
+    <dimen name="dialog_button_text_size">12sp</dimen>
+    <dimen name="dialog_button_width">160sp</dimen>
+    <dimen name="dialog_button_height">50sp</dimen>
 </resources>
