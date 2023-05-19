@@ -51,6 +51,9 @@ class GameViewModel(
     private val boardRepository = BoardRepository(board, history, game, gameRepository, aiRepository)
 
     init {
+        playerWhite.value = game.playerWhite
+        playerBlack.value = game.playerBlack
+
         setValues()
     }
 
@@ -81,8 +84,6 @@ class GameViewModel(
     private fun setValues() {
         // game settings
         updateIfDifferent(activePlayer, game.getPlayer())
-        updateIfDifferent(playerWhite, game.playerWhite)
-        updateIfDifferent(playerBlack, game.playerBlack)
         updateIfDifferent(status, game.getStatus())
         updateIfDifferent(selectedPosition, game.getSelectedPosition())
         updateIfDifferent(possibleMoves, game.getPossibleMoves())
