@@ -11,6 +11,9 @@ import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.repository.BoardRepository
+import janorschke.meyer.service.repository.GameRepository
+import janorschke.meyer.service.repository.ai.AiLevelOneRepository
+import janorschke.meyer.service.repository.ai.AiRepository
 import janorschke.meyer.service.utils.board.PiecePosition
 
 /**
@@ -32,9 +35,18 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     private val game = Game()
     private val board = Board()
     private val history = History()
-    private val boardRepository = BoardRepository(board, history, game)
+    private val aiRepository: AiRepository
+    private val gameRepository: GameRepository
+    private val boardRepository: BoardRepository
 
     init {
+        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/88
+        // Get level with help of the players
+        aiRepository = AiLevelOneRepository(PieceColor.BLACK)
+        gameRepository = GameRepository(board, history, game)
+        boardRepository = BoardRepository(board, history, game, gameRepository, aiRepository)
+
+        // Live data
         setValues()
     }
 
@@ -87,9 +99,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
      * @param data
      */
     private fun <T> updateIfDifferent(liveData: MutableLiveData<T>, data: T) {
-        if (liveData.value != data) {
-            liveData.value = data
-        }
+        if (liveData.value != data) liveData.value = data
     }
 
     /**
@@ -109,8 +119,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
      * @param data
      */
     private fun updateDeepArrayIfDifferent(liveData: MutableLiveData<Array<Array<Piece?>>>, data: Array<Array<Piece?>>) {
-        if (!liveData.value.contentDeepEquals(data)) {
-            liveData.value = data.map { it.copyOf() }.toTypedArray()
-        }
+        if (!liveData.value.contentDeepEquals(data)) liveData.value = data.map { it.copyOf() }.toTypedArray()
     }
 }

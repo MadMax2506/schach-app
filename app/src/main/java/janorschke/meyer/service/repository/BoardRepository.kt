@@ -8,13 +8,18 @@ import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.piece.Pawn
 import janorschke.meyer.service.model.game.piece.lineMoving.Queen
+import janorschke.meyer.service.repository.ai.AiRepository
 import janorschke.meyer.service.utils.board.PiecePosition
 
 private const val LOG_TAG = "BoardRepository"
 
-class BoardRepository(private val board: Board, private val history: History, private val game: Game) {
-    private val gameRepository: GameRepository = GameRepository(board, history, game)
-
+class BoardRepository(
+        private val board: Board,
+        private val history: History,
+        private val game: Game,
+        private val gameRepository: GameRepository,
+        private val aiRepository: AiRepository
+) {
     /**
      * Moves a chess piece from the source position to the target position, if the target position is valid.
      *
