@@ -30,8 +30,9 @@ class GameViewModel(application: Application, textResourceWhite: Int, textResour
     val fields: MutableLiveData<Array<Array<Piece?>>> = MutableLiveData()
     val moves: MutableLiveData<MutableList<Move>> = MutableLiveData()
     val beatenPiecesByWhite: MutableLiveData<MutableList<Piece>> = MutableLiveData()
+    val pawnDifferenceWhite: MutableLiveData<Int> = MutableLiveData()
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
-    val pawnDifference: MutableLiveData<Pair<Int, Int>> = MutableLiveData()
+    val pawnDifferenceBlack: MutableLiveData<Int> = MutableLiveData()
 
     private val game = Game(textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
@@ -74,17 +75,17 @@ class GameViewModel(application: Application, textResourceWhite: Int, textResour
         updateIfDifferent(activePlayer, game.getPlayer())
         updateIfDifferent(status, game.getStatus())
         updateIfDifferent(selectedPosition, game.getSelectedPosition())
-        updateListIfDifferent(possibleMoves, game.getPossibleMoves())
+        updateIfDifferent(possibleMoves, game.getPossibleMoves())
 
         // board
-        updateDeepArrayIfDifferent(fields, board.getFields())
+        updateIfDifferent(fields, board.getFields())
+        updateIfDifferent(pawnDifferenceWhite, board.getPawnDifferenceByColor(PieceColor.WHITE))
+        updateIfDifferent(pawnDifferenceBlack, board.getPawnDifferenceByColor(PieceColor.BLACK))
 
         // history
-        updateListIfDifferent(moves, history.getMoves())
-        updateListIfDifferent(beatenPiecesByWhite, history.getBeatenPieces(PieceColor.WHITE.opponent()))
-        updateListIfDifferent(beatenPiecesByBlack, history.getBeatenPieces(PieceColor.BLACK.opponent()))
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/70
-        // updateIfDifferent(pawnDifferent, ...)
+        updateIfDifferent(moves, history.getMoves())
+        updateIfDifferent(beatenPiecesByWhite, history.getBeatenPieces(PieceColor.WHITE.opponent()))
+        updateIfDifferent(beatenPiecesByBlack, history.getBeatenPieces(PieceColor.BLACK.opponent()))
     }
 
     /**
@@ -105,7 +106,7 @@ class GameViewModel(application: Application, textResourceWhite: Int, textResour
      * @param liveData
      * @param data
      */
-    private fun <T> updateListIfDifferent(liveData: MutableLiveData<MutableList<T>>, data: MutableList<T>) {
+    private fun <T> updateIfDifferent(liveData: MutableLiveData<MutableList<T>>, data: MutableList<T>) {
         if (data.size != liveData.value?.size || data != liveData.value) liveData.value = data.toMutableList()
     }
 
@@ -115,7 +116,7 @@ class GameViewModel(application: Application, textResourceWhite: Int, textResour
      * @param liveData
      * @param data
      */
-    private fun updateDeepArrayIfDifferent(liveData: MutableLiveData<Array<Array<Piece?>>>, data: Array<Array<Piece?>>) {
+    private fun updateIfDifferent(liveData: MutableLiveData<Array<Array<Piece?>>>, data: Array<Array<Piece?>>) {
         if (!liveData.value.contentDeepEquals(data)) {
             liveData.value = data.map { it.copyOf() }.toTypedArray()
         }

@@ -87,6 +87,17 @@ class Board {
     }
 
     /**
+     * @param color of the pieces
+     * @return pawn difference of the pieces by the given color
+     */
+    fun getPawnDifferenceByColor(color: PieceColor): Int {
+        val valanceOfOpponentPieces = PieceSequence.allPiecesByColor(fields, color.opponent()).sumOf { it.piece.pieceInfo.valence }
+        val valenceOfOwnPieces = PieceSequence.allPiecesByColor(fields, color).sumOf { it.piece.pieceInfo.valence }
+
+        return valenceOfOwnPieces - valanceOfOpponentPieces
+    }
+
+    /**
      * Moves an piece to another position
      *
      * @param from source position
