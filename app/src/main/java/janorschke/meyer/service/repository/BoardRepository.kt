@@ -48,7 +48,7 @@ class BoardRepository(
         if (gameRepository.checkEndOfGame(piece!!) || isAiMove) return
 
         // Calculate the next move from the ai
-        aiRepository.calculateNextMove().apply { tryToMovePiece(this.from, this.to, true) }
+        aiRepository.calculateNextMove().let { move -> tryToMovePiece(move.from, move.to, true) }
     }
 
     /**
