@@ -11,7 +11,6 @@ class GameViewModelFactory(private val application: Application,
                            private val textResourceBlack: Int,
                            private val aiLevelWhite: AiLevel?,
                            private val aiLevelBlack: AiLevel?) : ViewModelProvider.AndroidViewModelFactory() {
-
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         return GameViewModel(application, textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack) as T
     }
