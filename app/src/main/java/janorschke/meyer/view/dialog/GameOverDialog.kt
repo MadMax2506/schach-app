@@ -33,14 +33,13 @@ class GameOverDialog : DialogFragment() {
         private const val ARG_PLAYERBLACK = "playerBlack"
 
         fun newInstance(winningColor: PieceColor?, playerWhite: Player, playerBlack: Player): GameOverDialog {
-            val dialog = GameOverDialog()
-            val args = Bundle().apply {
-                putSerializable(ARG_WINNINGCOLOR, winningColor)
-                putSerializable(ARG_PLAYERWHITE, playerWhite)
-                putSerializable(ARG_PLAYERBLACK, playerBlack)
-            }
-            dialog.arguments = args
-            return dialog
+           return GameOverDialog().also{
+               it.arguments = Bundle().apply {
+                   putSerializable(ARG_WINNINGCOLOR, winningColor)
+                   putSerializable(ARG_PLAYERWHITE, playerWhite)
+                   putSerializable(ARG_PLAYERBLACK, playerBlack)
+               }
+           }
         }
     }
 
