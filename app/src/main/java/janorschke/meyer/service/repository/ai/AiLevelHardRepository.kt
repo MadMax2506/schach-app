@@ -7,13 +7,13 @@ import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.utils.piece.PieceSequence
 
-private const val LOG_TAG = "AiLevelTwoRepository"
+private const val LOG_TAG = "AiLevelThreeRepository"
 
 /**
- * Represents a medium ai
- * @see AiLevel.MAX
+ * Represents a hard ai
+ * @see AiLevel.CHRIS
  */
-class AiLevelTwoRepository(color: PieceColor, board: Board) : AiRepository(color, board, AiLevel.MAX) {
+class AiLevelHardRepository(color: PieceColor, board: Board) : AiRepository(color, board, AiLevel.CHRIS) {
     override fun calculateNextMove(): Move {
         Board(board).let { boardCopy ->
             // TODO

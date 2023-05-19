@@ -10,10 +10,10 @@ import janorschke.meyer.service.utils.piece.PieceSequence
 private const val LOG_TAG = "AiLevelOneRepository"
 
 /**
- * Represents a simple ai
+ * Represents an easy ai
  * @see AiLevel.KEVIN_OTTO
  */
-class AiLevelOneRepository(color: PieceColor, board: Board) : AiRepository(color, board, AiLevel.KEVIN_OTTO) {
+class AiLevelEasyRepository(color: PieceColor, board: Board) : AiRepository(color, board, AiLevel.KEVIN_OTTO) {
     override fun calculateNextMove(): Move {
         Board(board).let { boardCopy ->
             // TODO
