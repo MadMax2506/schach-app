@@ -28,7 +28,7 @@ class BoardRepository(
      *
      * @param fromPosition the source position of the chess piece
      * @param toPosition the target position to move the chess piece to
-     * @param isAiMove if true the move was produced by an ai
+     * @param isAiMove if true, the move was produced by an ai
      */
     private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition, isAiMove: Boolean) {
         val piece = board.getField(fromPosition)
