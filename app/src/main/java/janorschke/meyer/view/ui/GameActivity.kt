@@ -20,6 +20,8 @@ import janorschke.meyer.view.adapter.beatenPieces.BeatenPieceDecorator
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPiecesAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPiecesLayoutManager
 import janorschke.meyer.view.dialog.GameOverDialog
+import janorschke.meyer.view.listener.GameSurrenderOnClickListener
+import janorschke.meyer.view.listener.GameVoteDrawOnClickListener
 import janorschke.meyer.viewModel.GameViewModel
 import janorschke.meyer.viewModel.GameViewModelFactory
 
@@ -70,6 +72,11 @@ class GameActivity : AppCompatActivity() {
         // Move History
         moveHistoryAdapter = MoveHistoryAdapter(applicationContext)
         binding.moveHistoryWrapper?.moveHistory?.adapter = moveHistoryAdapter
+
+        // Navigation Bar
+        val bottomNavigationView = binding.bottomNavigationView
+        bottomNavigationView?.menu?.findItem(R.id.button_surrender)?.setOnMenuItemClickListener(GameSurrenderOnClickListener())
+        bottomNavigationView?.menu?.findItem(R.id.button_vote_draw)?.setOnMenuItemClickListener(GameVoteDrawOnClickListener())
 
         // Beaten Pieces By White
         beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)

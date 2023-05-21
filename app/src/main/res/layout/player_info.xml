@@ -18,6 +18,7 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/pawn_difference"
+            android:enabled="false"
             android:layout_width="@dimen/pawn_difference_width"
             android:layout_height="@dimen/pawn_difference_height"
             android:layout_marginHorizontal="@dimen/pawn_difference_margin_y"

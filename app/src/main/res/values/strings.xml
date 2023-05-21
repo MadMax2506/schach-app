@@ -33,4 +33,8 @@
     <string name="gameover_dialog_text_win">Schachmatt! %s gewinnt!</string>
     <string name="gameover_dialog_text_stalemate">Patt!</string>
 
+    <!-- game navigation-bar-->
+    <string name="vote_draw">Remi anbieten</string>
+    <string name="surrender">Aufgeben</string>
+
 </resources>

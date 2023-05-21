@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/button_surrender"
+        android:icon="@drawable/chess_surrender"
+        android:title="@string/surrender"
+        app:showAsAction="ifRoom"
+        app:tooltipText="" />
+    <item
+        android:id="@+id/button_vote_draw"
+        android:icon="@drawable/chess_vote_draw"
+        android:title="@string/vote_draw"
+        app:showAsAction="ifRoom"
+        app:tooltipText="" />
+</menu>
