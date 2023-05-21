@@ -75,8 +75,8 @@ class GameActivity : AppCompatActivity() {
 
         // Navigation Bar
         val bottomNavigationView = binding.bottomNavigationView
-        bottomNavigationView?.menu?.findItem(R.id.button_surrender)?.setOnMenuItemClickListener(GameSurrenderOnClickListener())
-        bottomNavigationView?.menu?.findItem(R.id.button_vote_draw)?.setOnMenuItemClickListener(GameVoteDrawOnClickListener())
+        bottomNavigationView?.menu?.findItem(R.id.button_surrender)?.setOnMenuItemClickListener(GameSurrenderOnClickListener(this))
+        bottomNavigationView?.menu?.findItem(R.id.button_vote_draw)?.setOnMenuItemClickListener(GameVoteDrawOnClickListener(applicationContext))
 
         // Beaten Pieces By White
         beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)
