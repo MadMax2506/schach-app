@@ -36,9 +36,17 @@
     <!-- game navigation-bar-->
     <string name="vote_draw">Remi anbieten</string>
     <string name="surrender">Aufgeben</string>
-    <string name="dialog_surrender_message">Möchten Sie wirklich aufgeben?</string>
-    <string name="dialog_surrender_title">Aufgabe</string>
+
+    <!-- confirmation dialog -->
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+
+    <!-- surrender dialog -->
+    <string name="dialog_surrender_title">Aufgabe</string>
+    <string name="dialog_surrender_message">Möchten Sie wirklich aufgeben?</string>
+
+    <!-- vote-draw dialog -->
+    <string name="dialog_draw_title">Remi anbieten</string>
+    <string name="dialog_draw_message">Möchten Sie dem Gegner wirklich ein Remi anbieten?</string>
 
 </resources>

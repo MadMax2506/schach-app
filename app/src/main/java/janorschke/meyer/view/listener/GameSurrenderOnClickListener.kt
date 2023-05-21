@@ -21,7 +21,6 @@ class GameSurrenderOnClickListener(private val activity: Activity) : MenuItem.On
                 }
                 .setNegativeButton(R.string.no) { dialog, _ ->
                     dialog.dismiss()
-                    // TODO: Klick auf "Nein"
                 }
                 .show()
     }
