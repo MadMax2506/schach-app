@@ -1,9 +1,10 @@
 package janorschke.meyer.service.repository.ai
 
+import android.util.Log
+import janorschke.meyer.enums.AiEvaluationType
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
-import janorschke.meyer.service.model.game.ai.AiEvaluationNode
-import janorschke.meyer.service.model.game.ai.AiEvaluationTree
+import janorschke.meyer.service.model.game.ai.tree.AiEvaluationTreeFactory
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
@@ -30,28 +31,15 @@ abstract class AiRepository(
     abstract fun calculateNextMove(): Move
 
     /**
+     * @param aiEvaluationType of the search tree
      * @param deepness of the simulation tree
+     * @return the next move
      */
-    protected fun calculateNextMove(deepness: Int): Move {
+    protected fun calculateNextMove(aiEvaluationType: AiEvaluationType, deepness: Int): Move {
         if (deepness < 1) throw IllegalArgumentException("Deepness has to be bigger than 1, but is $deepness")
         if (deepness % 2 != 0) throw IllegalArgumentException("Deepness is invalid")
 
-        AiEvaluationTree(deepness, board, history, color)
-
-        TODO()
-    }
-
-    /**
-     * TODO
-     */
-    private fun max(): AiEvaluationNode {
-        TODO()
-    }
-
-    /**
-     * TODO
-     */
-    private fun min(): AiEvaluationNode {
-        TODO()
+        Log.d(LOG_TAG, "Calculate the best move for the aiLevel=$level")
+        return AiEvaluationTreeFactory(aiEvaluationType, deepness, board, history, color).create().calculateBestMove()
     }
 }

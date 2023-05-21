@@ -4,6 +4,7 @@ import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
+import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.utils.TimeTracking
 
 private const val LOG_TAG = "AiLevelOneRepository"
@@ -13,5 +14,9 @@ private const val LOG_TAG = "AiLevelOneRepository"
  * @see AiLevel.KEVIN_OTTO
  */
 class AiLevelEasyRepository(color: PieceColor, board: Board, history: History) : AiRepository(color, board, history, AiLevel.KEVIN_OTTO) {
-    override fun calculateNextMove() = TimeTracking.log(LOG_TAG, "calculateNextMove") { calculateNextMove(2) }
+    override fun calculateNextMove(): Move {
+        return TimeTracking.log(LOG_TAG, "calculateNextMove") {
+            calculateNextMove(janorschke.meyer.enums.AiEvaluationType.MIN_MAX_EVALUATION, 2)
+        }
+    }
 }

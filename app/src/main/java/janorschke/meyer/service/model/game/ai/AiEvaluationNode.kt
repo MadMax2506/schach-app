@@ -10,7 +10,9 @@ import janorschke.meyer.service.validator.BoardValidator
 
 /**
  * @param move which is done in the evaluation step
+ * @param aiColor
  * @param history instance
+ * @param parent node
  */
 class AiEvaluationNode(val move: Move, aiColor: PieceColor, private val history: History, val parent: AiEvaluationNode?) {
     val valency: Int

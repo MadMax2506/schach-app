@@ -1,6 +1,7 @@
-package janorschke.meyer.service.model.game.ai
+package janorschke.meyer.service.model.game.ai.tree
 
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.service.model.game.ai.AiEvaluationNode
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
@@ -11,27 +12,27 @@ import janorschke.meyer.service.model.game.piece.lineMoving.Rook
 import janorschke.meyer.service.utils.piece.PieceSequence
 import janorschke.meyer.service.validator.BoardValidator
 
-class AiEvaluationTree(private val deepness: Int, private val board: Board, private val history: History, private val color: PieceColor) {
-    private val children: MutableList<AiEvaluationNode>
+/**
+ * TODO
+ */
+abstract class AiEvaluationTree(
+        protected val deepness: Int,
+        protected val board: Board,
+        protected val history: History,
+        protected val aiColor: PieceColor
+) {
+    protected val children: MutableList<AiEvaluationNode>
 
     init {
-        children = generateAiEvaluation(board, color)
-                .map { child -> generateAiEvaluation(child, color.opponent()) }
+        children = generateAiEvaluation(board, aiColor)
+                .map { child -> generateAiEvaluation(child, aiColor.opponent(), 1) }
                 .toMutableList()
     }
 
     /**
      * TODO
      */
-    fun getLeafs() = children.map { getLeafs(it) }.flatten().toMutableList()
-
-    /**
-     * TODO
-     */
-    private fun getLeafs(node: AiEvaluationNode): MutableList<AiEvaluationNode> {
-        if (node.getChildren().isEmpty()) return mutableListOf(node)
-        return node.getChildren().map { getLeafs(it) }.flatten().toMutableList()
-    }
+    abstract fun calculateBestMove(): Move
 
     /**
      * TODO
@@ -69,8 +70,10 @@ class AiEvaluationTree(private val deepness: Int, private val board: Board, priv
     }
 
     /**
+     * Generate for a piece all possible moves
+     *
      * @param indexedPiece which is selected
-     * @return all possible moves of an piece
+     * @return all moves of an piece
      */
     private fun generateMoveForPiece(indexedPiece: PieceSequence.IndexedPiece): MutableList<Move> {
         return indexedPiece.piece
@@ -80,7 +83,7 @@ class AiEvaluationTree(private val deepness: Int, private val board: Board, priv
                     // Create moves
                     if (BoardValidator.isPawnTransformation(indexedPiece.piece, possibleMove)) {
                         // Special case for the pawn transformation
-                        arrayOf(Knight(color), Bishop(color), Rook(color), Queen(color)).map { piece ->
+                        arrayOf(Knight(aiColor), Bishop(aiColor), Rook(aiColor), Queen(aiColor)).map { piece ->
                             Board(board).createMove(indexedPiece.position, possibleMove, piece)
                         }.toMutableList()
                     } else {
