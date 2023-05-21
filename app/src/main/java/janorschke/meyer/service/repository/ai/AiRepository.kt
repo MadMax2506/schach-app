@@ -1,54 +1,57 @@
 package janorschke.meyer.service.repository.ai
 
-import android.util.Log
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
-import janorschke.meyer.service.model.game.ai.AiBoardEvaluation
+import janorschke.meyer.service.model.game.ai.AiEvaluationNode
+import janorschke.meyer.service.model.game.ai.AiEvaluationTree
 import janorschke.meyer.service.model.game.board.Board
+import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
-import janorschke.meyer.service.utils.piece.PieceSequence
 
 private const val LOG_TAG = "AiRepository"
 
 /**
  * Handles the ai moves
+ *
+ * @param color of the ai
+ * @param board instance
+ * @param history instance
+ * @param level of the ai
  */
-abstract class AiRepository(val color: PieceColor, protected val board: Board, val aiLevel: AiLevel) {
+abstract class AiRepository(
+        val color: PieceColor,
+        protected val board: Board,
+        protected val history: History,
+        val level: AiLevel
+) {
     /**
      * @return the next possible move
      */
     abstract fun calculateNextMove(): Move
 
     /**
-     * @return all evaluated moves for the ai
+     * @param deepness of the simulation tree
      */
-    protected fun evaluateBoard(): MutableList<AiBoardEvaluation> {
-        Log.d(LOG_TAG, "Evaluate the board")
+    protected fun calculateNextMove(deepness: Int): Move {
+        if (deepness < 1) throw IllegalArgumentException("Deepness has to be bigger than 1, but is $deepness")
+        if (deepness % 2 != 0) throw IllegalArgumentException("Deepness is invalid")
 
-        TODO("evaluateBoard is not implemented")
-        generateMoves().map { move -> moveEvaluation(move) }
+        AiEvaluationTree(deepness, board, history, color)
+
+        TODO()
     }
 
-    private fun generateMoves(): MutableList<Move> {
-        return PieceSequence.allPiecesByColor(board, color)
-                .map { indexedPiece ->
-                    indexedPiece.piece
-                            .possibleMoves(board, indexedPiece.position)
-                            .map { possibleMove -> Board(board).createBoardMove(indexedPiece.position, possibleMove) }
-                }
-                .flatten()
-                .toMutableList()
+    /**
+     * TODO
+     */
+    private fun max(): AiEvaluationNode {
+        TODO()
     }
 
-    private fun moveEvaluation(move: Move) {
-        TODO("moveEvaluation https://www.freecodecamp.org/news/simple-chess-ai-step-by-step-1d55a9266977/")
-    }
-
-    private fun searchTreeMinMax() {
-        TODO("searchTreeMinMax https://www.freecodecamp.org/news/simple-chess-ai-step-by-step-1d55a9266977/")
-    }
-
-    private fun alphaBetaTrimming() {
-        TODO("alphaBetaTrimming https://www.freecodecamp.org/news/simple-chess-ai-step-by-step-1d55a9266977/")
+    /**
+     * TODO
+     */
+    private fun min(): AiEvaluationNode {
+        TODO()
     }
 }
