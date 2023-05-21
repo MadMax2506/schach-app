@@ -4,11 +4,12 @@ import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.board.Board
+import janorschke.meyer.service.model.game.board.History
 
 /**
  * Factory to create the repository for the correct ai level
  */
-class AiRepositoryFactory(private val game: Game, private val board: Board) {
+class AiRepositoryFactory(private val game: Game, private val board: Board, private val history: History) {
     init {
         if (game.playerWhite.aiLevel == null && game.playerBlack.aiLevel == null) {
             throw IllegalArgumentException("No player is an ai.")
@@ -17,9 +18,9 @@ class AiRepositoryFactory(private val game: Game, private val board: Board) {
 
     fun create(): AiRepository {
         return when (aiLevel()) {
-            AiLevel.KEVIN_OTTO -> AiLevelEasyRepository(aiColor(), board)
-            AiLevel.MAX -> AiLevelMediumRepository(aiColor(), board)
-            AiLevel.CHRIS -> AiLevelHardRepository(aiColor(), board)
+            AiLevel.KEVIN_OTTO -> AiLevelEasyRepository(aiColor(), board, history)
+            AiLevel.MAX -> AiLevelMediumRepository(aiColor(), board, history)
+            AiLevel.CHRIS -> AiLevelHardRepository(aiColor(), board, history)
         }
     }
 

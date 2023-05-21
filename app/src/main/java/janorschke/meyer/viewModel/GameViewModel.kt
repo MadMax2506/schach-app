@@ -46,7 +46,7 @@ class GameViewModel(
     private val game = Game(textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
-    private val aiRepository = AiRepositoryFactory(game, board).create()
+    private val aiRepository = AiRepositoryFactory(game, board, history).create()
     private val gameRepository = GameRepository(board, history, game)
     private val boardRepository = BoardRepository(board, history, game, gameRepository, aiRepository)
 

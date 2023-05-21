@@ -5,10 +5,15 @@ import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.piece.King
+import janorschke.meyer.service.model.game.piece.Pawn
+import janorschke.meyer.service.model.game.piece.Piece
+import janorschke.meyer.service.utils.board.PiecePosition
 import janorschke.meyer.service.utils.piece.PieceSequence
 
 object BoardValidator {
     private const val N_MOVE_REPETITIONS_FOR_STALEMATE = 10
+
+    fun isPawnTransformation(piece: Piece, to: PiecePosition) = piece is Pawn && to.row == piece.color.opponent().borderlineIndex
 
     /**
      * @param board instance
@@ -37,7 +42,7 @@ object BoardValidator {
                 .forEach {
                     it.piece.possibleMoves(board, it.position).forEach { move ->
                         Board(board).let { boardCopy ->
-                            boardCopy.createBoardMove(it.position, move)
+                            boardCopy.createMove(it.position, move)
                             // if King is not in check after this move, then it's not checkmate
                             if (!isKingInCheck(boardCopy, color)) return false
                         }
@@ -97,7 +102,7 @@ object BoardValidator {
      * @param color TODO
      */
     private fun hasColorRepeatedMoves(moveHistory: List<Move>, color: PieceColor): Boolean {
-        return moveHistory.filter { it.fromPiece.color == color }
+        return moveHistory.filter { it.fromPiece().color == color }
                 .withIndex()
                 .all {
                     if (it.index % 2 == 0) {

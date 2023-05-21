@@ -7,8 +7,19 @@ import janorschke.meyer.service.model.game.piece.Piece
  * Provides the history of all board moves and the beaten pieces by a move
  */
 class History {
-    private val beatenPieces: MutableList<Piece> = mutableListOf()
-    private val moves: MutableList<Move> = mutableListOf()
+    private val beatenPieces: MutableList<Piece>
+    private val moves: MutableList<Move>
+
+    constructor() {
+        beatenPieces = mutableListOf()
+        moves = mutableListOf()
+    }
+
+    // Copy Constructor
+    constructor(history: History) {
+        this.beatenPieces = history.beatenPieces.toMutableList()
+        this.moves = history.moves.toMutableList()
+    }
 
     fun reset() {
         beatenPieces.clear()
@@ -40,7 +51,9 @@ class History {
      * @param move of a piece
      */
     fun push(move: Move) {
-        if (move.toPiece != null) beatenPieces.also { it.add(move.toPiece) }.sortByDescending { it.pieceInfo.valence }
+        move.toPiece().let { piece ->
+            if (piece != null) beatenPieces.also { it.add(piece) }.sortByDescending { it.pieceInfo.valence }
+        }
         moves.add(move)
     }
 
@@ -49,7 +62,7 @@ class History {
      */
     fun undo(): Move {
         val move = moves.removeLast()
-        if (move.toPiece != null) beatenPieces.removeLast()
+        move.toPiece().let { piece -> if (piece != null) beatenPieces.removeLast() }
         return move
     }
 }

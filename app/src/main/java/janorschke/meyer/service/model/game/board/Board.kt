@@ -10,6 +10,7 @@ import janorschke.meyer.service.model.game.piece.lineMoving.Queen
 import janorschke.meyer.service.model.game.piece.lineMoving.Rook
 import janorschke.meyer.service.utils.board.PiecePosition
 import janorschke.meyer.service.utils.piece.PieceSequence
+import janorschke.meyer.service.validator.BoardValidator
 
 /**
  * Chess board
@@ -102,19 +103,26 @@ class Board {
      *
      * @param from source position
      * @param to target position
+     * @param pawnReplaceWith piece which is used for the pawn replace after transform on the opponent base line
      * @return board move
      */
-    fun createBoardMove(from: PiecePosition, to: PiecePosition): Move {
+    fun createMove(
+            from: PiecePosition,
+            to: PiecePosition,
+            pawnReplaceWith: Piece = Queen(getField(from)!!.color)
+    ): Move {
+        val fieldsBeforeMoving = Board(this).getFields()
         val fromPiece = getField(from)!!
-        val toPiece = getField(to)
 
         setField(from, null)
-        if (fromPiece is Pawn && to.row == fromPiece.color.opponent().borderlineIndex) {
-            setField(to, Queen(fromPiece.color))
+        if (BoardValidator.isPawnTransformation(fromPiece, to)) {
+            // pawn can be transfer to an higher valency piece
+            setField(to, pawnReplaceWith)
         } else {
+            // normal move
             setField(to, fromPiece)
         }
 
-        return Move(fields.map { it.copyOf() }.toTypedArray(), from, to, fromPiece, toPiece)
+        return Move(fieldsBeforeMoving, Board(this).getFields(), from, to)
     }
 }
