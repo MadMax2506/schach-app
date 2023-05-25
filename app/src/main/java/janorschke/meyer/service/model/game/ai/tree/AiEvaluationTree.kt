@@ -43,7 +43,7 @@ abstract class AiEvaluationTree(
         generateAiEvaluation(Board(node.move.fieldsAfterMoving), color, node)
                 .map { child -> generateAiEvaluation(child, color.opponent(), currentDeepness + 1) }
                 .toMutableList()
-                .let { node.addChildren(it) }
+                .let { children -> node.addChildren(children) }
 
         return node
     }

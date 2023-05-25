@@ -1,5 +1,6 @@
 package janorschke.meyer.service.repository.ai
 
+import janorschke.meyer.enums.AiEvaluationType
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
@@ -17,7 +18,7 @@ class AiLevelHardRepository(color: PieceColor, board: Board, history: History) :
     override fun calculateNextMove(): Move {
         return TimeTracking.log(LOG_TAG, "calculateNextMove") {
             // TODO use alpha beta pruning
-            calculateNextMove(janorschke.meyer.enums.AiEvaluationType.MIN_MAX_EVALUATION, 16)
+            calculateNextMove(AiEvaluationType.MIN_MAX_EVALUATION, 16)
         }
     }
 }

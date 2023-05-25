@@ -5,6 +5,7 @@ import janorschke.meyer.service.model.game.ai.AiEvaluationNode
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.utils.piece.PieceSequence
 
 /**
  * Evaluate the search tree with help of the min max algorithm
@@ -18,7 +19,11 @@ class AiMinMaxEvaluationTree(
         color: PieceColor
 ) : AiEvaluationTree(deepness, board, history, color) {
     override fun calculateBestMove(): Move {
-        TODO("Not yet implemented")
+        return PieceSequence.allPiecesByColor(board, aiColor)
+                .map { indexedPiece -> Pair(indexedPiece.position, indexedPiece.piece.possibleMoves(board, indexedPiece.position)) }
+                .filter { it.second.isNotEmpty() }
+                .first()
+                .let { board.createMove(it.first, it.second.first()) }
     }
 
     /**
