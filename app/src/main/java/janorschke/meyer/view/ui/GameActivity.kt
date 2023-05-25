@@ -2,6 +2,7 @@ package janorschke.meyer.view.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -39,7 +40,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var moveHistoryAdapter: MoveHistoryAdapter
     private lateinit var beatenPiecesByWhiteAdapter: BeatenPiecesAdapter
     private lateinit var beatenPiecesByBlackAdapter: BeatenPiecesAdapter
-    private lateinit var viewModel: GameViewModel
+    private lateinit var gameViewModel: GameViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +67,7 @@ class GameActivity : AppCompatActivity() {
         }
 
         // Board
-        boardAdapter = BoardAdapter(applicationContext, viewModel)
+        boardAdapter = BoardAdapter(applicationContext, gameViewModel)
         binding.boardWrapper?.board?.adapter = boardAdapter
 
         // Move History
@@ -74,9 +75,10 @@ class GameActivity : AppCompatActivity() {
         binding.moveHistoryWrapper?.moveHistory?.adapter = moveHistoryAdapter
 
         // Navigation Bar
-        val bottomNavigationView = binding.bottomNavigationView
-        bottomNavigationView?.menu?.findItem(R.id.button_surrender)?.setOnMenuItemClickListener(GameSurrenderOnClickListener(this))
-        bottomNavigationView?.menu?.findItem(R.id.button_vote_draw)?.setOnMenuItemClickListener(GameVoteDrawOnClickListener(this))
+        val layoutVoteDraw = binding.layoutVoteDraw
+        val layoutSurrender = binding.layoutSurrender
+        layoutVoteDraw?.findViewById<LinearLayout>(R.id.layout_vote_draw)?.setOnClickListener(GameSurrenderOnClickListener(this, gameViewModel))
+        layoutSurrender?.findViewById<LinearLayout>(R.id.layout_surrender)?.setOnClickListener(GameVoteDrawOnClickListener(this, gameViewModel))
 
         // Beaten Pieces By White
         beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)
@@ -105,7 +107,7 @@ class GameActivity : AppCompatActivity() {
                 val textResourceBlack = it.resourceId
 
                 // ViewModel
-                viewModel = ViewModelProvider(
+                gameViewModel = ViewModelProvider(
                         this,
                         GameViewModelFactory(application, textResourceWhite, textResourceBlack, null, it)
                 )[GameViewModel::class.java]
@@ -141,8 +143,13 @@ class GameActivity : AppCompatActivity() {
      * @param playerBlack
      * @see GameOverDialog.onCreateDialog
      */
-    private fun showGameOverDialog(winningColor: PieceColor? = null, playerWhite: Player, playerBlack: Player) {
-        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack).show(supportFragmentManager, GAMEOVER_DIALOG_TAG)
+    private fun showGameOverDialog(
+            winningColor: PieceColor? = null,
+            playerWhite: Player,
+            playerBlack: Player,
+            endByVote: Boolean = false
+    ) {
+        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote).show(supportFragmentManager, GAMEOVER_DIALOG_TAG)
     }
 
     /**
@@ -162,57 +169,75 @@ class GameActivity : AppCompatActivity() {
      * Observer for the view models
      */
     private fun observeViewModel() {
-        viewModel.status.observe(this) { status ->
-            if (status == GameStatus.CHECKMATE) {
-                Log.d(LOG_TAG, "Checkmate")
-                showGameOverDialog(viewModel.activePlayer.value?.color, viewModel.playerWhite.value!!, viewModel.playerBlack.value!!)
-            } else if (status == GameStatus.STALEMATE) {
-                Log.d(LOG_TAG, "Stalemate")
-                showGameOverDialog(playerWhite = viewModel.playerWhite.value!!, playerBlack = viewModel.playerBlack.value!!)
+        gameViewModel.status.observe(this) { status ->
+            when (status) {
+                GameStatus.CHECKMATE -> {
+                    Log.d(LOG_TAG, "Checkmate")
+                    showGameOverDialog(gameViewModel.activePlayer.value?.color, gameViewModel.playerWhite.value!!, gameViewModel.playerBlack.value!!)
+                }
+
+                GameStatus.STALEMATE -> {
+                    Log.d(LOG_TAG, "Stalemate")
+                    showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!)
+                }
+
+                GameStatus.DRAW -> {
+                    Log.d(LOG_TAG, "Draw voted")
+                    showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!, endByVote = true)
+                }
+
+                GameStatus.SURRENDERED -> {
+                    Log.d(LOG_TAG, "Draw voted")
+                    // TODO activePlayer doesn't make sense at this point, we need to know the player who clicked surrender
+                    //  we could just use the "player" in the AI mode? but in a local 1v1 mode both players should be able to give up
+                    showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!, endByVote = true)
+                }
+
+                else -> {} // just running
             }
         }
 
-        viewModel.activePlayer.observe(this) { player ->
+        gameViewModel.activePlayer.observe(this) { player ->
             Log.d(LOG_TAG, "Update player")
             boardAdapter.setPlayerColor(player.color)
         }
 
-        viewModel.selectedPosition.observe(this) { selectedPosition ->
+        gameViewModel.selectedPosition.observe(this) { selectedPosition ->
             Log.d(LOG_TAG, "Update selected positions")
             boardAdapter.setSelectedPosition(selectedPosition)
         }
 
-        viewModel.possibleMoves.observe(this) { moves ->
+        gameViewModel.possibleMoves.observe(this) { moves ->
             Log.d(LOG_TAG, "Update possible moves")
             boardAdapter.setPossibleMoves(moves)
         }
 
-        viewModel.fields.observe(this) { fields ->
+        gameViewModel.fields.observe(this) { fields ->
             Log.d(LOG_TAG, "Update fields")
             boardAdapter.setFields(fields)
         }
 
-        viewModel.moves.observe(this) { moveHistory ->
+        gameViewModel.moves.observe(this) { moveHistory ->
             Log.d(LOG_TAG, "Update move history")
             moveHistoryAdapter.setMoveHistory(moveHistory)
         }
 
-        viewModel.beatenPiecesByWhite.observe(this) { beatenPieces ->
+        gameViewModel.beatenPiecesByWhite.observe(this) { beatenPieces ->
             Log.d(LOG_TAG, "Update beaten pieces by white")
             beatenPiecesByWhiteAdapter.setBeatenPieces(beatenPieces)
         }
 
-        viewModel.beatenPiecesByBlack.observe(this) { beatenPieces ->
+        gameViewModel.beatenPiecesByBlack.observe(this) { beatenPieces ->
             Log.d(LOG_TAG, "Update beaten pieces by black")
             beatenPiecesByBlackAdapter.setBeatenPieces(beatenPieces)
         }
 
-        viewModel.pawnDifferenceWhite.observe(this) { pawnDifference ->
+        gameViewModel.pawnDifferenceWhite.observe(this) { pawnDifference ->
             Log.d(LOG_TAG, "Update pawn difference white")
             setPawnDifference(playerInfoWhite, pawnDifference)
         }
 
-        viewModel.pawnDifferenceBlack.observe(this) { pawnDifference ->
+        gameViewModel.pawnDifferenceBlack.observe(this) { pawnDifference ->
             Log.d(LOG_TAG, "Update pawn difference black")
             setPawnDifference(playerInfoBlack, pawnDifference)
         }
