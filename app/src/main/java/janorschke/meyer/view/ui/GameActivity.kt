@@ -77,8 +77,8 @@ class GameActivity : AppCompatActivity() {
         // Navigation Bar
         val layoutVoteDraw = binding.layoutVoteDraw
         val layoutSurrender = binding.layoutSurrender
-        layoutVoteDraw?.findViewById<LinearLayout>(R.id.layout_vote_draw)?.setOnClickListener(GameSurrenderOnClickListener(this, gameViewModel))
-        layoutSurrender?.findViewById<LinearLayout>(R.id.layout_surrender)?.setOnClickListener(GameVoteDrawOnClickListener(this, gameViewModel))
+        layoutVoteDraw?.findViewById<LinearLayout>(R.id.layout_vote_draw)?.setOnClickListener(GameVoteDrawOnClickListener(this, gameViewModel))
+        layoutSurrender?.findViewById<LinearLayout>(R.id.layout_surrender)?.setOnClickListener(GameSurrenderOnClickListener(this, gameViewModel))
 
         // Beaten Pieces By White
         beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)
@@ -190,7 +190,8 @@ class GameActivity : AppCompatActivity() {
                     Log.d(LOG_TAG, "Draw voted")
                     // TODO activePlayer doesn't make sense at this point, we need to know the player who clicked surrender
                     //  we could just use the "player" in the AI mode? but in a local 1v1 mode both players should be able to give up
-                    showGameOverDialog(gameViewModel.activePlayer.value?.color?.opponent(), playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!, endByVote = true)
+                    showGameOverDialog(gameViewModel.activePlayer.value?.color?.opponent(), gameViewModel.playerWhite.value!!,
+                            gameViewModel.playerBlack.value!!, true)
                 }
 
                 else -> {} // just running
