@@ -102,12 +102,8 @@ object BoardValidator {
         filteredHistory
                 .withIndex()
                 .forEach {
-                    if (it.index % 2 == 0) {
-                        if (filteredHistory[0] != it.value) return false
-                    } else {
-                        if (filteredHistory[1] != it.value) return false
-                    }
-
+                    if (it.index % 2 == 0 && filteredHistory[0] != it.value) return false
+                    else if (it.index % 2 == 1 && filteredHistory[1] != it.value) return false
                 }
         return true
     }
