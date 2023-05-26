@@ -94,8 +94,8 @@ class GameActivity : AppCompatActivity() {
      * Sets the onClickListener for the Layouts at the Bottom of the View
      */
     private fun setBottomLayoutListener() {
-        val layoutVoteDraw = binding.layoutVoteDraw
-        val layoutSurrender = binding.layoutSurrender
+        val layoutVoteDraw = binding.bottomBar?.layoutVoteDraw
+        val layoutSurrender = binding.bottomBar?.layoutSurrender
         layoutVoteDraw?.findViewById<LinearLayout>(R.id.layout_vote_draw)?.setOnClickListener(GameVoteDrawOnClickListener(this, gameViewModel))
         layoutSurrender?.findViewById<LinearLayout>(R.id.layout_surrender)?.setOnClickListener(GameSurrenderOnClickListener(this, gameViewModel))
     }
