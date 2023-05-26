@@ -75,7 +75,7 @@ object BoardValidator {
         if (!checkIfPlayerCanWin(pieceSequence) && !checkIfPlayerCanWin(pieceSequenceOpponent)) return true
 
         // check move-repetition
-        if (N_MOVE_REPETITIONS_FOR_STALEMATE >= history.numberOfMoves()) return false
+        if (N_MOVE_REPETITIONS_FOR_STALEMATE >= history.numberOfMoves) return false
         history.getLastMoves(N_MOVE_REPETITIONS_FOR_STALEMATE).let { moves ->
             return hasColorRepeatedMoves(moves, PieceColor.WHITE) && hasColorRepeatedMoves(moves, PieceColor.BLACK)
         }
@@ -103,7 +103,7 @@ object BoardValidator {
      */
     private fun hasColorRepeatedMoves(moveHistory: List<Move>, color: PieceColor): Boolean {
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/97
-        return moveHistory.filter { it.fromPiece().color == color }
+        return moveHistory.filter { it.fromPiece.color == color }
                 .withIndex()
                 .all {
                     if (it.index % 2 == 0) {

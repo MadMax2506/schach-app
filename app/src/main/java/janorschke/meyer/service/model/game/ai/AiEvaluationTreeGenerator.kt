@@ -1,8 +1,7 @@
-package janorschke.meyer.service.utils
+package janorschke.meyer.service.model.game.ai
 
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
-import janorschke.meyer.service.model.game.ai.AiEvaluationNode
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.piece.Knight
@@ -12,12 +11,15 @@ import janorschke.meyer.service.model.game.piece.lineMoving.Rook
 import janorschke.meyer.service.utils.piece.PieceSequence
 import janorschke.meyer.service.validator.BoardValidator
 
-object AiEvaluationTreeGenerator {
+class AiEvaluationTreeGenerator(private val level: AiLevel) {
     /**
      * TODO
      */
-    fun generate(node: AiEvaluationNode, color: PieceColor, level: AiLevel, board: Board): AiEvaluationNode {
-        return generate(node, color, level, 0, board)
+    fun generate(root: AiEvaluationNode, board: Board): AiEvaluationNode {
+        // If the root node contains no move, it is the start of the game (WHITE) begins
+        // otherwise the opponent color is the next one
+        val color = if (root.move == null) PieceColor.WHITE else root.requiredMove.fromPiece.color.opponent()
+        return generate(root, color, 0, board)
     }
 
     /**
@@ -26,20 +28,17 @@ object AiEvaluationTreeGenerator {
     private fun generate(
             node: AiEvaluationNode,
             color: PieceColor,
-            level: AiLevel,
             currentDeepness: Int,
-            board: Board = Board(node.requiredMove().fieldsAfterMoving)
+            board: Board = Board(node.requiredMove.fieldsAfterMoving)
     ): AiEvaluationNode {
-        if (currentDeepness == level.deepness || BoardValidator.isKingCheckmate(board, color.opponent())) {
-            return node
-        }
+        if (currentDeepness == level.deepness || BoardValidator.isKingCheckmate(board, color.opponent())) return node
 
         // TODO
-        (if (node.getChildren().size > 0) node.getChildren() else generateChildren(node, board, color))
-                .map { child -> generate(child, color.opponent(), level, currentDeepness + 1) }
+        val children = (if (node.numberOfChildren > 0) node.getChildren() else generateChildren(node, board, color))
+                .map { child -> generate(child, color.opponent(), currentDeepness + 1) }
                 .toMutableList()
-                .let { children -> node.addChildren(children) }
 
+        node.setChildren(children)
         return node
     }
 

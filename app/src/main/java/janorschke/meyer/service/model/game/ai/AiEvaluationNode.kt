@@ -11,16 +11,18 @@ import janorschke.meyer.service.validator.BoardValidator
 /**
  * TODO
  */
-class AiEvaluationNode(aiColor: PieceColor, val parent: AiEvaluationNode?, private val move: Move?, private val history: History) {
+class AiEvaluationNode(aiColor: PieceColor, val parent: AiEvaluationNode?, val move: Move?, private val history: History) {
     val valency: Int
+    val requiredMove: Move get() = move!!
+    val numberOfChildren: Int get() = children?.size ?: 0
 
-    private val children: MutableList<AiEvaluationNode> = mutableListOf()
+    private var children: MutableList<AiEvaluationNode>? = null
 
     // Constructor for the begin of an game
     constructor(aiColor: PieceColor, history: History) : this(aiColor, null, null, History(history))
 
     // Default constructor for a node or leaf
-    constructor(aiColor: PieceColor, move: Move, parent: AiEvaluationNode) : this(aiColor, parent, move, parent.history)
+    constructor(aiColor: PieceColor, move: Move, parent: AiEvaluationNode) : this(aiColor, parent, move, History(parent.history))
 
     init {
         valency = if (move == null) {
@@ -29,9 +31,9 @@ class AiEvaluationNode(aiColor: PieceColor, val parent: AiEvaluationNode?, priva
         } else {
             // Calculates valency of the current position
             if (aiColor == PieceColor.WHITE) 1 else -1 * Board(move.fieldsAfterMoving).let { boardCopy ->
-                history.push(move)
+                history.push(move) // TODO is not applied to the history
 
-                val color = move.fromPiece().color.opponent()
+                val color = move.fromPiece.color.opponent()
 
                 if (BoardValidator.isKingCheckmate(boardCopy, color)) Int.MAX_VALUE
                 if (BoardValidator.isStalemate(boardCopy, history, color)) Int.MIN_VALUE
@@ -43,19 +45,14 @@ class AiEvaluationNode(aiColor: PieceColor, val parent: AiEvaluationNode?, priva
     /**
      * TODO
      */
-    fun addChildren(children: MutableList<AiEvaluationNode>) {
-        this.children.plus(children)
+    fun setChildren(children: MutableList<AiEvaluationNode>) {
+        this.children = children.toMutableList()
     }
 
     /**
      * TODO
      */
-    fun getChildren() = children
-
-    /**
-     * TODO
-     */
-    fun requiredMove() = move!!
+    fun getChildren() = children!!
 
     /**
      * @param board instance

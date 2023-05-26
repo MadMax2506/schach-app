@@ -62,7 +62,7 @@ class BoardRepository(
         history.push(move)
         aiRepository.applyMove(move)
 
-        if (move.toPiece() != null) Log.d(LOG_TAG, "${from.getNotation()} beat piece on ${to.getNotation()}")
+        if (move.toPiece != null) Log.d(LOG_TAG, "${from.getNotation()} beat piece on ${to.getNotation()}")
         else Log.d(LOG_TAG, "Move piece from ${from.getNotation()} to ${to.getNotation()}")
     }
 

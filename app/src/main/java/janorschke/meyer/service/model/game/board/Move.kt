@@ -14,6 +14,7 @@ class Move(
         /**
          * Fields before moving pieces
          */
+        // TODO not working
         val fieldsAfterMoving: Array<Array<Piece?>>,
         /**
          * Source position of the piece
@@ -24,15 +25,8 @@ class Move(
          */
         val to: PiecePosition
 ) {
-    /**
-     * @return piece which is moving
-     */
-    fun fromPiece() = fieldsBeforeMoving[from.row][from.col]!!
-
-    /**
-     * @return piece on the target position which is beaten (opponent) or is null (empty field)
-     */
-    fun toPiece() = fieldsBeforeMoving[to.row][to.col]
+    val fromPiece get() = fieldsBeforeMoving[from.row][from.col]!!
+    val toPiece get() = fieldsBeforeMoving[to.row][to.col]
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

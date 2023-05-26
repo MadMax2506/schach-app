@@ -7,6 +7,8 @@ import janorschke.meyer.service.model.game.piece.Piece
  * Provides the history of all board moves and the beaten pieces by a move
  */
 class History {
+    val numberOfMoves get() = moves.size
+
     private val beatenPieces: MutableList<Piece>
     private val moves: MutableList<Move>
 
@@ -26,10 +28,6 @@ class History {
         moves.clear()
     }
 
-    /**
-     * @return number of moves
-     */
-    fun numberOfMoves(): Int = moves.size
 
     fun getMoves() = moves
 
@@ -37,7 +35,7 @@ class History {
      * @param n number of moves
      * @return the n last moves
      */
-    fun getLastMoves(n: Int) = moves.slice(IntRange(numberOfMoves() - 1 - n, numberOfMoves() - 1)).toMutableList()
+    fun getLastMoves(n: Int) = moves.slice(IntRange(numberOfMoves - 1 - n, numberOfMoves - 1)).toMutableList()
 
     /**
      * @param color of the pieces
@@ -51,7 +49,7 @@ class History {
      * @param move of a piece
      */
     fun push(move: Move) {
-        move.toPiece().let { piece ->
+        move.toPiece.let { piece ->
             if (piece != null) beatenPieces.also { it.add(piece) }.sortByDescending { it.pieceInfo.valence }
         }
         moves.add(move)
@@ -62,7 +60,7 @@ class History {
      */
     fun undo(): Move {
         val move = moves.removeLast()
-        move.toPiece().let { piece -> if (piece != null) beatenPieces.removeLast() }
+        move.toPiece.let { piece -> if (piece != null) beatenPieces.removeLast() }
         return move
     }
 }
