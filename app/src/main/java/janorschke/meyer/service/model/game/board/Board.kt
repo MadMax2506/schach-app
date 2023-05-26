@@ -69,7 +69,7 @@ class Board {
      * @param position target
      * @return piece on the target
      */
-    fun getField(position: PiecePosition): Piece? = fields[position.row][position.col]
+    fun getField(position: PiecePosition) = fields[position.row][position.col]
 
     fun setField(position: PiecePosition, piece: Piece?) {
         fields[position.row][position.col] = piece

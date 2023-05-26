@@ -11,7 +11,8 @@ import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameMode
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.TransferKeys
-import janorschke.meyer.service.model.game.Player
+import janorschke.meyer.service.model.game.player.AiPlayer
+import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.view.ui.AiActivity
 import janorschke.meyer.view.ui.GameActivity
 import janorschke.meyer.view.ui.MainActivity
@@ -45,7 +46,7 @@ class GameOverDialog : BaseDialog() {
         val playerWhite: Player = requireArguments().requiredSerializable(ARG_PLAYER_WHITE)
         val playerBlack: Player = requireArguments().requiredSerializable(ARG_PLAYER_BLACK)
 
-        aiLevel = playerWhite.aiLevel ?: playerBlack.aiLevel
+        aiLevel = if (playerWhite is AiPlayer) playerWhite.aiLevel else (playerBlack as AiPlayer).aiLevel
 
         binding.textGameOverDialog.text = getDialogText(winningColor, playerWhite, playerBlack)
 
