@@ -19,4 +19,9 @@
         <item name="colorOnPrimary">@color/black</item>
     </style>
 
+    <style name="MyTheme.Dialog" parent="MaterialAlertDialog.Material3">
+        <item name="android:background">@color/beige</item>
+    </style>
+
+
 </resources>

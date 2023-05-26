@@ -14,7 +14,7 @@ class GameSurrenderOnClickListener(private val activity: Activity,
     }
 
     private fun showConfirmationDialog() {
-        MaterialAlertDialogBuilder(activity)
+        MaterialAlertDialogBuilder(activity, R.style.MyTheme_Dialog)
                 .setTitle(R.string.dialog_surrender_title)
                 .setMessage(R.string.dialog_surrender_message)
                 .setPositiveButton(R.string.yes) { dialog, _ ->
