@@ -35,7 +35,7 @@ class History {
      * @param n number of moves
      * @return the n last moves
      */
-    fun getLastMoves(n: Int) = moves.slice(IntRange(numberOfMoves - 1 - n, numberOfMoves - 1)).toMutableList()
+    fun getLastMoves(n: Int) = moves.slice(IntRange(numberOfMoves - n, numberOfMoves - 1)).toMutableList()
 
     /**
      * @param color of the pieces
