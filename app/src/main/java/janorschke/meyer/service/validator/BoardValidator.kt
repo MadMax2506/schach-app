@@ -71,7 +71,7 @@ object BoardValidator {
                 .isEmpty()
                 .let { isEmpty -> if (isEmpty) return true }
 
-        // check if both player has enough pieces
+        // check if both player have enough pieces
         if (!checkIfPlayerCanWin(pieceSequence) && !checkIfPlayerCanWin(pieceSequenceOpponent)) return true
 
         // check move-repetition
@@ -102,6 +102,7 @@ object BoardValidator {
      * @param color TODO
      */
     private fun hasColorRepeatedMoves(moveHistory: List<Move>, color: PieceColor): Boolean {
+        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/97
         return moveHistory.filter { it.fromPiece().color == color }
                 .withIndex()
                 .all {
