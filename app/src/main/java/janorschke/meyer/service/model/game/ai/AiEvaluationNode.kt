@@ -9,29 +9,34 @@ import janorschke.meyer.service.utils.piece.PieceSequence
 import janorschke.meyer.service.validator.BoardValidator
 
 /**
- * @param move which is done in the evaluation step
- * @param aiColor
- * @param history instance
- * @param parent node
+ * TODO
  */
-class AiEvaluationNode(val move: Move, aiColor: PieceColor, private val history: History, val parent: AiEvaluationNode?) {
+class AiEvaluationNode(aiColor: PieceColor, val parent: AiEvaluationNode?, private val move: Move?, private val history: History) {
     val valency: Int
 
     private val children: MutableList<AiEvaluationNode> = mutableListOf()
 
-    constructor(move: Move, aiColor: PieceColor, parent: AiEvaluationNode) : this(move, aiColor, parent.history, parent)
-    constructor(move: Move, aiColor: PieceColor, history: History) : this(move, aiColor, history, null)
+    // Constructor for the begin of an game
+    constructor(aiColor: PieceColor, history: History) : this(aiColor, null, null, History(history))
+
+    // Default constructor for a node or leaf
+    constructor(aiColor: PieceColor, move: Move, parent: AiEvaluationNode) : this(aiColor, parent, move, parent.history)
 
     init {
-        // Calculates valency of the current position
-        valency = if (aiColor == PieceColor.WHITE) 1 else -1 * Board(move.fieldsAfterMoving).let { boardCopy ->
-            history.push(move)
+        valency = if (move == null) {
+            // Neutral starting position on the board
+            0
+        } else {
+            // Calculates valency of the current position
+            if (aiColor == PieceColor.WHITE) 1 else -1 * Board(move.fieldsAfterMoving).let { boardCopy ->
+                history.push(move)
 
-            val color = move.fromPiece().color.opponent()
+                val color = move.fromPiece().color.opponent()
 
-            if (BoardValidator.isKingCheckmate(boardCopy, color)) Int.MAX_VALUE
-            if (BoardValidator.isStalemate(boardCopy, history, color)) Int.MIN_VALUE
-            getPieceValue(boardCopy, PieceColor.WHITE) - getPieceValue(boardCopy, PieceColor.BLACK)
+                if (BoardValidator.isKingCheckmate(boardCopy, color)) Int.MAX_VALUE
+                if (BoardValidator.isStalemate(boardCopy, history, color)) Int.MIN_VALUE
+                getPieceValue(boardCopy, PieceColor.WHITE) - getPieceValue(boardCopy, PieceColor.BLACK)
+            }
         }
     }
 
@@ -46,6 +51,11 @@ class AiEvaluationNode(val move: Move, aiColor: PieceColor, private val history:
      * TODO
      */
     fun getChildren() = children
+
+    /**
+     * TODO
+     */
+    fun requiredMove() = move!!
 
     /**
      * @param board instance

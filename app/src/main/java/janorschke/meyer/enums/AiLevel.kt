@@ -2,8 +2,8 @@ package janorschke.meyer.enums
 
 import janorschke.meyer.R
 
-enum class AiLevel(val resourceId: Int) {
-    KEVIN_OTTO(R.string.ai_kevin_otto),
-    MAX(R.string.ai_max),
-    CHRIS(R.string.ai_chris)
+enum class AiLevel(val resourceId: Int, val deepness: Int) {
+    KEVIN_OTTO(R.string.ai_kevin_otto, 2),
+    MAX(R.string.ai_max, 4),
+    CHRIS(R.string.ai_chris, 16)
 }

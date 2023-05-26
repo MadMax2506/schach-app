@@ -47,6 +47,7 @@ class BoardRepository(
         if (gameRepository.checkEndOfGame(piece!!) || isAiMove) return
 
         // Calculate the next move from the ai
+        // TODO put into an own thread https://github.com/MadMax2506/android-wahlmodul-project/issues/99
         aiRepository.calculateNextMove().let { move -> tryToMovePiece(move.from, move.to, true) }
     }
 
@@ -57,10 +58,11 @@ class BoardRepository(
      * @param to target position
      */
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
-        val boardMove = createMove(from, to)
-        history.push(boardMove)
+        val move = createMove(from, to)
+        history.push(move)
+        aiRepository.applyMove(move)
 
-        if (boardMove.toPiece() != null) Log.d(LOG_TAG, "${from.getNotation()} beat piece on ${to.getNotation()}")
+        if (move.toPiece() != null) Log.d(LOG_TAG, "${from.getNotation()} beat piece on ${to.getNotation()}")
         else Log.d(LOG_TAG, "Move piece from ${from.getNotation()} to ${to.getNotation()}")
     }
 
