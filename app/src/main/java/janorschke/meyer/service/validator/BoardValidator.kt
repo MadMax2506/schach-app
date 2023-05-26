@@ -99,8 +99,7 @@ object BoardValidator {
     private fun hasColorRepeatedMoves(moveHistory: List<Move>, color: PieceColor): Boolean {
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/97
         val filteredHistory = moveHistory.filter { it.fromPiece.color == color }
-        filteredHistory
-                .withIndex()
+        filteredHistory.withIndex()
                 .forEach {
                     if (it.index % 2 == 0 && filteredHistory[0] != it.value) return false
                     else if (it.index % 2 == 1 && filteredHistory[1] != it.value) return false
