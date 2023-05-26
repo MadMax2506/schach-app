@@ -7,7 +7,7 @@
     <dimen name="beaten_pieces_list_width">40sp</dimen>
 
     <dimen name="pawn_difference_margin_y">10sp</dimen>
-    <dimen name="pawn_difference_fontSize">10sp</dimen>
+    <dimen name="pawn_difference_fontSize">14sp</dimen>
     <dimen name="pawn_difference_width">50sp</dimen>
     <dimen name="pawn_difference_height">@dimen/beaten_pieces_list_width</dimen>
 
