@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    android:orientation="horizontal">
 
     <include
-        layout="@layout/board"
         android:id="@+id/board_wrapper"
+        layout="@layout/board"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:layout_gravity="center_vertical">
+        android:orientation="vertical">
 
         <include
-            layout="@layout/player_info"
-            android:id="@+id/player_one" />
+            android:id="@+id/player_one"
+            layout="@layout/player_info" />
 
         <include
-            layout="@layout/move_history"
-            android:id="@+id/moveHistoryWrapper" />
+            android:id="@+id/moveHistoryWrapper"
+            layout="@layout/move_history" />
 
         <include
             android:id="@+id/player_two"
             layout="@layout/player_info" />
+
+        <include
+            android:id="@+id/bottom_bar"
+            layout="@layout/bottom_bar" />
     </LinearLayout>
 
 </LinearLayout>

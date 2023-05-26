@@ -76,10 +76,7 @@ class GameActivity : AppCompatActivity() {
         binding.moveHistoryWrapper?.moveHistory?.adapter = moveHistoryAdapter
 
         // Navigation Bar
-        val layoutVoteDraw = binding.layoutVoteDraw
-        val layoutSurrender = binding.layoutSurrender
-        layoutVoteDraw?.findViewById<LinearLayout>(R.id.layout_vote_draw)?.setOnClickListener(GameSurrenderOnClickListener(this, gameViewModel))
-        layoutSurrender?.findViewById<LinearLayout>(R.id.layout_surrender)?.setOnClickListener(GameVoteDrawOnClickListener(this, gameViewModel))
+        setBottomLayoutListener()
 
         // Beaten Pieces By White
         beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)
@@ -92,6 +89,16 @@ class GameActivity : AppCompatActivity() {
         // Observer
         // IMPORTANT: It needs to be after all adapter initializations
         observeViewModel()
+    }
+
+    /**
+     * Sets the onClickListener for the Layouts at the Bottom of the View
+     */
+    private fun setBottomLayoutListener() {
+        val layoutVoteDraw = binding.bottomBar?.layoutVoteDraw
+        val layoutSurrender = binding.bottomBar?.layoutSurrender
+        layoutVoteDraw?.findViewById<LinearLayout>(R.id.layout_vote_draw)?.setOnClickListener(GameVoteDrawOnClickListener(this, gameViewModel))
+        layoutSurrender?.findViewById<LinearLayout>(R.id.layout_surrender)?.setOnClickListener(GameSurrenderOnClickListener(this, gameViewModel))
     }
 
     /**
@@ -189,9 +196,8 @@ class GameActivity : AppCompatActivity() {
 
                 GameStatus.SURRENDERED -> {
                     Log.d(LOG_TAG, "Draw voted")
-                    // TODO activePlayer doesn't make sense at this point, we need to know the player who clicked surrender
-                    //  we could just use the "player" in the AI mode? but in a local 1v1 mode both players should be able to give up
-                    showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!, endByVote = true)
+                    showGameOverDialog(gameViewModel.activePlayer.value?.color?.opponent(), gameViewModel.playerWhite.value!!,
+                            gameViewModel.playerBlack.value!!, true)
                 }
 
                 else -> {} // just running

@@ -13,7 +13,7 @@ class GameVoteDrawOnClickListener(private val activity: Activity, private val ga
     }
 
     private fun showConfirmationDialog() {
-        MaterialAlertDialogBuilder(activity)
+        MaterialAlertDialogBuilder(activity, R.style.MyTheme_Dialog)
                 .setTitle(R.string.dialog_draw_title)
                 .setMessage(R.string.dialog_draw_message)
                 .setPositiveButton(R.string.yes) { dialog, _ ->
