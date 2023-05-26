@@ -94,19 +94,21 @@ object BoardValidator {
 
     /**
      * @param moveHistory to check the move-repetition for the given color
-     * @param color TODO
+     * @param color of the pieces that have possibly the repeated moves
      */
     private fun hasColorRepeatedMoves(moveHistory: List<Move>, color: PieceColor): Boolean {
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/97
-        return moveHistory.filter { it.fromPiece.color == color }
+        val filteredHistory = moveHistory.filter { it.fromPiece.color == color }
+        filteredHistory
                 .withIndex()
-                .all {
+                .forEach {
                     if (it.index % 2 == 0) {
-                        if (moveHistory[0] != it.value) return false
+                        if (filteredHistory[0] != it.value) return false
                     } else {
-                        if (moveHistory[1] != it.value) return false
+                        if (filteredHistory[1] != it.value) return false
                     }
-                    return true
+
                 }
+        return true
     }
 }
