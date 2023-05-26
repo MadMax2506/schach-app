@@ -1,5 +1,6 @@
 package janorschke.meyer.view.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
@@ -156,12 +157,12 @@ class GameActivity : AppCompatActivity() {
      * @param binding of the player info
      * @param value of the difference
      */
+    @SuppressLint("SetTextI18n")
     private fun setPawnDifference(binding: PlayerInfoBinding, value: Int) {
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/91
         when {
-            value > 0 -> binding.pawnDifference.text = String.format("+%s ", value)
-            value < 0 -> binding.pawnDifference.text = String.format("%s ", value)
-            else -> binding.pawnDifference.text = " 0 "
+            value > 0 -> binding.pawnDifference.text = "+$value"
+            value < 0 -> binding.pawnDifference.text = "$value"
+            else -> binding.pawnDifference.text = "0"
         }
     }
 

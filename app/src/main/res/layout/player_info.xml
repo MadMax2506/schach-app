@@ -1,37 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="4dp">
+    android:layout_marginVertical="4sp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/h1"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="@dimen/h1" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/beaten_pieces_list_width">
 
-        <com.google.android.material.chip.Chip
+        <TextView
             android:id="@+id/pawn_difference"
             android:enabled="false"
             android:layout_width="@dimen/pawn_difference_width"
-            android:layout_height="@dimen/pawn_difference_height"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/pawn_difference_margin_y"
-            android:textSize="@dimen/pawn_difference_fontSize"
-            android:textAlignment="center" />
+            android:background="@drawable/pawn_difference"
+            android:textAlignment="center"
+            android:textSize="@dimen/pawn_difference_fontSize" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/beaten_pieces"
-            android:background="@drawable/border"
-            android:paddingVertical="1sp"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@drawable/border"
+            android:orientation="horizontal"
+            android:paddingVertical="1sp" />
     </LinearLayout>
 
 </LinearLayout>
