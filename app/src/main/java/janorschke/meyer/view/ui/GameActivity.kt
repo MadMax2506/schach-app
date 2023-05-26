@@ -190,7 +190,7 @@ class GameActivity : AppCompatActivity() {
                     Log.d(LOG_TAG, "Draw voted")
                     // TODO activePlayer doesn't make sense at this point, we need to know the player who clicked surrender
                     //  we could just use the "player" in the AI mode? but in a local 1v1 mode both players should be able to give up
-                    showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!, endByVote = true)
+                    showGameOverDialog(gameViewModel.activePlayer.value?.color?.opponent(), playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!, endByVote = true)
                 }
 
                 else -> {} // just running
