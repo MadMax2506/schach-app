@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.Player
 import janorschke.meyer.service.model.game.board.Board
@@ -27,8 +28,8 @@ class GameViewModel(
         textResourceWhite: Int,
         textResourceBlack: Int,
         aiLevelWhite: AiLevel?,
-        aiLevelBlack: AiLevel?
-) : AndroidViewModel(application) {
+        aiLevelBlack: AiLevel?,
+        timeMode: TimeMode) : AndroidViewModel(application) {
     // live data for the view
     val activePlayer: MutableLiveData<Player> = MutableLiveData()
     val playerWhite: MutableLiveData<Player> = MutableLiveData()
@@ -43,7 +44,7 @@ class GameViewModel(
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
     val pawnDifferenceBlack: MutableLiveData<Int> = MutableLiveData()
 
-    private val game = Game(textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack)
+    private val game = Game(textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack, timeMode)
     private val board = Board()
     private val history = History()
     private val aiRepository = AiRepositoryFactory(game, board).create()

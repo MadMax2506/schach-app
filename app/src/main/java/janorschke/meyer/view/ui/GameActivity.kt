@@ -13,6 +13,7 @@ import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameMode
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.enums.TransferKeys
 import janorschke.meyer.service.model.game.Player
 import janorschke.meyer.view.adapter.BoardAdapter
@@ -91,23 +92,26 @@ class GameActivity : AppCompatActivity() {
      * @return a pair of the two players
      */
     private fun aiGameMode() {
-        intent.extras?.getString(TransferKeys.AI_LEVEL.name).let { aiLevelStr ->
-            if (aiLevelStr == null) throw IllegalArgumentException("Wrong ai level")
+        val aiLevelStr = intent.extras?.getString(TransferKeys.AI_LEVEL.name)
+                ?: throw IllegalArgumentException("AI Level null")
+        val timeModeStr = intent.extras?.getString(TransferKeys.TIME_MODE.name)
+                ?: throw IllegalArgumentException("Time Mode null")
 
-            enumValueOf<AiLevel>(aiLevelStr).let {
-                val textResourceWhite = R.string.default_player_name
-                val textResourceBlack = it.resourceId
+        val aiLevel = enumValueOf<AiLevel>(aiLevelStr)
+        val timeMode = enumValueOf<TimeMode>(timeModeStr)
 
-                // ViewModel
-                viewModel = ViewModelProvider(
-                        this,
-                        GameViewModelFactory(application, textResourceWhite, textResourceBlack, null, it)
-                )[GameViewModel::class.java]
+        val textResourceWhite = R.string.default_player_name
+        val textResourceBlack = aiLevel.resourceId
 
-                playerInfoWhite.name.text = resources.getString(textResourceWhite)
-                playerInfoBlack.name.text = resources.getString(textResourceBlack)
-            }
-        }
+        // ViewModel
+        viewModel = ViewModelProvider(
+                this,
+                GameViewModelFactory(application, textResourceWhite, textResourceBlack, null, aiLevel, timeMode)
+        )[GameViewModel::class.java]
+
+        playerInfoWhite.name.text = resources.getString(textResourceWhite)
+        playerInfoBlack.name.text = resources.getString(textResourceBlack)
+
     }
 
     /**

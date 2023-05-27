@@ -5,5 +5,6 @@ package janorschke.meyer.enums
  */
 enum class TransferKeys {
     AI_LEVEL,
-    GAME_MODE
+    GAME_MODE,
+    TIME_MODE
 }
