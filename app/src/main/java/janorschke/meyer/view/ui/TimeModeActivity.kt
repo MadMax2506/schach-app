@@ -26,11 +26,15 @@ class TimeModeActivity : AppCompatActivity() {
     }
 
     private fun startGame(timeMode: TimeMode) {
+        val aiLevelStr = intent.extras?.getString(TransferKeys.AI_LEVEL.name)
+                ?: throw IllegalArgumentException("AI Level null")
+
         Intent(this, GameActivity::class.java).let { intent ->
-            Log.d(LOG_TAG, "Start new game with the ai-level $timeMode")
+            Log.d(LOG_TAG, "Start new game with the ai-level $aiLevelStr and timemode ${timeMode.name}")
 
             intent.putExtras(Bundle().also { bundle ->
                 bundle.putString(TransferKeys.TIME_MODE.name, timeMode.name)
+                bundle.putString(TransferKeys.AI_LEVEL.name, aiLevelStr)
                 bundle.putString(TransferKeys.GAME_MODE.name, GameMode.AI.name)
             })
             startActivity(intent)
