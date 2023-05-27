@@ -16,7 +16,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64sp"
+        android:layout_marginTop="96sp"
         android:gravity="center_horizontal">
 
         <com.google.android.material.button.MaterialButton
