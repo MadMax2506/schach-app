@@ -2,6 +2,7 @@ package janorschke.meyer.view.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -39,7 +40,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var moveHistoryAdapter: MoveHistoryAdapter
     private lateinit var beatenPiecesByWhiteAdapter: BeatenPiecesAdapter
     private lateinit var beatenPiecesByBlackAdapter: BeatenPiecesAdapter
-    private lateinit var viewModel: GameViewModel
+    private lateinit var gameViewModel: GameViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,8 +66,30 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
+        // Time Mode
+        val timeModeStr = intent.extras?.getString(TransferKeys.TIME_MODE.name)
+                ?: throw IllegalArgumentException("Time Mode null!")
+        val timeMode = enumValueOf<TimeMode>(timeModeStr)
+
+        binding.playerOne!!.time // setHidden
+
+        // Start the countdown for 10 seconds (10000 milliseconds)
+        if (timeMode != TimeMode.UNLIMITED) {
+            object : CountDownTimer(timeMode.time, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    val seconds = millisUntilFinished / 1000
+                    binding.playerTwo!!.time.text = "Countdown: $seconds"
+                }
+
+                override fun onFinish() {
+                    binding.playerTwo!!.time.text = "Countdown abgelaufen!"
+                    // TODO Dialog öffnen
+                }
+            }.start()
+        }
+
         // Board
-        boardAdapter = BoardAdapter(applicationContext, viewModel)
+        boardAdapter = BoardAdapter(applicationContext, gameViewModel)
         binding.boardWrapper?.board?.adapter = boardAdapter
 
         // Move History
@@ -93,20 +116,17 @@ class GameActivity : AppCompatActivity() {
      */
     private fun aiGameMode() {
         val aiLevelStr = intent.extras?.getString(TransferKeys.AI_LEVEL.name)
-                ?: throw IllegalArgumentException("AI Level null")
-        val timeModeStr = intent.extras?.getString(TransferKeys.TIME_MODE.name)
-                ?: throw IllegalArgumentException("Time Mode null")
+                ?: throw IllegalArgumentException("AI Level null!")
 
         val aiLevel = enumValueOf<AiLevel>(aiLevelStr)
-        val timeMode = enumValueOf<TimeMode>(timeModeStr)
 
         val textResourceWhite = R.string.default_player_name
         val textResourceBlack = aiLevel.resourceId
 
         // ViewModel
-        viewModel = ViewModelProvider(
+        gameViewModel = ViewModelProvider(
                 this,
-                GameViewModelFactory(application, textResourceWhite, textResourceBlack, null, aiLevel, timeMode)
+                GameViewModelFactory(application, textResourceWhite, textResourceBlack, null, aiLevel)
         )[GameViewModel::class.java]
 
         playerInfoWhite.name.text = resources.getString(textResourceWhite)
@@ -160,57 +180,57 @@ class GameActivity : AppCompatActivity() {
      * Observer for the view models
      */
     private fun observeViewModel() {
-        viewModel.status.observe(this) { status ->
+        gameViewModel.status.observe(this) { status ->
             if (status == GameStatus.CHECKMATE) {
                 Log.d(LOG_TAG, "Checkmate")
-                showGameOverDialog(viewModel.activePlayer.value?.color, viewModel.playerWhite.value!!, viewModel.playerBlack.value!!)
+                showGameOverDialog(gameViewModel.activePlayer.value?.color, gameViewModel.playerWhite.value!!, gameViewModel.playerBlack.value!!)
             } else if (status == GameStatus.STALEMATE) {
                 Log.d(LOG_TAG, "Stalemate")
-                showGameOverDialog(playerWhite = viewModel.playerWhite.value!!, playerBlack = viewModel.playerBlack.value!!)
+                showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!)
             }
         }
 
-        viewModel.activePlayer.observe(this) { player ->
+        gameViewModel.activePlayer.observe(this) { player ->
             Log.d(LOG_TAG, "Update player")
             boardAdapter.setPlayerColor(player.color)
         }
 
-        viewModel.selectedPosition.observe(this) { selectedPosition ->
+        gameViewModel.selectedPosition.observe(this) { selectedPosition ->
             Log.d(LOG_TAG, "Update selected positions")
             boardAdapter.setSelectedPosition(selectedPosition)
         }
 
-        viewModel.possibleMoves.observe(this) { moves ->
+        gameViewModel.possibleMoves.observe(this) { moves ->
             Log.d(LOG_TAG, "Update possible moves")
             boardAdapter.setPossibleMoves(moves)
         }
 
-        viewModel.fields.observe(this) { fields ->
+        gameViewModel.fields.observe(this) { fields ->
             Log.d(LOG_TAG, "Update fields")
             boardAdapter.setFields(fields)
         }
 
-        viewModel.moves.observe(this) { moveHistory ->
+        gameViewModel.moves.observe(this) { moveHistory ->
             Log.d(LOG_TAG, "Update move history")
             moveHistoryAdapter.setMoveHistory(moveHistory)
         }
 
-        viewModel.beatenPiecesByWhite.observe(this) { beatenPieces ->
+        gameViewModel.beatenPiecesByWhite.observe(this) { beatenPieces ->
             Log.d(LOG_TAG, "Update beaten pieces by white")
             beatenPiecesByWhiteAdapter.setBeatenPieces(beatenPieces)
         }
 
-        viewModel.beatenPiecesByBlack.observe(this) { beatenPieces ->
+        gameViewModel.beatenPiecesByBlack.observe(this) { beatenPieces ->
             Log.d(LOG_TAG, "Update beaten pieces by black")
             beatenPiecesByBlackAdapter.setBeatenPieces(beatenPieces)
         }
 
-        viewModel.pawnDifferenceWhite.observe(this) { pawnDifference ->
+        gameViewModel.pawnDifferenceWhite.observe(this) { pawnDifference ->
             Log.d(LOG_TAG, "Update pawn difference white")
             setPawnDifference(playerInfoWhite, pawnDifference)
         }
 
-        viewModel.pawnDifferenceBlack.observe(this) { pawnDifference ->
+        gameViewModel.pawnDifferenceBlack.observe(this) { pawnDifference ->
             Log.d(LOG_TAG, "Update pawn difference black")
             setPawnDifference(playerInfoBlack, pawnDifference)
         }

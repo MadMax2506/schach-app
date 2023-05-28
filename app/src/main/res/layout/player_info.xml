@@ -5,12 +5,39 @@
     android:layout_marginVertical="4sp"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/name"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="@dimen/h1" />
+        android:gravity="center">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textAlignment="center"
+                android:textSize="@dimen/h1"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="70sp"
+                android:layout_height="wrap_content"
+                android:text="11:23"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/time_clock"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

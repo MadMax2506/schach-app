@@ -6,7 +6,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.service.utils.board.PiecePosition
 
-class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?, timeMode: TimeMode) {
+class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) {
 
     val playerWhite = Player(PieceColor.WHITE, textResourceWhite, aiLevelWhite)
     val playerBlack = Player(PieceColor.BLACK, textResourceBlack, aiLevelBlack)

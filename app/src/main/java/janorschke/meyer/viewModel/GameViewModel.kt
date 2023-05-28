@@ -29,7 +29,7 @@ class GameViewModel(
         textResourceBlack: Int,
         aiLevelWhite: AiLevel?,
         aiLevelBlack: AiLevel?,
-        timeMode: TimeMode) : AndroidViewModel(application) {
+) : AndroidViewModel(application) {
     // live data for the view
     val activePlayer: MutableLiveData<Player> = MutableLiveData()
     val playerWhite: MutableLiveData<Player> = MutableLiveData()
@@ -44,7 +44,7 @@ class GameViewModel(
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
     val pawnDifferenceBlack: MutableLiveData<Int> = MutableLiveData()
 
-    private val game = Game(textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack, timeMode)
+    private val game = Game(textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
     private val aiRepository = AiRepositoryFactory(game, board).create()
