@@ -32,6 +32,7 @@ class AiEvaluationTree(
     /**
      * TODO
      */
+    // TODO check algorithm, because it does not return the correct res
     fun calculateBestMove() = max(root, Int.MIN_VALUE, Int.MAX_VALUE).requiredMove
 
     /**
