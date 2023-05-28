@@ -115,23 +115,23 @@ class GameActivity : AppCompatActivity() {
      * @return a pair of the two players
      */
     private fun aiGameMode() {
-        val aiLevelStr = intent.extras?.getString(TransferKeys.AI_LEVEL.name)
-                ?: throw IllegalArgumentException("AI Level null!")
+        intent.extras?.getString(TransferKeys.AI_LEVEL.name).let { aiLevelStr ->
+            if (aiLevelStr == null) throw IllegalArgumentException("Wrong ai level")
 
-        val aiLevel = enumValueOf<AiLevel>(aiLevelStr)
+            enumValueOf<AiLevel>(aiLevelStr).let {
+                val textResourceWhite = R.string.default_player_name
+                val textResourceBlack = it.resourceId
 
-        val textResourceWhite = R.string.default_player_name
-        val textResourceBlack = aiLevel.resourceId
+                // ViewModel
+                gameViewModel = ViewModelProvider(
+                        this,
+                        GameViewModelFactory(application, textResourceWhite, textResourceBlack, null, it)
+                )[GameViewModel::class.java]
 
-        // ViewModel
-        gameViewModel = ViewModelProvider(
-                this,
-                GameViewModelFactory(application, textResourceWhite, textResourceBlack, null, aiLevel)
-        )[GameViewModel::class.java]
-
-        playerInfoWhite.name.text = resources.getString(textResourceWhite)
-        playerInfoBlack.name.text = resources.getString(textResourceBlack)
-
+                playerInfoWhite.name.text = resources.getString(textResourceWhite)
+                playerInfoBlack.name.text = resources.getString(textResourceBlack)
+            }
+        }
     }
 
     /**
