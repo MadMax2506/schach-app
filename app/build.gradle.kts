@@ -60,9 +60,9 @@ android {
 
 dependencies {
     // XML serialization dependencies
-    compileOnly("javax.xml.bind:jaxb-api:2.3.0")
-    compileOnly("javax.activation:activation:1.1")
-    compileOnly("org.glassfish.jaxb:jaxb-runtime:2.3.2")
+    compileOnly("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
+    compileOnly("javax.activation:activation:1.1.1")
+    compileOnly("org.glassfish.jaxb:jaxb-runtime:4.0.2")
 
     // Material dependencies
     implementation("com.google.android.material:material:1.9.0")
@@ -88,5 +88,5 @@ dependencies {
 
     // Tooling
     debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation(kotlin("script-runtime"))
+    implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.9.0-Beta")
 }
