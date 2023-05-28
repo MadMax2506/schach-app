@@ -16,4 +16,4 @@
 local.properties
 
 # Generated resources
-app/src/main/res/generatedObjects
+app/generatedObjects

@@ -1,8 +1,6 @@
 import android.annotation.SuppressLint
 import janorschke.meyer.service.xml.AiEvaluationNodeXml
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
 
@@ -19,14 +17,8 @@ object XMLSerialisation {
     }
 
     @SuppressLint("NewApi")
-    fun evaluationNodeToString(node: AiEvaluationNodeXml, name: String) {
-        val path = "./app/src/main/res/generatedObjects"
-        if (!Files.exists(Paths.get(path))) {
-            println("Creates path=$path for the generated objects")
-            Files.createDirectory(Paths.get(path))
-        }
-
-        marshaller.marshal(node, File("${path}/$name"))
+    fun evaluationNodeToString(node: AiEvaluationNodeXml, dir: String, name: String) {
+        marshaller.marshal(node, File("${dir}/${name}"))
     }
 
 // TODO
