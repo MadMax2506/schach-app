@@ -113,6 +113,8 @@ class GameActivity : AppCompatActivity() {
                     // TODO Dialog öffnen
                 }
             }.start()
+        } else {
+            binding.playerTwo!!.time.visibility = View.GONE
         }
     }
 
