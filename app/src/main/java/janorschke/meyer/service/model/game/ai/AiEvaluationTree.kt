@@ -3,14 +3,12 @@ package janorschke.meyer.service.model.game.ai
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
-import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 
 /**
  * TODO
  */
 class AiEvaluationTree(
-        history: History,
         // TODO
         private val level: AiLevel,
         private val board: Board,
@@ -18,13 +16,15 @@ class AiEvaluationTree(
         private val aiColor: PieceColor
 ) {
     private val aiEvaluationTreeGenerator = AiEvaluationTreeGenerator(level)
-    private var root = aiEvaluationTreeGenerator.generate(AiEvaluationNode(aiColor, history), board)
+    private var root = aiEvaluationTreeGenerator.generate(AiEvaluationNode(aiColor), board)
+
+    fun getRoot() = root
 
     /**
      * TODO
      */
     fun applyMove(move: Move) {
-        root.getChildren().first { it.requiredMove == move }.let { node ->
+        root.requiredChildren().first { it.requiredMove == move }.let { node ->
             root = aiEvaluationTreeGenerator.generate(node, board)
         }
     }
@@ -37,20 +37,20 @@ class AiEvaluationTree(
     /**
      * TODO
      */
-    private fun max(node: AiEvaluationNode, alpha: Int, beta: Int): AiEvaluationNode {
-        if (node.numberOfChildren == 0) return node
+    private fun max(parent: AiEvaluationNode, alpha: Int, beta: Int): AiEvaluationNode {
+        if (parent.numberOfChildren == 0) return parent
 
-        var bestVal: AiEvaluationNode? = null
-        var bestAlpha = alpha
-        for (child in node.getChildren()) {
-            val value = min(child, bestAlpha, beta)
+        var bestNode: AiEvaluationNode? = null
+        var mutableAlpha = alpha
+        for (child in parent.requiredChildren()) {
+            val calcNode = min(child, mutableAlpha, beta)
 
-            bestVal = maxNode(bestVal, value)
-            bestAlpha = bestAlpha.coerceAtLeast(bestVal.valency)
+            bestNode = maxNode(bestNode, calcNode)
+            mutableAlpha = mutableAlpha.coerceAtLeast(bestNode.valency)
 
-            if (beta <= bestAlpha) break
+            if (beta <= mutableAlpha) break
         }
-        return bestVal!!
+        return bestNode!!
     }
 
     /**
@@ -63,20 +63,20 @@ class AiEvaluationTree(
     /**
      * TODO
      */
-    private fun min(node: AiEvaluationNode, alpha: Int, beta: Int): AiEvaluationNode {
-        if (node.numberOfChildren == 0) return node
+    private fun min(parent: AiEvaluationNode, alpha: Int, beta: Int): AiEvaluationNode {
+        if (parent.numberOfChildren == 0) return parent
 
-        var bestVal: AiEvaluationNode? = null
-        var bestBeta = beta
-        for (child in node.getChildren()) {
-            val value = max(child, alpha, bestBeta)
+        var bestNode: AiEvaluationNode? = null
+        var mutableBeta = beta
+        for (child in parent.requiredChildren()) {
+            val calcNode = max(child, alpha, mutableBeta)
 
-            bestVal = minNode(bestVal, value)
-            bestBeta = bestBeta.coerceAtMost(bestVal.valency)
+            bestNode = minNode(bestNode, calcNode)
+            mutableBeta = mutableBeta.coerceAtMost(bestNode.valency)
 
-            if (bestBeta <= alpha) break
+            if (mutableBeta <= alpha) break
         }
-        return bestVal!!
+        return bestNode!!
     }
 
     /**

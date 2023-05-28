@@ -11,21 +11,21 @@ import janorschke.meyer.service.validator.BoardValidator
 /**
  * TODO
  */
-class AiEvaluationNode(aiColor: PieceColor, val parent: AiEvaluationNode?, val move: Move?, private val history: History) {
+class AiEvaluationNode(aiColor: PieceColor, val parent: AiEvaluationNode?, val move: Move?, val history: History) {
     val valency: Int
+    private var children: MutableList<AiEvaluationNode>? = null
+
     val requiredMove: Move get() = move!!
     val numberOfChildren: Int get() = children?.size ?: 0
 
-    private var children: MutableList<AiEvaluationNode>? = null
-
     // Constructor for the begin of an game
-    constructor(aiColor: PieceColor, history: History) : this(aiColor, null, null, History(history))
+    constructor(aiColor: PieceColor) : this(aiColor, null, null, History())
 
     // Default constructor for a node or leaf
     constructor(aiColor: PieceColor, move: Move, parent: AiEvaluationNode) : this(aiColor, parent, move, History(parent.history))
 
     init {
-        valency = if (move == null) {
+        this.valency = if (move == null) {
             // Neutral starting position on the board
             0
         } else {
@@ -49,10 +49,10 @@ class AiEvaluationNode(aiColor: PieceColor, val parent: AiEvaluationNode?, val m
         this.children = children.toMutableList()
     }
 
-    /**
-     * TODO
-     */
-    fun getChildren() = children!!
+    fun getChildren() = children
+
+    // TODO
+    fun requiredChildren() = children!!
 
     /**
      * @param board instance

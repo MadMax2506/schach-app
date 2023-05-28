@@ -34,7 +34,7 @@ class AiEvaluationTreeGenerator(private val level: AiLevel) {
         if (currentDeepness == level.deepness || BoardValidator.isKingCheckmate(board, color.opponent())) return node
 
         // TODO
-        val children = (if (node.numberOfChildren > 0) node.getChildren() else generateChildren(node, board, color))
+        val children = (if (node.numberOfChildren > 0) node.requiredChildren() else generateChildren(node, board, color))
                 .map { child -> generate(child, color.opponent(), currentDeepness + 1) }
                 .toMutableList()
 

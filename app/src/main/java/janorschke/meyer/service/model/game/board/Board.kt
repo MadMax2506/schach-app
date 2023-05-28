@@ -106,13 +106,9 @@ class Board {
      * @param pawnReplaceWith piece which is used for the pawn replace after transform on the opponent base line
      * @return board move
      */
-    fun createMove(
-            from: PiecePosition,
-            to: PiecePosition,
-            pawnReplaceWith: Piece = Queen(getField(from)!!.color)
-    ): Move {
-        val fieldsBeforeMoving = Board(this).getFields()
+    fun createMove(from: PiecePosition, to: PiecePosition, pawnReplaceWith: Piece = Queen(getField(from)!!.color)): Move {
         val fromPiece = getField(from)!!
+        val toPiece = getField(to)
 
         setField(from, null)
         if (BoardValidator.isPawnTransformation(fromPiece, to)) {
@@ -123,6 +119,6 @@ class Board {
             setField(to, fromPiece)
         }
 
-        return Move(fieldsBeforeMoving, Board(this).getFields(), from, to)
+        return Move(Board(this).fields, from, to, fromPiece, toPiece)
     }
 }

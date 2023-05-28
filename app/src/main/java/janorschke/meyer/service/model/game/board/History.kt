@@ -28,14 +28,15 @@ class History {
         moves.clear()
     }
 
-
-    fun getMoves() = moves
+    fun getMoves() = moves.toMutableList()
 
     /**
      * @param n number of moves
      * @return the n last moves
      */
     fun getLastMoves(n: Int) = moves.slice(IntRange(numberOfMoves - n, numberOfMoves - 1)).toMutableList()
+
+    fun getBeatenPieces() = beatenPieces.toMutableList()
 
     /**
      * @param color of the pieces
