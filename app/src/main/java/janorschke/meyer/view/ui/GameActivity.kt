@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -67,27 +68,7 @@ class GameActivity : AppCompatActivity() {
         }
 
         // Time Mode
-        val timeModeStr = intent.extras?.getString(TransferKeys.TIME_MODE.name)
-                ?: throw IllegalArgumentException("Time Mode null!")
-        val timeMode = enumValueOf<TimeMode>(timeModeStr)
-
-        binding.playerOne!!.time // TODO setHidden
-
-        // Start the countdown for 10 seconds (10000 milliseconds)
-        if (timeMode != TimeMode.UNLIMITED) {
-            object : CountDownTimer(timeMode.time, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    val seconds = millisUntilFinished / 1000
-                    binding.playerTwo!!.time.text = "$seconds"
-                    // TODO anzeige in Minuten : Sekunden anpassen
-                }
-
-                override fun onFinish() {
-                    binding.playerTwo!!.time.text = "Countdown abgelaufen!"
-                    // TODO Dialog öffnen
-                }
-            }.start()
-        }
+        setTimeMode()
 
         // Board
         boardAdapter = BoardAdapter(applicationContext, gameViewModel)
@@ -108,6 +89,31 @@ class GameActivity : AppCompatActivity() {
         // Observer
         // IMPORTANT: It needs to be after all adapter initializations
         observeViewModel()
+    }
+
+    private fun setTimeMode() {
+        val timeModeStr = intent.extras?.getString(TransferKeys.TIME_MODE.name)
+                ?: throw IllegalArgumentException("Time Mode null!")
+        val timeMode = enumValueOf<TimeMode>(timeModeStr)
+
+        // TimeMode off for AI-Player
+        binding.playerOne!!.time.visibility = View.GONE
+
+        if (timeMode != TimeMode.UNLIMITED) {
+            object : CountDownTimer(timeMode.time, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    val seconds = millisUntilFinished / 1000
+                    val minutes = seconds / 60
+                    val remainingSeconds = seconds % 60
+                    binding.playerTwo!!.time.text = String.format("%02d:%02d", minutes, remainingSeconds)
+                }
+
+                override fun onFinish() {
+                    binding.playerTwo!!.time.text = "Countdown abgelaufen!"
+                    // TODO Dialog öffnen
+                }
+            }.start()
+        }
     }
 
     /**
