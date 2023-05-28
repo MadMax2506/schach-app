@@ -78,7 +78,7 @@ class GameActivity : AppCompatActivity() {
             object : CountDownTimer(timeMode.time, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     val seconds = millisUntilFinished / 1000
-                    binding.playerTwo!!.time.text = "Countdown: $seconds"
+                    binding.playerTwo!!.time.text = "$seconds"
                 }
 
                 override fun onFinish() {
