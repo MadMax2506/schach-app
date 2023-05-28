@@ -71,7 +71,7 @@ class GameActivity : AppCompatActivity() {
                 ?: throw IllegalArgumentException("Time Mode null!")
         val timeMode = enumValueOf<TimeMode>(timeModeStr)
 
-        binding.playerOne!!.time // setHidden
+        binding.playerOne!!.time // TODO setHidden
 
         // Start the countdown for 10 seconds (10000 milliseconds)
         if (timeMode != TimeMode.UNLIMITED) {
@@ -79,6 +79,7 @@ class GameActivity : AppCompatActivity() {
                 override fun onTick(millisUntilFinished: Long) {
                     val seconds = millisUntilFinished / 1000
                     binding.playerTwo!!.time.text = "$seconds"
+                    // TODO anzeige in Minuten : Sekunden anpassen
                 }
 
                 override fun onFinish() {
