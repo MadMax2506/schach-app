@@ -14,6 +14,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        testInstrumentationRunner = "janorschke.meyer.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -89,5 +90,17 @@ dependencies {
     // Tooling
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.9.0-Beta")
-    implementation(kotlin("script-runtime"))
+
+    // Instrumented tests
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // Local tests: jUnit, coroutines, Android runner
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    // Instrumented tests: jUnit rules and runners
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.runner)
 }

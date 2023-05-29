@@ -1,6 +1,5 @@
 package janorschke.meyer.service.model.game.ai
 
-import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.Move
@@ -11,7 +10,7 @@ import janorschke.meyer.service.model.game.piece.lineMoving.Rook
 import janorschke.meyer.service.utils.piece.PieceSequence
 import janorschke.meyer.service.validator.BoardValidator
 
-class AiEvaluationTreeGenerator(private val level: AiLevel) {
+class AiEvaluationTreeGenerator(private val deepness: Int) {
     /**
      * TODO
      */
@@ -31,7 +30,7 @@ class AiEvaluationTreeGenerator(private val level: AiLevel) {
             currentDeepness: Int,
             board: Board = Board(node.requiredMove.fieldsAfterMoving)
     ): AiEvaluationNode {
-        if (currentDeepness == level.deepness || BoardValidator.isKingCheckmate(board, color.opponent())) return node
+        if (currentDeepness == deepness || BoardValidator.isKingCheckmate(board, color.opponent())) return node
 
         // TODO
         val children = (if (node.numberOfChildren > 0) node.requiredChildren() else generateChildren(node, board, color))

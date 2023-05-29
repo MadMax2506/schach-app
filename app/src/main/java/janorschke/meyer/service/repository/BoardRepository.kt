@@ -78,8 +78,6 @@ class BoardRepository(
      */
     private fun createMove(from: PiecePosition, to: PiecePosition): Move {
         board.getField(from)!!.let { piece ->
-            piece.markAsMove()
-
             if (BoardValidator.isPawnTransformation(piece, to)) {
                 // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/49
                 return board.createMove(from, to)

@@ -28,7 +28,7 @@ class GameFieldOnClickListener(
             // handle first click
             (selectedPosition == null && isPlayersPiece) -> gameViewModel.setSelectedPiece(position, possibleMoves)
             // handle second click
-            (selectedPosition != null && !isPlayersPiece) -> gameViewModel.tryToMovePiece(selectedPosition!!, position)
+            (selectedPosition != null && !isPlayersPiece) -> gameViewModel.tryToMovePiece(selectedPosition, position)
             (isPlayersPiece && selectedPosition != position) -> gameViewModel.setSelectedPiece(position, possibleMoves)
             else -> gameViewModel.setSelectedPiece()
         }

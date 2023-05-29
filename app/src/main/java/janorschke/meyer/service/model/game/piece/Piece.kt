@@ -18,11 +18,7 @@ abstract class Piece(
         /**
          * Static piece informations
          */
-        val pieceInfo: PieceInfo,
-        /**
-         * If true, the piece has already moved
-         */
-        protected var moved: Boolean = false
+        val pieceInfo: PieceInfo
 ) {
     /**
      * @param board instance
@@ -56,25 +52,13 @@ abstract class Piece(
     }
 
     /**
-     * Marks the piece as moved
-     */
-    fun markAsMove() {
-        moved = true
-    }
-
-    /**
-     * @return true, if the piece has moved
-     */
-    fun hasMoved(): Boolean = moved
-
-    /**
      * @param board instance
      * @param currentPosition of the piece
      *
      * @return true, if you're not allowed to go to that position
      */
     protected fun isFieldUnavailable(board: Board, currentPosition: PiecePosition): Boolean {
-        return !FieldValidator.isInBound(board, currentPosition) || FieldValidator.isTeammate(board, color, currentPosition)
+        return !FieldValidator.isInBound(currentPosition) || FieldValidator.isTeammate(board, color, currentPosition)
     }
 
     /**

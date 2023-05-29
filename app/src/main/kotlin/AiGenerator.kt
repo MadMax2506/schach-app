@@ -2,10 +2,6 @@ import android.annotation.SuppressLint
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
-import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.repository.ai.AiLevelEasyRepository
-import janorschke.meyer.service.repository.ai.AiLevelHardRepository
-import janorschke.meyer.service.repository.ai.AiLevelMediumRepository
 import janorschke.meyer.service.repository.ai.AiRepository
 import janorschke.meyer.service.xml.AiEvaluationNodeXml
 import java.nio.file.Files
@@ -37,7 +33,9 @@ fun main() {
                 println("Start with level=$level for color=$color")
 
                 var node: AiEvaluationNodeXml
-                val timeCalcTree = measureTimeMillis { node = AiEvaluationNodeXml(createRepository(color, level).evaluationTree.getRoot()) }
+                val timeCalcTree = measureTimeMillis {
+                    node = AiEvaluationNodeXml(AiRepository(color, Board(), level.deepness).evaluationTree.getRoot())
+                }
                 println("Calculated tree for $level for $color in ${timeCalcTree}ms")
 
                 val timeMarshal = measureTimeMillis { XMLSerialisation.evaluationNodeToString(node, dir, name) }
@@ -46,16 +44,5 @@ fun main() {
                 println("Finished with level=$level for color=$color\n")
             }
         }
-    }
-}
-
-/**
- * TODO
- */
-private fun createRepository(color: PieceColor, level: AiLevel): AiRepository {
-    return when (level) {
-        AiLevel.KEVIN_OTTO -> AiLevelEasyRepository(color, Board(), History())
-        AiLevel.MAX -> AiLevelMediumRepository(color, Board(), History())
-        AiLevel.CHRIS -> AiLevelHardRepository(color, Board(), History())
     }
 }

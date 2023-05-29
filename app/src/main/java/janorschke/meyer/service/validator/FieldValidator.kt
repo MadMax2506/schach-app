@@ -29,7 +29,7 @@ object FieldValidator {
      * @throws IndexOutOfBoundsException if position is invalid
      */
     fun isTeammate(board: Board, color: PieceColor, position: PiecePosition): Boolean {
-        if (!isInBound(board, position)) throw IndexOutOfBoundsException("Position is not on the board")
+        if (!isInBound(position)) throw IndexOutOfBoundsException("Position is not on the board")
 
         return board.getField(position)?.color == color
     }
@@ -42,19 +42,18 @@ object FieldValidator {
      * @throws IndexOutOfBoundsException if position is invalid
      */
     fun isEmpty(board: Board, position: PiecePosition): Boolean {
-        if (!isInBound(board, position)) throw IndexOutOfBoundsException("Position is not on the board")
+        if (!isInBound(position)) throw IndexOutOfBoundsException("Position is not on the board")
 
         return board.getField(position) == null
     }
 
     /**
-     * @param board instance
      * @param position being checked
      *
      * @return true, if position is on the board
      */
-    fun isInBound(board: Board, position: PiecePosition): Boolean {
-        val indices = board.getFields().indices
+    fun isInBound(position: PiecePosition): Boolean {
+        val indices = 0 until Board.LINE_SIZE
         return position.row in indices && position.col in indices
     }
 }

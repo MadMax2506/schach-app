@@ -15,18 +15,15 @@ import javax.xml.bind.annotation.XmlRootElement
 class PieceXml : BaseXml {
     var color: PieceColor?
     var pieceInfo: PieceInfo?
-    var moved: Boolean?
 
     // Needed for XML serialization
     constructor() {
         color = null
         pieceInfo = null
-        moved = null
     }
 
     constructor(piece: Piece) {
         this.color = piece.color
         this.pieceInfo = piece.pieceInfo
-        this.moved = piece.hasMoved()
     }
 }
