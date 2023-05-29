@@ -24,20 +24,21 @@ fun main() {
     }
     Files.createDirectory(dirPaths)
 
-    PieceColor.values().forEach { color ->
-        AiLevel.values().forEach { level ->
-            // TODO Does not work for the strongest ai -> error with field validator
-            if (level != AiLevel.CHRIS) {
+    val completeTime = measureTimeMillis {
+        PieceColor.values().forEach { color ->
+            AiLevel.values().forEach { level ->
                 val name = "generated_ai_for_${color}_with_level_${level}.xml"
 
                 println("Start with level=$level for color=$color")
 
+                println("Calculate tree for $level for $color")
                 var node: AiEvaluationNodeXml
                 val timeCalcTree = measureTimeMillis {
-                    node = AiEvaluationNodeXml(AiRepository(color, Board(), level.deepness).evaluationTree.getRoot())
+                    node = AiEvaluationNodeXml(AiRepository(color, Board(), level.deepness + 2).evaluationTree.getRoot())
                 }
                 println("Calculated tree for $level for $color in ${timeCalcTree}ms")
 
+                println("Marshal $level for $color")
                 val timeMarshal = measureTimeMillis { XMLSerialisation.evaluationNodeToString(node, dir, name) }
                 println("Marshal $level for $color in ${timeMarshal}ms")
 
@@ -45,4 +46,6 @@ fun main() {
             }
         }
     }
+
+    println("Finished after ${completeTime}ms")
 }
