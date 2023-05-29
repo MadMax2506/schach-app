@@ -25,6 +25,7 @@
         <activity android:name=".view.ui.AiActivity" />
         <activity android:name=".view.ui.SettingsActivity" />
         <activity android:name=".view.ui.GameActivity" />
+        <activity android:name=".view.ui.TimeModeActivity" />
     </application>
 
 </manifest>

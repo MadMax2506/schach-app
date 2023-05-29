@@ -18,18 +18,18 @@ class AiActivity : AppCompatActivity() {
         binding = ActivityAiBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.buttonAiKevinOtto?.setOnClickListener { startGame(AiLevel.KEVIN_OTTO) }
-        binding.buttonAiMax?.setOnClickListener { startGame(AiLevel.MAX) }
-        binding.buttonAiChris?.setOnClickListener { startGame(AiLevel.CHRIS) }
+        binding.buttonAiKevinOtto?.setOnClickListener { selectTimeMode(AiLevel.KEVIN_OTTO) }
+        binding.buttonAiMax?.setOnClickListener { selectTimeMode(AiLevel.MAX) }
+        binding.buttonAiChris?.setOnClickListener { selectTimeMode(AiLevel.CHRIS) }
     }
 
-    private fun startGame(aiLevel: AiLevel) {
-        Intent(this, GameActivity::class.java).let { intent ->
+    private fun selectTimeMode(aiLevel: AiLevel) {
+        Intent(this, TimeModeActivity::class.java).let { intent ->
             Log.d(LOG_TAG, "Start new game with the ai-level $aiLevel")
 
             intent.putExtras(Bundle().also { bundle ->
-                bundle.putString(TransferKeys.AI_LEVEL.toString(), aiLevel.toString())
-                bundle.putString(TransferKeys.GAME_MODE.toString(), GameMode.AI.toString())
+                bundle.putString(TransferKeys.AI_LEVEL.name, aiLevel.name)
+                bundle.putString(TransferKeys.GAME_MODE.name, GameMode.AI.name)
             })
             startActivity(intent)
         }

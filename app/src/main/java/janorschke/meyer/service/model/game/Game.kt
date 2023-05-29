@@ -51,7 +51,7 @@ class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel
     /**
      * Sets the selected piece and shows the possible moves through the GameFieldAdapter.
      *
-     * @param position the position of the selected piece
+     * @param selectedPosition the position of the selected piece
      * @param possibleMoves the possible moves for the selected piece
      */
     fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PiecePosition> = mutableListOf()) {
