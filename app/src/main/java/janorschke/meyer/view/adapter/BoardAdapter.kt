@@ -71,7 +71,9 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
 
         holder.view.setBackgroundResource(getViewBackgroundColor(position))
         holder.binding.btn.background = getPieceBackground(piece, position)
-        holder.binding.btn.setOnClickListener(GameFieldOnClickListener(position, fields, playerColor, selectedPosition, gameViewModel))
+        holder.binding.btn.setOnClickListener(
+                GameFieldOnClickListener(position, fields, playerColor, selectedPosition, gameViewModel, gameViewModel.getHistory())
+        )
 
         return holder.view
     }

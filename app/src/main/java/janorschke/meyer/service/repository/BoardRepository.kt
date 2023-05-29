@@ -32,7 +32,7 @@ class BoardRepository(
      */
     private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition, isAiMove: Boolean) {
         val piece = board.getField(fromPosition)
-        val possibleMoves = piece?.possibleMoves(board, fromPosition) ?: emptyList()
+        val possibleMoves = piece?.possibleMoves(board, fromPosition, history) ?: emptyList()
 
         // Check if requested position is a possible move of the piece
         if (toPosition !in possibleMoves) {
@@ -42,13 +42,15 @@ class BoardRepository(
 
         // Move piece and reset selection
         movePiece(fromPosition, toPosition)
+        game.setColor(piece!!.color.opponent()) // TODO added for enPassantTest
         game.setSelectedPiece()
 
         // Check if game is finished or move was done by the ai
-        if (gameRepository.checkEndOfGame(piece!!) || isAiMove) return
+        if (gameRepository.checkEndOfGame(piece) || isAiMove) return
 
+        // TODO commented out to test enpassant
         // Calculate the next move from the ai
-        aiRepository.calculateNextMove().let { move -> tryToMovePiece(move.from, move.to, true) }
+        //aiRepository.calculateNextMove().let { move -> tryToMovePiece(move.from, move.to, true) }
     }
 
     /**

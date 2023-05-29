@@ -16,11 +16,11 @@ object BoardValidator {
      *
      * @return true, if King is in check
      */
-    fun isKingInCheck(board: Board, color: PieceColor): Boolean {
+    fun isKingInCheck(board: Board, color: PieceColor, history: History): Boolean {
         val kingPosition = board.findKingPosition(color) ?: return true
 
         return PieceSequence.allPiecesByColor(board, color.opponent())
-                .any { it.piece.givesOpponentKingCheck(board, it.position, kingPosition) }
+                .any { it.piece.givesOpponentKingCheck(board, it.position, kingPosition, history) }
     }
 
     /**
@@ -29,17 +29,17 @@ object BoardValidator {
      *
      * @return true, if the king of the given color is in checkmate
      */
-    fun isKingCheckmate(board: Board, color: PieceColor): Boolean {
-        if (!isKingInCheck(board, color)) return false
+    fun isKingCheckmate(board: Board, color: PieceColor, history: History): Boolean {
+        if (!isKingInCheck(board, color, history)) return false
 
         // check if any piece can go somewhere, that is not checkmate
         PieceSequence.allPiecesByColor(board, color)
                 .forEach {
-                    it.piece.possibleMoves(board, it.position).forEach { move ->
+                    it.piece.possibleMoves(board, it.position, history).forEach { move ->
                         Board(board).let { boardCopy ->
                             boardCopy.createBoardMove(it.position, move)
                             // if King is not in check after this move, then it's not checkmate
-                            if (!isKingInCheck(boardCopy, color)) return false
+                            if (!isKingInCheck(boardCopy, color, history)) return false
                         }
                     }
                 }
@@ -54,13 +54,13 @@ object BoardValidator {
      * @return true, if the game with the rest pieces is stalemate
      */
     fun isStalemate(board: Board, history: History, color: PieceColor): Boolean {
-        if (isKingInCheck(board, color)) return false
+        if (isKingInCheck(board, color, history)) return false
 
         val pieceSequence = PieceSequence.allPiecesByColor(board, color)
         val pieceSequenceOpponent = PieceSequence.allPiecesByColor(board, color.opponent())
 
         // check if no possible move for the given color is left
-        pieceSequence.map { it.piece.possibleMoves(board, it.position) }
+        pieceSequence.map { it.piece.possibleMoves(board, it.position, history) }
                 .flatten()
                 .toList()
                 .isEmpty()

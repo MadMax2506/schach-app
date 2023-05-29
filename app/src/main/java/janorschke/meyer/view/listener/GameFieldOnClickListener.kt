@@ -4,6 +4,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
+import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.utils.board.PiecePosition
 import janorschke.meyer.viewModel.GameViewModel
@@ -16,11 +17,12 @@ class GameFieldOnClickListener(
         private val board: Array<Array<Piece?>>,
         private val playerColor: PieceColor,
         private val selectedPosition: PiecePosition?,
-        private val gameViewModel: GameViewModel
+        private val gameViewModel: GameViewModel,
+        private val history: History
 ) : OnClickListener {
     override fun onClick(v: View?) {
         val piece = board[position.row][position.col]
-        val possibleMoves = piece?.possibleMoves(Board(board), position) ?: mutableListOf()
+        val possibleMoves = piece?.possibleMoves(Board(board), position, history) ?: mutableListOf()
 
         val isPlayersPiece = (piece?.color == playerColor)
 
@@ -28,7 +30,7 @@ class GameFieldOnClickListener(
             // handle first click
             (selectedPosition == null && isPlayersPiece) -> gameViewModel.setSelectedPiece(position, possibleMoves)
             // handle second click
-            (selectedPosition != null && !isPlayersPiece) -> gameViewModel.tryToMovePiece(selectedPosition!!, position)
+            (selectedPosition != null && !isPlayersPiece) -> gameViewModel.tryToMovePiece(selectedPosition, position)
             (isPlayersPiece && selectedPosition != position) -> gameViewModel.setSelectedPiece(position, possibleMoves)
             else -> gameViewModel.setSelectedPiece()
         }

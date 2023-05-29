@@ -3,6 +3,7 @@ package janorschke.meyer.service.model.game.piece
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
+import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.utils.board.PiecePosition
 import janorschke.meyer.service.validator.BoardValidator
 import janorschke.meyer.service.validator.FieldValidator
@@ -31,7 +32,12 @@ abstract class Piece(
      *
      * @return possible moves
      */
-    protected abstract fun possibleMoves(board: Board, currentPosition: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition>
+    protected abstract fun possibleMoves(
+            board: Board,
+            currentPosition: PiecePosition,
+            disableCheckCheck: Boolean,
+            history: History
+    ): MutableList<PiecePosition>
 
     /**
      * @param board instance
@@ -40,8 +46,13 @@ abstract class Piece(
      *
      * @return true, if the piece gives check to the opponent king
      */
-    open fun givesOpponentKingCheck(board: Board, ownPosition: PiecePosition, kingPosition: PiecePosition): Boolean {
-        val possibleMoves = this.possibleMoves(board, ownPosition, true)
+    open fun givesOpponentKingCheck(
+            board: Board,
+            ownPosition: PiecePosition,
+            kingPosition: PiecePosition,
+            history: History
+    ): Boolean {
+        val possibleMoves = this.possibleMoves(board, ownPosition, true, history)
         return possibleMoves.contains(kingPosition)
     }
 
@@ -51,8 +62,12 @@ abstract class Piece(
      *
      * @return possible moves
      */
-    fun possibleMoves(board: Board, currentPosition: PiecePosition): MutableList<PiecePosition> {
-        return possibleMoves(board, currentPosition, false)
+    fun possibleMoves(
+            board: Board,
+            currentPosition: PiecePosition,
+            history: History
+    ): MutableList<PiecePosition> {
+        return possibleMoves(board, currentPosition, false, history)
     }
 
     /**
@@ -92,6 +107,7 @@ abstract class Piece(
             possiblePosition: PiecePosition,
             possibleMoves: MutableList<PiecePosition>,
             disableCheckCheck: Boolean,
+            history: History
     ) {
         if (disableCheckCheck) {
             possibleMoves.add(possiblePosition)
@@ -100,7 +116,7 @@ abstract class Piece(
 
         Board(board).let { boardCopy ->
             boardCopy.createBoardMove(currentPosition, possiblePosition)
-            if (!BoardValidator.isKingInCheck(boardCopy, color)) possibleMoves.add(possiblePosition)
+            if (!BoardValidator.isKingInCheck(boardCopy, color, history)) possibleMoves.add(possiblePosition)
         }
     }
 }
