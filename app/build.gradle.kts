@@ -89,4 +89,5 @@ dependencies {
     // Tooling
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.9.0-Beta")
+    implementation(kotlin("script-runtime"))
 }
