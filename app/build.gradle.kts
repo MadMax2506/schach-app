@@ -61,7 +61,7 @@ android {
 dependencies {
     // XML serialization dependencies
     compileOnly("javax.xml.bind:jaxb-api:2.3.0")
-    compileOnly("javax.activation:activation:1.1")
+    compileOnly("javax.activation:activation:1.1.1")
     compileOnly("org.glassfish.jaxb:jaxb-runtime:2.3.2")
 
     // Material dependencies
