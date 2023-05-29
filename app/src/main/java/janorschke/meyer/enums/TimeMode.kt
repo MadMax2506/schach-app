@@ -1,7 +1,7 @@
 package janorschke.meyer.enums
 
 /**
- * Enum representing time modes for the countdown in milliseconds.
+ * Consideration time of a player in a game
  */
 enum class TimeMode(val time: Long) {
     /**

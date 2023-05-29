@@ -75,14 +75,13 @@ class GameOverDialog : BaseDialog() {
             Intent(requireContext(), GameActivity::class.java).let { intent ->
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 intent.putExtras(Bundle().also { bundle ->
-                    Log.d(LOG_TAG, "Start new game with time-mode=$timeMode")
-                    Log.d(LOG_TAG, "Start new game with ai-level=$aiLevel")
+                    Log.d(LOG_TAG, "Start new game with ai-level=$aiLevel and time-mode=$timeMode")
 
                     bundle.putString(TransferKeys.TIME_MODE.name, timeMode.name)
 
                     if (aiLevel != null) {
-                      bundle.putString(TransferKeys.AI_LEVEL.name, aiLevel.name)
-                      bundle.putString(TransferKeys.GAME_MODE.name, GameMode.AI.name)
+                        bundle.putString(TransferKeys.AI_LEVEL.name, aiLevel!!.name)
+                        bundle.putString(TransferKeys.GAME_MODE.name, GameMode.AI.name)
                     }
                 })
                 startActivity(intent)

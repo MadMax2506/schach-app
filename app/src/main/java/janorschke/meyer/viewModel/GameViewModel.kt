@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
-import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.Player
 import janorschke.meyer.service.model.game.board.Board
@@ -28,7 +27,7 @@ class GameViewModel(
         textResourceWhite: Int,
         textResourceBlack: Int,
         aiLevelWhite: AiLevel?,
-        aiLevelBlack: AiLevel?,
+        aiLevelBlack: AiLevel?
 ) : AndroidViewModel(application) {
     // live data for the view
     val activePlayer: MutableLiveData<Player> = MutableLiveData()
