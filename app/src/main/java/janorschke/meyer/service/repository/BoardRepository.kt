@@ -60,6 +60,8 @@ class BoardRepository(
      * @param to target position
      */
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
+        // TODO toPosition is not always the position of the beaten Piece => enPassant
+
         val boardMove = createBoardMove(from, to)
         history.push(boardMove)
 
