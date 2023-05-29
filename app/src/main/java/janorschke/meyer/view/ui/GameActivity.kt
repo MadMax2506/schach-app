@@ -61,14 +61,16 @@ class GameActivity : AppCompatActivity() {
 
             enumValueOf<GameMode>(gameModeStr).let { gameMode ->
                 when {
-                    gameMode == GameMode.AI -> aiGameMode()
+                    gameMode == GameMode.AI -> {
+                        aiGameMode()
+
+                        // Time Mode
+                        setTimeMode()
+                    }
                     // TODO further modes
                 }
             }
         }
-
-        // Time Mode
-        setTimeMode()
 
         // Board
         boardAdapter = BoardAdapter(applicationContext, gameViewModel)
