@@ -42,6 +42,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var beatenPiecesByWhiteAdapter: BeatenPiecesAdapter
     private lateinit var beatenPiecesByBlackAdapter: BeatenPiecesAdapter
     private lateinit var gameViewModel: GameViewModel
+    private lateinit var timeMode: TimeMode
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,7 +97,7 @@ class GameActivity : AppCompatActivity() {
     private fun setTimeMode() {
         val timeModeStr = intent.extras?.getString(TransferKeys.TIME_MODE.name)
                 ?: throw IllegalArgumentException("Time Mode null!")
-        val timeMode = enumValueOf<TimeMode>(timeModeStr)
+        timeMode = enumValueOf(timeModeStr)
 
         // TimeMode off for AI-Player
         binding.playerOne!!.time.visibility = View.GONE
@@ -171,7 +172,7 @@ class GameActivity : AppCompatActivity() {
      * @see GameOverDialog.onCreateDialog
      */
     private fun showGameOverDialog(winningColor: PieceColor? = null, playerWhite: Player, playerBlack: Player) {
-        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack).show(supportFragmentManager, GAMEOVER_DIALOG_TAG)
+        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, timeMode).show(supportFragmentManager, GAMEOVER_DIALOG_TAG)
     }
 
     /**
