@@ -1,6 +1,4 @@
-package janorschke.meyer.service.utils.board
-
-import janorschke.meyer.service.model.game.board.Board
+package janorschke.meyer.service.model.game.board
 
 class PiecePosition {
     val row: Int

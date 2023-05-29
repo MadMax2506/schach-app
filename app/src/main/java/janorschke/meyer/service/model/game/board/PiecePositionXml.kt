@@ -1,6 +1,6 @@
-package janorschke.meyer.service.xml
+package janorschke.meyer.service.model.game.board
 
-import janorschke.meyer.service.utils.board.PiecePosition
+import janorschke.meyer.service.model.BaseXml
 import javax.xml.bind.annotation.XmlAccessType
 import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.bind.annotation.XmlRootElement

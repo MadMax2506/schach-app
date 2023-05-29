@@ -3,7 +3,8 @@ import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.repository.ai.AiRepository
-import janorschke.meyer.service.xml.AiEvaluationNodeXml
+import janorschke.meyer.service.utils.XMLSerialisation
+import janorschke.meyer.service.model.game.ai.AiEvaluationNodeXml
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.system.measureTimeMillis

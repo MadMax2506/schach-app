@@ -1,5 +1,6 @@
-package janorschke.meyer.service.xml
+package janorschke.meyer.service.model.game.board
 
+import janorschke.meyer.service.model.BaseXml
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.piece.Piece

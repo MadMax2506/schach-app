@@ -1,5 +1,7 @@
+package janorschke.meyer.service.utils
+
 import android.annotation.SuppressLint
-import janorschke.meyer.service.xml.AiEvaluationNodeXml
+import janorschke.meyer.service.model.game.ai.AiEvaluationNodeXml
 import java.io.File
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller

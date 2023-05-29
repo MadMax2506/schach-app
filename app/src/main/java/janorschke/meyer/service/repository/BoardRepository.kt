@@ -6,7 +6,7 @@ import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.repository.ai.AiRepository
-import janorschke.meyer.service.utils.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.validator.BoardValidator
 
 private const val LOG_TAG = "BoardRepository"

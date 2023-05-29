@@ -1,7 +1,8 @@
-package janorschke.meyer.service.xml
+package janorschke.meyer.service.model.game.piece
 
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
+import janorschke.meyer.service.model.BaseXml
 import janorschke.meyer.service.model.game.piece.Piece
 import javax.xml.bind.annotation.XmlAccessType
 import javax.xml.bind.annotation.XmlAccessorType

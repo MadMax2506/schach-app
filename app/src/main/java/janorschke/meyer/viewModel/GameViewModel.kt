@@ -15,7 +15,7 @@ import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.service.repository.BoardRepository
 import janorschke.meyer.service.repository.GameRepository
 import janorschke.meyer.service.repository.ai.AiRepositoryFactory
-import janorschke.meyer.service.utils.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PiecePosition
 
 /**
  * View model for the game activity

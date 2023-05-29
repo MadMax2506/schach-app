@@ -3,7 +3,7 @@ package janorschke.meyer.service.model.game.piece
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
-import janorschke.meyer.service.utils.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.validator.FieldValidator
 
 class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {

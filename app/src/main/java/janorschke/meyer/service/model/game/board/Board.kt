@@ -8,7 +8,6 @@ import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.piece.lineMoving.Bishop
 import janorschke.meyer.service.model.game.piece.lineMoving.Queen
 import janorschke.meyer.service.model.game.piece.lineMoving.Rook
-import janorschke.meyer.service.utils.board.PiecePosition
 import janorschke.meyer.service.utils.piece.PieceSequence
 import janorschke.meyer.service.validator.BoardValidator
 

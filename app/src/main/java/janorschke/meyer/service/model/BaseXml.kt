@@ -1,4 +1,4 @@
-package janorschke.meyer.service.xml
+package janorschke.meyer.service.model
 
 abstract class BaseXml {
     protected fun <T> listToArrayList(list: MutableList<T>): ArrayList<T> {

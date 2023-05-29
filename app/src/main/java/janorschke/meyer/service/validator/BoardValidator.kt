@@ -7,7 +7,7 @@ import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.piece.King
 import janorschke.meyer.service.model.game.piece.Pawn
 import janorschke.meyer.service.model.game.piece.Piece
-import janorschke.meyer.service.utils.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.utils.piece.PieceSequence
 
 object BoardValidator {

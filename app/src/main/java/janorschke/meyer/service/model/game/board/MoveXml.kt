@@ -1,7 +1,8 @@
-package janorschke.meyer.service.xml
+package janorschke.meyer.service.model.game.board
 
-import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.BaseXml
 import janorschke.meyer.service.model.game.piece.Piece
+import janorschke.meyer.service.model.game.piece.PieceXml
 import javax.xml.bind.annotation.XmlAccessType
 import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.bind.annotation.XmlRootElement

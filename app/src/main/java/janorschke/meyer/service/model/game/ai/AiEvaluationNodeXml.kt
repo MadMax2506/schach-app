@@ -1,6 +1,8 @@
-package janorschke.meyer.service.xml
+package janorschke.meyer.service.model.game.ai
 
-import janorschke.meyer.service.model.game.ai.AiEvaluationNode
+import janorschke.meyer.service.model.BaseXml
+import janorschke.meyer.service.model.game.board.HistoryXml
+import janorschke.meyer.service.model.game.board.MoveXml
 import javax.xml.bind.annotation.XmlAccessType
 import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.bind.annotation.XmlElement
