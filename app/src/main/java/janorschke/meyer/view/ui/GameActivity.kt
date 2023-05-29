@@ -103,6 +103,7 @@ class GameActivity : AppCompatActivity() {
         binding.playerOne!!.time.visibility = View.GONE
 
         if (timeMode != TimeMode.UNLIMITED) {
+            // TODO pausieren, wenn KI am Zug ist: https://github.com/MadMax2506/android-wahlmodul-project/issues/96
             object : CountDownTimer(timeMode.time, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     val seconds = millisUntilFinished / 1000
@@ -113,7 +114,7 @@ class GameActivity : AppCompatActivity() {
 
                 override fun onFinish() {
                     binding.playerTwo!!.time.text = "Countdown abgelaufen!"
-                    // TODO Dialog öffnen
+                    // TODO Dialog öffnen: https://github.com/MadMax2506/android-wahlmodul-project/issues/96
                 }
             }.start()
         } else {
