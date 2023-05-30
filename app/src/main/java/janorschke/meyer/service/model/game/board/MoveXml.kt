@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.bind.annotation.XmlRootElement
 
 /**
- * TODO
+ * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,8 +36,18 @@ class MoveXml : BaseXml {
         toPiece = if (move.toPiece == null) null else PieceXml(move.toPiece)
     }
 
+    fun toMove(): Move {
+        return Move(
+                fieldsAfterMoving!!.map { row -> row.map { it?.toPiece() }.toTypedArray() }.toTypedArray(),
+                from!!.toPiecePosition(),
+                to!!.toPiecePosition(),
+                fromPiece!!.toPiece(),
+                toPiece!!.toPiece()
+        )
+    }
+
     /**
-     * TODO
+     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     private fun mapArray(fields: Array<Array<Piece?>>): Array<Array<PieceXml?>> {
         return fields

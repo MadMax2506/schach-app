@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.bind.annotation.XmlRootElement
 
 /**
- * TODO
+ * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -24,4 +24,6 @@ class PiecePositionXml : BaseXml {
         this.row = piecePosition.row
         this.col = piecePosition.col
     }
+
+    fun toPiecePosition() = PiecePosition(row!!, col!!)
 }

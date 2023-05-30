@@ -1,5 +1,6 @@
 package janorschke.meyer.service.model.game.ai
 
+import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.Move
@@ -10,9 +11,11 @@ import janorschke.meyer.service.model.game.piece.lineMoving.Rook
 import janorschke.meyer.service.utils.piece.PieceSequence
 import janorschke.meyer.service.validator.BoardValidator
 
-class AiEvaluationTreeGenerator(private val deepness: Int) {
+class AiEvaluationTreeGenerator(private val level: AiLevel) {
+    private val deepness get() = level.deepness + 2
+
     /**
-     * TODO
+     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     fun generate(root: AiEvaluationNode, board: Board): AiEvaluationNode {
         // If the root node contains no move, it is the start of the game (WHITE) begins
@@ -22,7 +25,7 @@ class AiEvaluationTreeGenerator(private val deepness: Int) {
     }
 
     /**
-     * TODO
+     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     private fun generate(
             node: AiEvaluationNode,
@@ -32,7 +35,6 @@ class AiEvaluationTreeGenerator(private val deepness: Int) {
     ): AiEvaluationNode {
         if (currentDeepness == deepness || BoardValidator.isKingCheckmate(board, color.opponent())) return node
 
-        // TODO
         val children = (if (node.numberOfChildren > 0) node.requiredChildren() else generateChildren(node, board, color))
                 .map { child -> generate(child, color.opponent(), currentDeepness + 1) }
                 .toMutableList()
@@ -42,7 +44,7 @@ class AiEvaluationTreeGenerator(private val deepness: Int) {
     }
 
     /**
-     * TODO
+     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     private fun generateChildren(parent: AiEvaluationNode, board: Board, color: PieceColor): MutableList<AiEvaluationNode> {
         return PieceSequence
@@ -56,7 +58,7 @@ class AiEvaluationTreeGenerator(private val deepness: Int) {
     }
 
     /**
-     * TODO
+     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     private fun generateMovesForPiece(board: Board, indexedPiece: PieceSequence.IndexedPiece): MutableList<Move> {
         return indexedPiece.piece

@@ -1,26 +1,27 @@
 package janorschke.meyer.service.model.game.ai
 
+import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.Move
 
 /**
- * TODO
+ * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
  */
-class AiEvaluationTree(
-        // TODO
-        private val deepness: Int,
-        private val board: Board,
-        // TODO
-        private val aiColor: PieceColor
-) {
-    private val aiEvaluationTreeGenerator = AiEvaluationTreeGenerator(deepness)
-    private var root = aiEvaluationTreeGenerator.generate(AiEvaluationNode(aiColor), board)
+class AiEvaluationTree(color: PieceColor, level: AiLevel, readFromFile: Boolean, private val board: Board) {
+    private val aiEvaluationTreeGenerator = AiEvaluationTreeGenerator(level)
+    private var root: AiEvaluationNode
+
+    init {
+        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/106
+        root = /*if (readFromFile) XmlSerialisation.toObject<AiEvaluationNodeXml>(DIR, getAi(color, level)).toNode(color)
+        else*/ aiEvaluationTreeGenerator.generate(AiEvaluationNode(color), board)
+    }
 
     fun getRoot() = root
 
     /**
-     * TODO
+     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     fun applyMove(move: Move) {
         root.requiredChildren()
@@ -29,7 +30,7 @@ class AiEvaluationTree(
     }
 
     /**
-     * TODO
+     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     fun calculateBestMove(): Move {
         var alpha = Int.MIN_VALUE
@@ -47,7 +48,7 @@ class AiEvaluationTree(
     }
 
     /**
-     * TODO
+     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     private fun max(parent: AiEvaluationNode, alpha: Int, beta: Int): Int {
         if (parent.numberOfChildren == 0) return parent.valency
@@ -66,7 +67,7 @@ class AiEvaluationTree(
     }
 
     /**
-     * TODO
+     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     private fun min(parent: AiEvaluationNode, alpha: Int, beta: Int): Int {
         if (parent.numberOfChildren == 0) return parent.valency

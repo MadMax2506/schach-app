@@ -18,9 +18,9 @@ class AiRepositoryFactory(private val game: Game, private val board: Board) {
 
     fun create(): AiRepository {
         return when (aiPlayer.aiLevel) {
-            AiLevel.KEVIN_OTTO -> AiLevelEasyRepository(aiPlayer.color, board)
-            AiLevel.MAX -> AiLevelMediumRepository(aiPlayer.color, board)
-            AiLevel.CHRIS -> AiLevelHardRepository(aiPlayer.color, board)
+            AiLevel.KEVIN_OTTO -> AiLevelEasyRepository(aiPlayer.color, board, true)
+            AiLevel.MAX -> AiLevelMediumRepository(aiPlayer.color, board, true)
+            AiLevel.CHRIS -> AiLevelHardRepository(aiPlayer.color, board, true)
         }
     }
 }

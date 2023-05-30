@@ -8,4 +8,4 @@ import janorschke.meyer.service.model.game.board.Board
  * Represents a hard ai
  * @see AiLevel.CHRIS
  */
-class AiLevelHardRepository(color: PieceColor, board: Board) : AiRepository(color, board, AiLevel.CHRIS.deepness)
+class AiLevelHardRepository(color: PieceColor, board: Board, readFromFile: Boolean) : AiRepository(color, AiLevel.CHRIS, board, readFromFile)

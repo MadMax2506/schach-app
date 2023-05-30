@@ -8,4 +8,4 @@ import janorschke.meyer.service.model.game.board.Board
  * Represents a medium ai
  * @see AiLevel.MAX
  */
-class AiLevelMediumRepository(color: PieceColor, board: Board) : AiRepository(color, board, AiLevel.MAX.deepness)
+class AiLevelMediumRepository(color: PieceColor, board: Board, readFromFile: Boolean) : AiRepository(color, AiLevel.MAX, board, readFromFile)

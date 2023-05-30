@@ -1,5 +1,6 @@
 package janorschke.meyer.service.repository.ai
 
+import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.ai.AiEvaluationTree
 import janorschke.meyer.service.model.game.board.Board
@@ -11,15 +12,15 @@ private const val LOG_TAG = "AiRepository"
  * Handles the ai moves
  *
  * @param color of the ai
+ * @param level of the ai
  * @param board instance
- * @param deepness of the evaluation tree
  */
-open class AiRepository(val color: PieceColor, board: Board, deepness: Int) {
+abstract class AiRepository(val color: PieceColor, level: AiLevel, board: Board, readFromFile: Boolean = false) {
     val evaluationTree: AiEvaluationTree
 
     init {
-        if (deepness < 1 || deepness % 2 != 0) throw IllegalArgumentException("Deepness is invalid")
-        evaluationTree = AiEvaluationTree(deepness, board, color)
+        if (level.deepness < 1 || level.deepness % 2 != 0) throw IllegalArgumentException("Deepness is invalid")
+        evaluationTree = AiEvaluationTree(color, level, readFromFile, board)
     }
 
     /**
