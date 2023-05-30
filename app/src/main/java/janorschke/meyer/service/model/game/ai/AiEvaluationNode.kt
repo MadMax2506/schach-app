@@ -11,10 +11,10 @@ import janorschke.meyer.service.validator.BoardValidator
 /**
  * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
  */
-class AiEvaluationNode(aiColor: PieceColor, val move: Move?, val history: History, val color: PieceColor) {
+class AiEvaluationNode(aiColor: PieceColor, val move: Move?, val history: History) {
     val valency: Int
 
-    val requiredMove: Move get() = move!!
+    val requiredMove get() = move!!
 
     init {
         this.valency = if (move == null) 0

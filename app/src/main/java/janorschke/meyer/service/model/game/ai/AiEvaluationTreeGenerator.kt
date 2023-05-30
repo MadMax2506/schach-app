@@ -14,13 +14,13 @@ object AiEvaluationTreeGenerator {
     /**
      * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
-    fun generateChildren(parent: AiEvaluationNode, board: Board, color: PieceColor): MutableList<AiEvaluationNode> {
-        return PieceSequence.allPiecesByColor(board, color)
+    fun generateChildren(parent: AiEvaluationNode, board: Board, aiColor: PieceColor): MutableList<AiEvaluationNode> {
+        return PieceSequence.allPiecesByColor(board, aiColor)
                 // Create a flatten list of moves for each possible move
                 .map { piece -> generateMovesForPiece(board, piece) }
                 .flatten()
                 // Create a evaluation for each move
-                .map { move -> AiEvaluationNode(color, move, parent.history, color) }
+                .map { move -> AiEvaluationNode(aiColor, move, parent.history) }
                 .toMutableList()
     }
 

@@ -10,6 +10,8 @@ import janorschke.meyer.service.model.game.board.Move
  * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
  */
 class AiEvaluationTree(private val aiColor: PieceColor, private val level: AiLevel) {
+    private val depth get() = level.depth + 1
+
     /**
      * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
@@ -17,8 +19,9 @@ class AiEvaluationTree(private val aiColor: PieceColor, private val level: AiLev
         var alpha = Int.MIN_VALUE
         var node: AiEvaluationNode? = null
 
-        val lastMove = AiEvaluationNode(aiColor, history.getMoves().last(), History(history), aiColor.opponent())
-        for (child in AiEvaluationTreeGenerator.generateChildren(lastMove, board, aiColor)) {
+        val lastMove = history.getMoves().last()
+        val root = AiEvaluationNode(aiColor, lastMove, History(history))
+        for (child in AiEvaluationTreeGenerator.generateChildren(root, board, aiColor)) {
             val value = minimax(child, 1, alpha, Int.MAX_VALUE, aiColor)
 
             if (value > alpha) {
@@ -33,7 +36,7 @@ class AiEvaluationTree(private val aiColor: PieceColor, private val level: AiLev
      * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     private fun minimax(parent: AiEvaluationNode, currentDepth: Int, alpha: Int, beta: Int, color: PieceColor): Int {
-        if (currentDepth == level.depth) {
+        if (currentDepth == depth) {
             return parent.valency
         }
 
@@ -54,7 +57,7 @@ class AiEvaluationTree(private val aiColor: PieceColor, private val level: AiLev
                 bestVal = bestVal.coerceAtMost(calcNode)
                 mutableBeta = mutableBeta.coerceAtMost(bestVal)
             }
-            
+
             if (mutableBeta <= mutableAlpha) break
         }
         return bestVal
