@@ -9,7 +9,7 @@ import janorschke.meyer.service.utils.piece.PieceSequence
 import janorschke.meyer.service.validator.BoardValidator
 
 /**
- * TODO
+ * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
  */
 class AiEvaluationNode(aiColor: PieceColor, val parent: AiEvaluationNode?, val move: Move?, val history: History) {
     val valency: Int
@@ -31,7 +31,7 @@ class AiEvaluationNode(aiColor: PieceColor, val parent: AiEvaluationNode?, val m
         } else {
             // Calculates valency of the current position
             if (aiColor == PieceColor.WHITE) 1 else -1 * Board(move.fieldsAfterMoving).let { boardCopy ->
-                history.push(move) // TODO is not applied to the history
+                history.push(move)
 
                 val color = move.fromPiece.color.opponent()
 
@@ -43,7 +43,7 @@ class AiEvaluationNode(aiColor: PieceColor, val parent: AiEvaluationNode?, val m
     }
 
     /**
-     * TODO
+     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     fun setChildren(children: MutableList<AiEvaluationNode>) {
         this.children = children.toMutableList()
@@ -51,7 +51,6 @@ class AiEvaluationNode(aiColor: PieceColor, val parent: AiEvaluationNode?, val m
 
     fun getChildren() = children
 
-    // TODO
     fun requiredChildren() = children!!
 
     /**

@@ -6,7 +6,7 @@ import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
 
 /**
- * TODO
+ * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
  */
 object XmlSerialisation {
     private val jc = JAXBContext.newInstance(AiEvaluationNodeXml::class.java)
