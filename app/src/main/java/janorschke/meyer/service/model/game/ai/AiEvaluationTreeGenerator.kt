@@ -12,6 +12,7 @@ import janorschke.meyer.service.utils.piece.PieceSequence
 import janorschke.meyer.service.validator.BoardValidator
 
 class AiEvaluationTreeGenerator(private val level: AiLevel) {
+    // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/110
     private val deepness get() = level.deepness + 2
 
     /**
