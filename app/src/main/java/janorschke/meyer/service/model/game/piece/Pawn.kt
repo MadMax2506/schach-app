@@ -48,7 +48,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
     ) {
         if (currentPosition.row != color.pawnLine) return
         PiecePosition(currentPosition.row + 2 * getMoveDirection(), currentPosition.col).let { piecePosition ->
-            if (FieldValidator.isInBound(piecePosition) && FieldValidator.isEmpty(board, piecePosition)) {
+            if (FieldValidator.isEmpty(board, piecePosition)) {
                 addPossibleMove(board, currentPosition, piecePosition, possibleMoves, disableCheckCheck)
             }
         }

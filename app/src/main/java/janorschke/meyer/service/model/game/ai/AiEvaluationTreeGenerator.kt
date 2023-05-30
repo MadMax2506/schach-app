@@ -13,7 +13,7 @@ import janorschke.meyer.service.validator.BoardValidator
 
 class AiEvaluationTreeGenerator(private val level: AiLevel) {
     // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/110
-    private val deepness get() = level.deepness + 2
+    private val depth get() = level.depth + 2
 
     /**
      * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
@@ -31,13 +31,13 @@ class AiEvaluationTreeGenerator(private val level: AiLevel) {
     private fun generate(
             node: AiEvaluationNode,
             color: PieceColor,
-            currentDeepness: Int,
+            depth: Int,
             board: Board = Board(node.requiredMove.fieldsAfterMoving)
     ): AiEvaluationNode {
-        if (currentDeepness == deepness || BoardValidator.isKingCheckmate(board, color.opponent())) return node
+        if (depth == this.depth || BoardValidator.isKingCheckmate(board, color.opponent())) return node
 
         val children = (if (node.numberOfChildren > 0) node.requiredChildren() else generateChildren(node, board, color))
-                .map { child -> generate(child, color.opponent(), currentDeepness + 1) }
+                .map { child -> generate(child, color.opponent(), depth + 1) }
                 .toMutableList()
 
         node.setChildren(children)
@@ -48,8 +48,7 @@ class AiEvaluationTreeGenerator(private val level: AiLevel) {
      * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     private fun generateChildren(parent: AiEvaluationNode, board: Board, color: PieceColor): MutableList<AiEvaluationNode> {
-        return PieceSequence
-                .allPiecesByColor(board, color)
+        return PieceSequence.allPiecesByColor(board, color)
                 // Create a flatten list of moves for each possible move
                 .map { piece -> generateMovesForPiece(board, piece) }
                 .flatten()

@@ -19,7 +19,7 @@ abstract class AiRepository(val color: PieceColor, level: AiLevel, board: Board,
     val evaluationTree: AiEvaluationTree
 
     init {
-        if (level.deepness < 1 || level.deepness % 2 != 0) throw IllegalArgumentException("Deepness is invalid")
+        if (level.depth < 1 || level.depth % 2 != 0) throw IllegalArgumentException("Depth is invalid")
         evaluationTree = AiEvaluationTree(color, level, readFromFile, board)
     }
 

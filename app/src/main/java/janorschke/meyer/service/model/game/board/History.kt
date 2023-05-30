@@ -61,7 +61,7 @@ class History {
      */
     fun undo(): Move {
         val move = moves.removeLast()
-        move.toPiece.let { piece -> if (piece != null) beatenPieces.removeLast() }
+        if (move.toPiece != null) beatenPieces.removeLast()
         return move
     }
 }
