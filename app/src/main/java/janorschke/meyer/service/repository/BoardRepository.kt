@@ -6,6 +6,7 @@ import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.repository.ai.AiRepository
 import janorschke.meyer.service.validator.BoardValidator
 
 private const val LOG_TAG = "BoardRepository"
@@ -15,8 +16,7 @@ class BoardRepository(
         private val history: History,
         private val game: Game,
         private val gameRepository: GameRepository,
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/111
-        //private val aiRepository: AiRepository
+        private val aiRepository: AiRepository
 ) {
     fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
         tryToMovePiece(fromPosition, toPosition, false)
@@ -44,15 +44,9 @@ class BoardRepository(
         game.setSelectedPiece()
 
         // Check if game is finished or move was done by the ai
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/111
-        // if (gameRepository.checkEndOfGame(piece!!) || isAiMove) return
+        if (gameRepository.checkEndOfGame(piece!!) || isAiMove) return
 
-        if (gameRepository.checkEndOfGame(piece!!)) return
-        game.setColor(game.getColor().opponent())
-
-        // Calculate the next move from the ai
-        // TODO put into an own thread https://github.com/MadMax2506/android-wahlmodul-project/issues/99
-        // aiRepository.calculateNextMove().let { move -> tryToMovePiece(move.from, move.to, true) }
+        aiRepository.calculateNextMove(board, history).let { move -> tryToMovePiece(move.from, move.to, true) }
     }
 
     /**
@@ -64,8 +58,6 @@ class BoardRepository(
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
         val move = createMove(from, to)
         history.push(move)
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/111
-        // aiRepository.applyMove(move)
 
         if (move.toPiece != null) Log.d(LOG_TAG, "${from.getNotation()} beat piece on ${to.getNotation()}")
         else Log.d(LOG_TAG, "Move piece from ${from.getNotation()} to ${to.getNotation()}")

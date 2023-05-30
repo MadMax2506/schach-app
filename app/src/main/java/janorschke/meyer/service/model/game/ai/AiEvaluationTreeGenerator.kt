@@ -1,6 +1,5 @@
 package janorschke.meyer.service.model.game.ai
 
-import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.Move
@@ -11,49 +10,17 @@ import janorschke.meyer.service.model.game.piece.lineMoving.Rook
 import janorschke.meyer.service.utils.piece.PieceSequence
 import janorschke.meyer.service.validator.BoardValidator
 
-class AiEvaluationTreeGenerator(private val level: AiLevel) {
-    // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/110
-    private val depth get() = level.depth + 2
-
+object AiEvaluationTreeGenerator {
     /**
      * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
-    fun generate(root: AiEvaluationNode, board: Board): AiEvaluationNode {
-        // If the root node contains no move, it is the start of the game (WHITE) begins
-        // otherwise the opponent color is the next one
-        val color = if (root.move == null) PieceColor.WHITE else root.requiredMove.fromPiece.color.opponent()
-        return generate(root, color, 0, board)
-    }
-
-    /**
-     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
-     */
-    private fun generate(
-            node: AiEvaluationNode,
-            color: PieceColor,
-            depth: Int,
-            board: Board = Board(node.requiredMove.fieldsAfterMoving)
-    ): AiEvaluationNode {
-        if (depth == this.depth || BoardValidator.isKingCheckmate(board, color.opponent())) return node
-
-        val children = (if (node.numberOfChildren > 0) node.requiredChildren() else generateChildren(node, board, color))
-                .map { child -> generate(child, color.opponent(), depth + 1) }
-                .toMutableList()
-
-        node.setChildren(children)
-        return node
-    }
-
-    /**
-     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
-     */
-    private fun generateChildren(parent: AiEvaluationNode, board: Board, color: PieceColor): MutableList<AiEvaluationNode> {
+    fun generateChildren(parent: AiEvaluationNode, board: Board, color: PieceColor): MutableList<AiEvaluationNode> {
         return PieceSequence.allPiecesByColor(board, color)
                 // Create a flatten list of moves for each possible move
                 .map { piece -> generateMovesForPiece(board, piece) }
                 .flatten()
                 // Create a evaluation for each move
-                .map { move -> AiEvaluationNode(color, move, parent) }
+                .map { move -> AiEvaluationNode(color, move, parent.history, color) }
                 .toMutableList()
     }
 

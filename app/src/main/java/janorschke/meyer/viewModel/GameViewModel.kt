@@ -15,6 +15,7 @@ import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.service.repository.BoardRepository
 import janorschke.meyer.service.repository.GameRepository
+import janorschke.meyer.service.repository.ai.AiRepositoryFactory
 
 /**
  * View model for the game activity
@@ -46,13 +47,9 @@ class GameViewModel(
     private val board = Board()
     private val history = History()
 
-    // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/111
-    //private val aiRepository = AiRepositoryFactory(game, board).create()
+    private val aiRepository = AiRepositoryFactory(game).create()
     private val gameRepository = GameRepository(board, history, game)
-
-    // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/111
-    //private val boardRepository = BoardRepository(board, history, game, gameRepository, aiRepository)
-    private val boardRepository = BoardRepository(board, history, game, gameRepository)
+    private val boardRepository = BoardRepository(board, history, game, gameRepository, aiRepository)
 
     init {
         playerWhite.value = game.playerWhite

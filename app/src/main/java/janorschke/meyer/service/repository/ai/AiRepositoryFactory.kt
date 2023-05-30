@@ -2,13 +2,12 @@ package janorschke.meyer.service.repository.ai
 
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.service.model.game.Game
-import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.player.AiPlayer
 
 /**
  * Factory to create the repository for the correct ai level
  */
-class AiRepositoryFactory(private val game: Game, private val board: Board) {
+class AiRepositoryFactory(private val game: Game) {
     private val aiPlayer: AiPlayer
         get() {
             if (game.playerWhite is AiPlayer) return game.playerWhite
@@ -18,9 +17,9 @@ class AiRepositoryFactory(private val game: Game, private val board: Board) {
 
     fun create(): AiRepository {
         return when (aiPlayer.aiLevel) {
-            AiLevel.KEVIN_OTTO -> AiLevelEasyRepository(aiPlayer.color, board, true)
-            AiLevel.MAX -> AiLevelMediumRepository(aiPlayer.color, board, true)
-            AiLevel.CHRIS -> AiLevelHardRepository(aiPlayer.color, board, true)
+            AiLevel.KEVIN_OTTO -> AiLevelEasyRepository(aiPlayer.color)
+            AiLevel.MAX -> AiLevelMediumRepository(aiPlayer.color)
+            AiLevel.CHRIS -> AiLevelHardRepository(aiPlayer.color)
         }
     }
 }
