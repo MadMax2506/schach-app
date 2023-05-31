@@ -31,7 +31,7 @@ import janorschke.meyer.viewModel.GameViewModel
 import janorschke.meyer.viewModel.GameViewModelFactory
 
 private const val LOG_TAG = "GameActivity"
-private const val GAMEOVER_DIALOG_TAG: String = "GameOverDialog"
+private const val GAME_OVER_DIALOG_TAG: String = "GameOverDialog"
 
 /**
  * Activity for an chess game

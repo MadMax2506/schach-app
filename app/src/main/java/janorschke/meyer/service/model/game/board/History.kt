@@ -7,26 +7,36 @@ import janorschke.meyer.service.model.game.piece.Piece
  * Provides the history of all board moves and the beaten pieces by a move
  */
 class History {
-    private val beatenPieces: MutableList<Piece> = mutableListOf()
-    private val moves: MutableList<Move> = mutableListOf()
+    val numberOfMoves get() = moves.size
+
+    private val beatenPieces: MutableList<Piece>
+    private val moves: MutableList<Move>
+
+    constructor() {
+        beatenPieces = mutableListOf()
+        moves = mutableListOf()
+    }
+
+    // Copy Constructor
+    constructor(history: History) {
+        this.beatenPieces = history.beatenPieces.toMutableList()
+        this.moves = history.moves.toMutableList()
+    }
 
     fun reset() {
         beatenPieces.clear()
         moves.clear()
     }
 
-    /**
-     * @return number of moves
-     */
-    fun numberOfMoves(): Int = moves.size
-
-    fun getMoves() = moves
+    fun getMoves() = moves.toMutableList()
 
     /**
      * @param n number of moves
      * @return the n last moves
      */
-    fun getLastMoves(n: Int) = moves.slice(IntRange(numberOfMoves() - n, numberOfMoves() - 1)).toMutableList()
+    fun getLastMoves(n: Int) = moves.slice(IntRange(numberOfMoves - n, numberOfMoves - 1)).toMutableList()
+
+    fun getBeatenPieces() = beatenPieces.toMutableList()
 
     /**
      * @param color of the pieces

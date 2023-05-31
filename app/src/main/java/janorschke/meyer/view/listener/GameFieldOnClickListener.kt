@@ -5,7 +5,7 @@ import android.view.View.OnClickListener
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.piece.Piece
-import janorschke.meyer.service.utils.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.viewModel.GameViewModel
 
 /**
@@ -28,7 +28,7 @@ class GameFieldOnClickListener(
             // handle first click
             (selectedPosition == null && isPlayersPiece) -> gameViewModel.setSelectedPiece(position, possibleMoves)
             // handle second click
-            (selectedPosition != null && !isPlayersPiece) -> gameViewModel.tryToMovePiece(selectedPosition!!, position)
+            (selectedPosition != null && !isPlayersPiece) -> gameViewModel.tryToMovePiece(selectedPosition, position)
             (isPlayersPiece && selectedPosition != position) -> gameViewModel.setSelectedPiece(position, possibleMoves)
             else -> gameViewModel.setSelectedPiece()
         }

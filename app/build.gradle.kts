@@ -69,6 +69,12 @@ android {
 }
 
 dependencies {
+    // XML serialization dependencies
+    compileOnly("javax.xml.bind:jaxb-api:2.3.0")
+    compileOnly("javax.activation:activation:1.1")
+    compileOnly("org.glassfish.jaxb:jaxb-runtime:2.3.2")
+
+    // Material dependencies
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -104,6 +110,7 @@ dependencies {
 
     // Tooling
     debugImplementation(libs.androidx.compose.ui.tooling)
+
     // Instrumented tests
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
@@ -113,7 +120,6 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 
     // Instrumented tests: jUnit rules and runners
-
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
