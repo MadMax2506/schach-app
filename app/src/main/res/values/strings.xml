@@ -15,6 +15,13 @@
     <string name="ai_level_medium">Mittel</string>
     <string name="ai_hard">Schwer</string>
 
+    <!-- time-mode -->
+    <string name="time_mode_select">Zeitmodus auswählen</string>
+    <string name="time_mode_bullet">Bullet</string>
+    <string name="time_mode_blitz">Blitz</string>
+    <string name="time_mode_rapid">Schnellschach</string>
+    <string name="time_mode_unlimited_time">Unbegrenzt</string>
+
     <!-- piece info -->
     <string name="piece_info_king">K</string>
     <string name="piece_info_queen">D</string>

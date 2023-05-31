@@ -2,8 +2,10 @@ package janorschke.meyer.view.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.widget.LinearLayout
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +16,7 @@ import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameMode
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.enums.TransferKeys
 import janorschke.meyer.service.model.game.Player
 import janorschke.meyer.view.adapter.BoardAdapter
@@ -42,6 +45,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var beatenPiecesByWhiteAdapter: BeatenPiecesAdapter
     private lateinit var beatenPiecesByBlackAdapter: BeatenPiecesAdapter
     private lateinit var gameViewModel: GameViewModel
+    private lateinit var timeMode: TimeMode
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +65,12 @@ class GameActivity : AppCompatActivity() {
 
             enumValueOf<GameMode>(gameModeStr).let { gameMode ->
                 when {
-                    gameMode == GameMode.AI -> aiGameMode()
+                    gameMode == GameMode.AI -> {
+                        aiGameMode()
+
+                        // Time Mode
+                        setTimeMode()
+                    }
                     // TODO further modes
                 }
             }
@@ -99,6 +108,34 @@ class GameActivity : AppCompatActivity() {
         val layoutSurrender = binding.bottomBar?.layoutSurrender
         layoutVoteDraw?.findViewById<LinearLayout>(R.id.layout_vote_draw)?.setOnClickListener(GameVoteDrawOnClickListener(this, gameViewModel))
         layoutSurrender?.findViewById<LinearLayout>(R.id.layout_surrender)?.setOnClickListener(GameSurrenderOnClickListener(this, gameViewModel))
+    }
+
+    private fun setTimeMode() {
+        val timeModeStr = intent.extras?.getString(TransferKeys.TIME_MODE.name)
+                ?: throw IllegalArgumentException("Time Mode null!")
+        timeMode = enumValueOf(timeModeStr)
+
+        // TimeMode off for AI-Player
+        binding.playerOne!!.time.visibility = View.GONE
+
+        if (timeMode != TimeMode.UNLIMITED) {
+            // TODO pausieren, wenn KI am Zug ist: https://github.com/MadMax2506/android-wahlmodul-project/issues/96
+            object : CountDownTimer(timeMode.time, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    val seconds = millisUntilFinished / 1000
+                    val minutes = seconds / 60
+                    val remainingSeconds = seconds % 60
+                    binding.playerTwo!!.time.text = String.format("%02d:%02d", minutes, remainingSeconds)
+                }
+
+                override fun onFinish() {
+                    binding.playerTwo!!.time.text = "Countdown abgelaufen!"
+                    // TODO Dialog öffnen: https://github.com/MadMax2506/android-wahlmodul-project/issues/96
+                }
+            }.start()
+        } else {
+            binding.playerTwo!!.time.visibility = View.GONE
+        }
     }
 
     /**
@@ -157,7 +194,7 @@ class GameActivity : AppCompatActivity() {
             playerBlack: Player,
             endByVote: Boolean = false
     ) {
-        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote).show(supportFragmentManager, GAMEOVER_DIALOG_TAG)
+        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote, timeMode).show(supportFragmentManager, GAMEOVER_DIALOG_TAG)
     }
 
     /**
@@ -200,7 +237,7 @@ class GameActivity : AppCompatActivity() {
                             gameViewModel.playerBlack.value!!, true)
                 }
 
-                else -> {} // just running
+                GameStatus.RUNNING -> {}
             }
         }
 
