@@ -78,7 +78,7 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
         return holder.view
     }
 
-    private fun getViewBackgroundColor(position: PiecePosition): Int = if (position.row % 2 != position.col % 2) R.color.brown else R.color.beige
+    private fun getViewBackgroundColor(position: PiecePosition): Int = if (position.row % 2 != position.col % 2) R.color.red_brown else R.color.beige
 
     private fun getPieceBackground(piece: Piece?, position: PiecePosition): Drawable? {
         val isPossibleMove = possibleMoves.contains(position)

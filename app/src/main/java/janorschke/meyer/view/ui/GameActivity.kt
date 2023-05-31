@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,8 @@ import janorschke.meyer.view.adapter.beatenPieces.BeatenPieceDecorator
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPiecesAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPiecesLayoutManager
 import janorschke.meyer.view.dialog.GameOverDialog
+import janorschke.meyer.view.listener.GameSurrenderOnClickListener
+import janorschke.meyer.view.listener.GameVoteDrawOnClickListener
 import janorschke.meyer.viewModel.GameViewModel
 import janorschke.meyer.viewModel.GameViewModelFactory
 
@@ -81,6 +84,9 @@ class GameActivity : AppCompatActivity() {
         moveHistoryAdapter = MoveHistoryAdapter(applicationContext)
         binding.moveHistoryWrapper?.moveHistory?.adapter = moveHistoryAdapter
 
+        // Bottom Bar
+        setBottomBarListener()
+
         // Beaten Pieces By White
         beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)
         beatenPiecesAdapter(playerInfoWhite.beatenPieces, beatenPiecesByWhiteAdapter)
@@ -92,6 +98,16 @@ class GameActivity : AppCompatActivity() {
         // Observer
         // IMPORTANT: It needs to be after all adapter initializations
         observeViewModel()
+    }
+
+    /**
+     * Sets the on click listener for the buttons on the bottom bar
+     */
+    private fun setBottomBarListener() {
+        val layoutVoteDraw = binding.bottomBar?.layoutVoteDraw
+        val layoutSurrender = binding.bottomBar?.layoutSurrender
+        layoutVoteDraw?.findViewById<LinearLayout>(R.id.layout_vote_draw)?.setOnClickListener(GameVoteDrawOnClickListener(this, gameViewModel))
+        layoutSurrender?.findViewById<LinearLayout>(R.id.layout_surrender)?.setOnClickListener(GameSurrenderOnClickListener(this, gameViewModel))
     }
 
     private fun setTimeMode() {
@@ -172,8 +188,13 @@ class GameActivity : AppCompatActivity() {
      * @param playerBlack
      * @see GameOverDialog.onCreateDialog
      */
-    private fun showGameOverDialog(winningColor: PieceColor? = null, playerWhite: Player, playerBlack: Player) {
-        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, timeMode).show(supportFragmentManager, GAME_OVER_DIALOG_TAG)
+    private fun showGameOverDialog(
+            winningColor: PieceColor? = null,
+            playerWhite: Player,
+            playerBlack: Player,
+            endByVote: Boolean = false
+    ) {
+        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote, timeMode).show(supportFragmentManager, GAME_OVER_DIALOG_TAG)
     }
 
     /**
@@ -194,12 +215,31 @@ class GameActivity : AppCompatActivity() {
      */
     private fun observeViewModel() {
         gameViewModel.status.observe(this) { status ->
-            if (status == GameStatus.CHECKMATE) {
-                Log.d(LOG_TAG, "Checkmate")
-                showGameOverDialog(gameViewModel.activePlayer.value?.color, gameViewModel.playerWhite.value!!, gameViewModel.playerBlack.value!!)
-            } else if (status == GameStatus.STALEMATE) {
-                Log.d(LOG_TAG, "Stalemate")
-                showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!)
+            when (status) {
+                GameStatus.CHECKMATE -> {
+                    Log.d(LOG_TAG, "Checkmate")
+                    showGameOverDialog(gameViewModel.activePlayer.value?.color, gameViewModel.playerWhite.value!!, gameViewModel.playerBlack.value!!)
+                }
+
+                GameStatus.STALEMATE -> {
+                    Log.d(LOG_TAG, "Stalemate")
+                    showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!)
+                }
+
+                GameStatus.DRAW -> {
+                    Log.d(LOG_TAG, "Draw voted")
+                    showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!, endByVote = true)
+                }
+
+                GameStatus.SURRENDERED -> {
+                    Log.d(LOG_TAG, "Draw voted")
+                    showGameOverDialog(gameViewModel.activePlayer.value?.color?.opponent(), gameViewModel.playerWhite.value!!,
+                            gameViewModel.playerBlack.value!!, true)
+                }
+
+                GameStatus.RUNNING -> {}
+
+                else -> { throw IllegalArgumentException("Invalid status")}
             }
         }
 
