@@ -9,9 +9,9 @@ import janorschke.meyer.service.model.game.board.PiecePosition
 class Rook(color: PieceColor) : LineMovingPiece(color, PieceInfo.ROOK) {
     override fun possibleMoves(
             board: Board,
+            history: History,
             currentPosition: PiecePosition,
-            disableCheckCheck: Boolean,
-            history: History
+            disableCheckCheck: Boolean
     ): MutableList<PiecePosition> {
         return possibleMovesOnStraightLine(board, currentPosition, disableCheckCheck, history)
     }

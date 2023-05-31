@@ -9,9 +9,9 @@ import janorschke.meyer.service.model.game.board.PiecePosition
 class Queen(color: PieceColor) : LineMovingPiece(color, PieceInfo.QUEEN) {
     override fun possibleMoves(
             board: Board,
+            history: History,
             currentPosition: PiecePosition,
-            disableCheckCheck: Boolean,
-            history: History
+            disableCheckCheck: Boolean
     ): MutableList<PiecePosition> {
         return possibleMovesOnDiagonalLine(board, currentPosition, disableCheckCheck, history)
                 .plus(possibleMovesOnStraightLine(board, currentPosition, disableCheckCheck, history))

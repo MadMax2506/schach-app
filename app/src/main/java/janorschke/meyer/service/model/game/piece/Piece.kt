@@ -30,9 +30,9 @@ abstract class Piece(
      */
     protected abstract fun possibleMoves(
             board: Board,
+            history: History,
             currentPosition: PiecePosition,
-            disableCheckCheck: Boolean,
-            history: History
+            disableCheckCheck: Boolean
     ): MutableList<PiecePosition>
 
     /**
@@ -48,7 +48,7 @@ abstract class Piece(
             kingPosition: PiecePosition,
             ownPosition: PiecePosition
     ): Boolean {
-        val possibleMoves = this.possibleMoves(board, ownPosition, true, history)
+        val possibleMoves = this.possibleMoves(board, history, ownPosition, true)
         return possibleMoves.contains(kingPosition)
     }
 
@@ -63,7 +63,7 @@ abstract class Piece(
             currentPosition: PiecePosition,
             history: History
     ): MutableList<PiecePosition> {
-        return possibleMoves(board, currentPosition, false, history)
+        return possibleMoves(board, history, currentPosition, false)
     }
 
     /**

@@ -9,9 +9,9 @@ import janorschke.meyer.service.model.game.board.PiecePosition
 class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
     override fun possibleMoves(
             board: Board,
+            history: History,
             currentPosition: PiecePosition,
-            disableCheckCheck: Boolean,
-            history: History
+            disableCheckCheck: Boolean
     ): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
         for (row in -1..1) {

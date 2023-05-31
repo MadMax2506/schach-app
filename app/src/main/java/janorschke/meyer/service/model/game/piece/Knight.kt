@@ -10,9 +10,9 @@ import kotlin.math.abs
 class Knight(color: PieceColor) : Piece(color, PieceInfo.KNIGHT) {
     override fun possibleMoves(
             board: Board,
+            history: History,
             currentPosition: PiecePosition,
-            disableCheckCheck: Boolean,
-            history: History
+            disableCheckCheck: Boolean
     ): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
         for (i in -2..2) {
