@@ -19,6 +19,6 @@
     <dimen name="dialog_button_width">180sp</dimen>
     <dimen name="dialog_button_height">55sp</dimen>
 
-    <!-- NavigationBar -->
-    <dimen name="navbar_button_text_size">15sp</dimen>
+    <!-- BottomBar -->
+    <dimen name="bottom_bar_button_text_size">15sp</dimen>
 </resources>

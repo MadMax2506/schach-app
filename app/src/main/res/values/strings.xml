@@ -43,7 +43,7 @@
     <string name="gameover_dialog_text_draw_voted">Unentschieden durch Abstimmung!</string>
 
 
-    <!-- game navigation-bar-->
+    <!-- game bottom-bar-->
     <string name="vote_draw">Remi anbieten</string>
     <string name="surrender">Aufgeben</string>
 

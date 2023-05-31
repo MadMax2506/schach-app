@@ -84,7 +84,7 @@ class GameActivity : AppCompatActivity() {
         moveHistoryAdapter = MoveHistoryAdapter(applicationContext)
         binding.moveHistoryWrapper?.moveHistory?.adapter = moveHistoryAdapter
 
-        // Navigation Bar
+        // Bottom Bar
         setBottomLayoutListener()
 
         // Beaten Pieces By White
