@@ -13,12 +13,12 @@ import janorschke.meyer.viewModel.GameViewModel
  * Handles the click on a game field
  */
 class GameFieldOnClickListener(
-        private val position: PiecePosition,
         private val board: Array<Array<Piece?>>,
+        private val history: History,
+        private val position: PiecePosition,
         private val playerColor: PieceColor,
         private val selectedPosition: PiecePosition?,
-        private val gameViewModel: GameViewModel,
-        private val history: History
+        private val gameViewModel: GameViewModel
 ) : OnClickListener {
     override fun onClick(v: View?) {
         val piece = board[position.row][position.col]
