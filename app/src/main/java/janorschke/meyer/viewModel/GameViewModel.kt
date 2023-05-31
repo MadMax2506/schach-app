@@ -7,15 +7,15 @@ import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.Game
-import janorschke.meyer.service.model.game.Player
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.model.game.piece.Piece
+import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.service.repository.BoardRepository
 import janorschke.meyer.service.repository.GameRepository
 import janorschke.meyer.service.repository.ai.AiRepositoryFactory
-import janorschke.meyer.service.utils.board.PiecePosition
 
 /**
  * View model for the game activity
@@ -46,7 +46,8 @@ class GameViewModel(
     private val game = Game(textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
-    private val aiRepository = AiRepositoryFactory(game, board).create()
+
+    private val aiRepository = AiRepositoryFactory(game).create()
     private val gameRepository = GameRepository(board, history, game)
     private val boardRepository = BoardRepository(board, history, game, gameRepository, aiRepository)
 

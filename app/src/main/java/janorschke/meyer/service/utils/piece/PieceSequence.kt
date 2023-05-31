@@ -3,7 +3,7 @@ package janorschke.meyer.service.utils.piece
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.piece.Piece
-import janorschke.meyer.service.utils.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PiecePosition
 
 /**
  * Provides functionality to compare all pieces on the board

@@ -3,7 +3,7 @@ package janorschke.meyer.service.model.game.piece
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
-import janorschke.meyer.service.utils.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.validator.FieldValidator
 
 class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
@@ -46,7 +46,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
             possibleMoves: MutableList<PiecePosition>,
             disableCheckCheck: Boolean
     ) {
-        if (moved) return
+        if (currentPosition.row != color.pawnLine) return
         PiecePosition(currentPosition.row + 2 * getMoveDirection(), currentPosition.col).let { piecePosition ->
             if (FieldValidator.isEmpty(board, piecePosition)) {
                 addPossibleMove(board, currentPosition, piecePosition, possibleMoves, disableCheckCheck)

@@ -17,7 +17,7 @@ import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.enums.TransferKeys
-import janorschke.meyer.service.model.game.Player
+import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.view.adapter.BoardAdapter
 import janorschke.meyer.view.adapter.MoveHistoryAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPieceDecorator
@@ -28,7 +28,7 @@ import janorschke.meyer.viewModel.GameViewModel
 import janorschke.meyer.viewModel.GameViewModelFactory
 
 private const val LOG_TAG = "GameActivity"
-private const val GAMEOVER_DIALOG_TAG: String = "GameOverDialog"
+private const val GAME_OVER_DIALOG_TAG: String = "GameOverDialog"
 
 /**
  * Activity for an chess game
@@ -173,7 +173,7 @@ class GameActivity : AppCompatActivity() {
      * @see GameOverDialog.onCreateDialog
      */
     private fun showGameOverDialog(winningColor: PieceColor? = null, playerWhite: Player, playerBlack: Player) {
-        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, timeMode).show(supportFragmentManager, GAMEOVER_DIALOG_TAG)
+        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, timeMode).show(supportFragmentManager, GAME_OVER_DIALOG_TAG)
     }
 
     /**
