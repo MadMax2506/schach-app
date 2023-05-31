@@ -62,9 +62,9 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
             possibleMoves: MutableList<PiecePosition>,
             disableCheckCheck: Boolean
     ) {
-        val lastMove = history.getLastMoves(1).getOrNull(0)
+        val lastMove = history.getLastMoves(1).getOrNull(0) ?: return
 
-        if (lastMove != null && lastMove.fromPiece is Pawn && lastMove.fromPiece.color != color) {
+        if (lastMove.fromPiece is Pawn && lastMove.fromPiece.color != color) {
             val lastMoveTargetRow = lastMove.to.row
             val lastMoveTargetCol = lastMove.to.col
 
