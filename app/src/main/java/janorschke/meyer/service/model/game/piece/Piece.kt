@@ -87,11 +87,11 @@ abstract class Piece(
      */
     protected fun addPossibleMove(
             board: Board,
+            history: History,
             currentPosition: PiecePosition,
             possiblePosition: PiecePosition,
             possibleMoves: MutableList<PiecePosition>,
-            disableCheckCheck: Boolean,
-            history: History
+            disableCheckCheck: Boolean
     ) {
         if (disableCheckCheck) {
             possibleMoves.add(possiblePosition)

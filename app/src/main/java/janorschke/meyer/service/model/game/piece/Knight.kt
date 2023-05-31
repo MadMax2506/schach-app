@@ -22,7 +22,7 @@ class Knight(color: PieceColor) : Piece(color, PieceInfo.KNIGHT) {
 
                 val possiblePosition = PiecePosition(currentPosition.row + i, currentPosition.col + j)
                 if (isFieldUnavailable(board, possiblePosition)) continue
-                addPossibleMove(board, currentPosition, possiblePosition, possibleMoves, disableCheckCheck, history)
+                addPossibleMove(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)
             }
         }
         return possibleMoves

@@ -34,7 +34,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
         // normal move
         PiecePosition(currentPosition.row + getMoveDirection(), currentPosition.col).let { piecePosition ->
             if (FieldValidator.isEmpty(board, piecePosition)) {
-                addPossibleMove(board, currentPosition, piecePosition, possibleMoves, disableCheckCheck, history)
+                addPossibleMove(board, history, currentPosition, piecePosition, possibleMoves, disableCheckCheck)
 
                 // move from base line only possible if normal move is also possible
                 specialMoveFromBaseLine(currentPosition, board, possibleMoves, disableCheckCheck, history)
@@ -45,7 +45,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
         for (i in arrayOf(-1, 1)) {
             PiecePosition(currentPosition.row + getMoveDirection(), currentPosition.col + i).let { piecePosition ->
                 if (!isFieldUnavailable(board, piecePosition) && FieldValidator.isOpponent(board, color, piecePosition)) {
-                    addPossibleMove(board, currentPosition, piecePosition, possibleMoves, disableCheckCheck, history)
+                    addPossibleMove(board, history, currentPosition, piecePosition, possibleMoves, disableCheckCheck)
                 }
             }
         }
@@ -72,7 +72,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
                 val enPassantRow = if (color == PieceColor.WHITE) 3 else 4
                 if (currentPosition.row == enPassantRow) {
                     val enPassantPosition = PiecePosition(enPassantRow + getMoveDirection(), lastMoveTargetCol)
-                    addPossibleMove(board, currentPosition, enPassantPosition, possibleMoves, disableCheckCheck, history)
+                    addPossibleMove(board, history, currentPosition, enPassantPosition, possibleMoves, disableCheckCheck)
                 }
             }
         }
@@ -88,7 +88,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
         if (currentPosition.row != color.pawnLine) return
         PiecePosition(currentPosition.row + 2 * getMoveDirection(), currentPosition.col).let { piecePosition ->
             if (FieldValidator.isEmpty(board, piecePosition)) {
-                addPossibleMove(board, currentPosition, piecePosition, possibleMoves, disableCheckCheck, history)
+                addPossibleMove(board, history, currentPosition, piecePosition, possibleMoves, disableCheckCheck)
             }
         }
     }

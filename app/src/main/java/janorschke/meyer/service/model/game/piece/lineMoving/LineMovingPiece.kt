@@ -116,7 +116,7 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
     ): Boolean {
         if (isFieldUnavailable(board, possiblePosition)) return true
 
-        addPossibleMove(board, currentPosition, possiblePosition, possibleMoves, disableCheckCheck, history)
+        addPossibleMove(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)
         return FieldValidator.isOpponent(board, color, possiblePosition)
     }
 }
