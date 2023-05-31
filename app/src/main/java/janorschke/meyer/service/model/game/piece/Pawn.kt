@@ -4,6 +4,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
+import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.validator.FieldValidator
 import kotlin.math.abs
@@ -51,7 +52,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
         }
 
         enPassant(board, history, currentPosition, possibleMoves, disableCheckCheck)
-
+        //possibleMoves.map { Move() }
         return possibleMoves
     }
 
@@ -65,17 +66,16 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
         val lastMove = history.getLastMoves(1).getOrNull(0) ?: return
 
         val lastMovedPiece = lastMove.fromPiece
-        if (lastMovedPiece  is Pawn && lastMovedPiece.color != color) {
-            val lastMoveTargetRow = lastMove.to.row
-            val lastMoveTargetCol = lastMove.to.col
+        if (lastMovedPiece !is Pawn || lastMovedPiece.color == color) return
 
-            if (currentPosition.row == lastMoveTargetRow && abs(currentPosition.col - lastMoveTargetCol) == 1) {
-                val enPassantRow = if (color == PieceColor.WHITE) 3 else 4
-                if (currentPosition.row == enPassantRow) {
-                    val enPassantPosition = PiecePosition(enPassantRow + getMoveDirection(), lastMoveTargetCol)
-                    addPossibleMove(board, history, currentPosition, enPassantPosition, possibleMoves, disableCheckCheck)
-                }
-            }
+        val lastMoveTargetRow = lastMove.to.row
+        val lastMoveTargetCol = lastMove.to.col
+        if (currentPosition.row != lastMoveTargetRow || abs(currentPosition.col - lastMoveTargetCol) != 1) return
+
+        val enPassantRow = if (color == PieceColor.WHITE) 3 else 4
+        if (currentPosition.row == enPassantRow) {
+            val enPassantPosition = PiecePosition(enPassantRow + getMoveDirection(), lastMoveTargetCol)
+            addPossibleMove(board, history, currentPosition, enPassantPosition, possibleMoves, disableCheckCheck)
         }
     }
 

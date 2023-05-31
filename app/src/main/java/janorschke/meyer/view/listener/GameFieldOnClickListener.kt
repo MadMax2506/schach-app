@@ -14,7 +14,6 @@ import janorschke.meyer.viewModel.GameViewModel
  */
 class GameFieldOnClickListener(
         private val board: Array<Array<Piece?>>,
-        private val history: History,
         private val position: PiecePosition,
         private val playerColor: PieceColor,
         private val selectedPosition: PiecePosition?,
@@ -22,7 +21,7 @@ class GameFieldOnClickListener(
 ) : OnClickListener {
     override fun onClick(v: View?) {
         val piece = board[position.row][position.col]
-        val possibleMoves = piece?.possibleMoves(Board(board), history, position) ?: mutableListOf()
+        val possibleMoves = piece?.possibleMoves(Board(board), gameViewModel.getHistory(), position) ?: mutableListOf()
 
         val isPlayersPiece = (piece?.color == playerColor)
 

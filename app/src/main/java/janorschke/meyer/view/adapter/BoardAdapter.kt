@@ -74,7 +74,6 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
         holder.binding.btn.setOnClickListener(
                 GameFieldOnClickListener(
                         fields,
-                        gameViewModel.getHistory(),
                         position,
                         playerColor,
                         selectedPosition,
