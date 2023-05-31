@@ -29,13 +29,21 @@ class GameOverDialog : BaseDialog() {
         private const val ARG_PLAYER_WHITE = "playerWhite"
         private const val ARG_PLAYER_BLACK = "playerBlack"
         private const val ARG_TIME_MODE = "timeMode"
+        private const val ARG_END_BY_VOTE = "endByVote"
 
-        fun newInstance(winningColor: PieceColor?, playerWhite: Player, playerBlack: Player, timeMode: TimeMode): GameOverDialog {
+        fun newInstance(
+                winningColor: PieceColor?,
+                playerWhite: Player,
+                playerBlack: Player,
+                endByVote: Boolean,
+                timeMode: TimeMode
+        ): GameOverDialog {
             return GameOverDialog().also { dialog ->
                 dialog.arguments = Bundle().also { bundle ->
                     bundle.putSerializable(ARG_WINNING_COLOR, winningColor)
                     bundle.putSerializable(ARG_PLAYER_WHITE, playerWhite)
                     bundle.putSerializable(ARG_PLAYER_BLACK, playerBlack)
+                    bundle.putSerializable(ARG_END_BY_VOTE, endByVote)
                     bundle.putSerializable(ARG_TIME_MODE, timeMode)
                 }
             }
@@ -48,27 +56,49 @@ class GameOverDialog : BaseDialog() {
         val winningColor: PieceColor? = requireArguments().optionalSerializable(ARG_WINNING_COLOR)
         val playerWhite: Player = requireArguments().requiredSerializable(ARG_PLAYER_WHITE)
         val playerBlack: Player = requireArguments().requiredSerializable(ARG_PLAYER_BLACK)
+        val endByVote: Boolean = requireArguments().requiredSerializable(ARG_END_BY_VOTE)
         val timeMode: TimeMode = requireArguments().requiredSerializable(ARG_TIME_MODE)
 
         aiLevel = if (playerWhite is AiPlayer) playerWhite.aiLevel else (playerBlack as AiPlayer).aiLevel
 
-        binding.textGameOverDialog.text = getDialogText(winningColor, playerWhite, playerBlack)
+        binding.textGameOverDialog.text = getDialogText(winningColor, playerWhite, playerBlack, endByVote)
 
         setButtonOnClickHandlers(timeMode)
 
         return MaterialAlertDialogBuilder(requireContext()).setView(binding.root).create()
     }
 
-    private fun getDialogText(winningColor: PieceColor?, playerWhite: Player, playerBlack: Player): String {
-        if (winningColor == null) return resources.getString(R.string.gameover_dialog_text_stalemate)
+    private fun getDialogText(
+            winningColor: PieceColor?,
+            playerWhite: Player,
+            playerBlack: Player,
+            endByVote: Boolean
+    ): String {
+        when {
+            endByVote && winningColor == null -> return resources.getString(R.string.gameover_dialog_text_draw_voted)
 
-        return resources.getString(
-                R.string.gameover_dialog_text_win,
-                resources.getString(
-                        if (winningColor == PieceColor.WHITE) playerWhite.textResource
-                        else playerBlack.textResource
+            endByVote && winningColor != null -> {
+                return resources.getString(
+                        R.string.gameover_dialog_text_surrender,
+                        resources.getString(
+                                if (winningColor == PieceColor.WHITE) playerWhite.textResource
+                                else playerBlack.textResource
+                        )
                 )
-        )
+            }
+
+            winningColor == null -> return resources.getString(R.string.gameover_dialog_text_stalemate)
+
+            else -> {
+                return resources.getString(
+                        R.string.gameover_dialog_text_win,
+                        resources.getString(
+                                if (winningColor == PieceColor.WHITE) playerWhite.textResource
+                                else playerBlack.textResource
+                        )
+                )
+            }
+        }
     }
 
     private fun setButtonOnClickHandlers(timeMode: TimeMode) {

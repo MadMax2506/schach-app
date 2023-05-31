@@ -66,6 +66,18 @@ class GameViewModel(
         setValues()
     }
 
+    fun surrenderGame() {
+        game.setStatus(GameStatus.SURRENDERED)
+        setValues()
+    }
+
+    fun voteDraw() {
+        // TODO ki draw analysieren und dann entscheiden ob angenommen wird oder nicht
+        //  https://github.com/users/MadMax2506/projects/19/views/1?pane=issue&itemId=29566739
+        game.setStatus(GameStatus.DRAW)
+        setValues()
+    }
+
     /**
      * Sets the selected piece and shows the possible moves through the GameFieldAdapter.
      *
