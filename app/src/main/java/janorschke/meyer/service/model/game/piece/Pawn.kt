@@ -50,17 +50,17 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
             }
         }
 
-        enPassant(currentPosition, board, possibleMoves, disableCheckCheck, history)
+        enPassant(board, history, currentPosition, possibleMoves, disableCheckCheck)
 
         return possibleMoves
     }
 
     private fun enPassant(
-            currentPosition: PiecePosition,
             board: Board,
+            history: History,
+            currentPosition: PiecePosition,
             possibleMoves: MutableList<PiecePosition>,
-            disableCheckCheck: Boolean,
-            history: History
+            disableCheckCheck: Boolean
     ) {
         val lastMove = history.getLastMoves(1).getOrNull(0)
 
