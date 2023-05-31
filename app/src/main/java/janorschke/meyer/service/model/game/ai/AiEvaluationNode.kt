@@ -17,8 +17,10 @@ class AiEvaluationNode(aiColor: PieceColor, val move: Move?, val history: Histor
     val requiredMove get() = move!!
 
     init {
-        this.valency = if (move == null) 0
-        else {
+        this.valency = if (move == null) {
+            // Neutral starting position on the board
+            0
+        } else {
             // Calculates valency of the current position
             (if (aiColor == PieceColor.WHITE) 1 else -1) * Board(move.fieldsAfterMoving).let { boardCopy ->
                 history.push(move)

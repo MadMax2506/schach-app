@@ -47,7 +47,7 @@ class AiEvaluationTree(private val aiColor: PieceColor, private val level: AiLev
         var mutableAlpha = alpha
         var mutableBeta = beta
 
-        for (child in AiEvaluationTreeGenerator.generateChildren(parent, board, aiColor.opponent())) {
+        for (child in AiEvaluationTreeGenerator.generateChildren(parent, board, color.opponent())) {
             val calcNode = minimax(child, currentDepth + 1, mutableAlpha, mutableBeta, color.opponent())
 
             if (maximizingPlayer) {
