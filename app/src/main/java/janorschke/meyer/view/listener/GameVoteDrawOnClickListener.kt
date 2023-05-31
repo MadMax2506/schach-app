@@ -16,12 +16,8 @@ class GameVoteDrawOnClickListener(private val activity: Activity, private val ga
         MaterialAlertDialogBuilder(activity, R.style.MyTheme_Dialog)
                 .setTitle(R.string.dialog_draw_title)
                 .setMessage(R.string.dialog_draw_message)
-                .setPositiveButton(R.string.yes) { dialog, _ ->
-                    gameViewModel.voteDraw()
-                }
-                .setNegativeButton(R.string.no) { dialog, _ ->
-                    dialog.dismiss()
-                }
+                .setPositiveButton(R.string.yes) { _, _ -> gameViewModel.voteDraw() }
+                .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
                 .show()
     }
 }

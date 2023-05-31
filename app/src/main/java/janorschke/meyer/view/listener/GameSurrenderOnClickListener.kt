@@ -17,12 +17,8 @@ class GameSurrenderOnClickListener(private val activity: Activity,
         MaterialAlertDialogBuilder(activity, R.style.MyTheme_Dialog)
                 .setTitle(R.string.dialog_surrender_title)
                 .setMessage(R.string.dialog_surrender_message)
-                .setPositiveButton(R.string.yes) { dialog, _ ->
-                    gameViewModel.surrenderGame()
-                }
-                .setNegativeButton(R.string.no) { dialog, _ ->
-                    dialog.dismiss()
-                }
+                .setPositiveButton(R.string.yes) { _, _ -> gameViewModel.surrenderGame() }
+                .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
                 .show()
     }
 }
