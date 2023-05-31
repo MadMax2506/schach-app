@@ -1,9 +1,10 @@
 package janorschke.meyer.enums
 
 /**
- * Keys for the between activities
+ * Keys used for transferring data between activities.
  */
 enum class TransferKeys {
     AI_LEVEL,
-    GAME_MODE
+    GAME_MODE,
+    TIME_MODE
 }

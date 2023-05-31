@@ -3,12 +3,13 @@ package janorschke.meyer.service.model.game
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
-import janorschke.meyer.service.utils.board.PiecePosition
+import janorschke.meyer.service.model.game.player.PlayerFactory
+import janorschke.meyer.service.model.game.board.PiecePosition
 
 class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) {
 
-    val playerWhite = Player(PieceColor.WHITE, textResourceWhite, aiLevelWhite)
-    val playerBlack = Player(PieceColor.BLACK, textResourceBlack, aiLevelBlack)
+    val playerWhite = PlayerFactory(PieceColor.WHITE, textResourceWhite, aiLevelWhite).create()
+    val playerBlack = PlayerFactory(PieceColor.BLACK, textResourceBlack, aiLevelBlack).create()
 
     /**
      * Color of the player who is moving
@@ -51,7 +52,7 @@ class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel
     /**
      * Sets the selected piece and shows the possible moves through the GameFieldAdapter.
      *
-     * @param position the position of the selected piece
+     * @param selectedPosition the position of the selected piece
      * @param possibleMoves the possible moves for the selected piece
      */
     fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PiecePosition> = mutableListOf()) {

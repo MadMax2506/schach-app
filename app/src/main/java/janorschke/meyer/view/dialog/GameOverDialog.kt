@@ -10,8 +10,10 @@ import janorschke.meyer.databinding.DialogGameoverBinding
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameMode
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.enums.TransferKeys
-import janorschke.meyer.service.model.game.Player
+import janorschke.meyer.service.model.game.player.AiPlayer
+import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.view.ui.AiActivity
 import janorschke.meyer.view.ui.GameActivity
 import janorschke.meyer.view.ui.MainActivity
@@ -26,13 +28,15 @@ class GameOverDialog : BaseDialog() {
         private const val ARG_WINNING_COLOR = "winningColor"
         private const val ARG_PLAYER_WHITE = "playerWhite"
         private const val ARG_PLAYER_BLACK = "playerBlack"
+        private const val ARG_TIME_MODE = "timeMode"
 
-        fun newInstance(winningColor: PieceColor?, playerWhite: Player, playerBlack: Player): GameOverDialog {
+        fun newInstance(winningColor: PieceColor?, playerWhite: Player, playerBlack: Player, timeMode: TimeMode): GameOverDialog {
             return GameOverDialog().also { dialog ->
                 dialog.arguments = Bundle().also { bundle ->
                     bundle.putSerializable(ARG_WINNING_COLOR, winningColor)
                     bundle.putSerializable(ARG_PLAYER_WHITE, playerWhite)
                     bundle.putSerializable(ARG_PLAYER_BLACK, playerBlack)
+                    bundle.putSerializable(ARG_TIME_MODE, timeMode)
                 }
             }
         }
@@ -44,12 +48,13 @@ class GameOverDialog : BaseDialog() {
         val winningColor: PieceColor? = requireArguments().optionalSerializable(ARG_WINNING_COLOR)
         val playerWhite: Player = requireArguments().requiredSerializable(ARG_PLAYER_WHITE)
         val playerBlack: Player = requireArguments().requiredSerializable(ARG_PLAYER_BLACK)
+        val timeMode: TimeMode = requireArguments().requiredSerializable(ARG_TIME_MODE)
 
-        aiLevel = playerWhite.aiLevel ?: playerBlack.aiLevel
+        aiLevel = if (playerWhite is AiPlayer) playerWhite.aiLevel else (playerBlack as AiPlayer).aiLevel
 
         binding.textGameOverDialog.text = getDialogText(winningColor, playerWhite, playerBlack)
 
-        setButtonOnClickHandlers()
+        setButtonOnClickHandlers(timeMode)
 
         return MaterialAlertDialogBuilder(requireContext()).setView(binding.root).create()
     }
@@ -66,14 +71,16 @@ class GameOverDialog : BaseDialog() {
         )
     }
 
-    private fun setButtonOnClickHandlers() {
+    private fun setButtonOnClickHandlers(timeMode: TimeMode) {
         binding.buttonNewGame.setOnClickListener {
             Intent(requireContext(), GameActivity::class.java).let { intent ->
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 intent.putExtras(Bundle().also { bundle ->
-                    if (aiLevel != null) {
-                        Log.d(LOG_TAG, "Start new game with ai-level=$aiLevel")
+                    Log.d(LOG_TAG, "Start new game with ai-level=$aiLevel and time-mode=$timeMode")
 
+                    bundle.putString(TransferKeys.TIME_MODE.name, timeMode.name)
+
+                    if (aiLevel != null) {
                         bundle.putString(TransferKeys.AI_LEVEL.name, aiLevel!!.name)
                         bundle.putString(TransferKeys.GAME_MODE.name, GameMode.AI.name)
                     }

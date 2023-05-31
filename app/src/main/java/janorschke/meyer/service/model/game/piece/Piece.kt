@@ -4,7 +4,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.utils.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.validator.BoardValidator
 import janorschke.meyer.service.validator.FieldValidator
 
@@ -19,11 +19,7 @@ abstract class Piece(
         /**
          * Static piece informations
          */
-        val pieceInfo: PieceInfo,
-        /**
-         * If true, the piece has already moved
-         */
-        protected var moved: Boolean = false
+        val pieceInfo: PieceInfo
 ) {
     /**
      * @param board instance
@@ -71,25 +67,13 @@ abstract class Piece(
     }
 
     /**
-     * Marks the piece as moved
-     */
-    fun markAsMove() {
-        moved = true
-    }
-
-    /**
-     * @return true, if the piece has moved
-     */
-    fun hasMoved(): Boolean = moved
-
-    /**
      * @param board instance
      * @param currentPosition of the piece
      *
      * @return true, if you're not allowed to go to that position
      */
     protected fun isFieldUnavailable(board: Board, currentPosition: PiecePosition): Boolean {
-        return !FieldValidator.isInBound(board, currentPosition) || FieldValidator.isTeammate(board, color, currentPosition)
+        return !FieldValidator.isInBound(currentPosition) || FieldValidator.isTeammate(board, color, currentPosition)
     }
 
     /**
@@ -115,7 +99,7 @@ abstract class Piece(
         }
 
         Board(board).let { boardCopy ->
-            boardCopy.createBoardMove(currentPosition, possiblePosition)
+            boardCopy.createMove(currentPosition, possiblePosition)
             if (!BoardValidator.isKingInCheck(boardCopy, color, history)) possibleMoves.add(possiblePosition)
         }
     }

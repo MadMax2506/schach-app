@@ -5,10 +5,9 @@ import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
-import janorschke.meyer.service.model.game.piece.Pawn
-import janorschke.meyer.service.model.game.piece.lineMoving.Queen
+import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.repository.ai.AiRepository
-import janorschke.meyer.service.utils.board.PiecePosition
+import janorschke.meyer.service.validator.BoardValidator
 
 private const val LOG_TAG = "BoardRepository"
 
@@ -50,7 +49,7 @@ class BoardRepository(
 
         // TODO commented out to test enpassant
         // Calculate the next move from the ai
-        //aiRepository.calculateNextMove().let { move -> tryToMovePiece(move.from, move.to, true) }
+        //aiRepository.calculateNextMove(board, history).let { move -> tryToMovePiece(move.from, move.to, true) }
     }
 
     /**
@@ -62,10 +61,10 @@ class BoardRepository(
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
         // TODO toPosition is not always the position of the beaten Piece => enPassant
 
-        val boardMove = createBoardMove(from, to)
-        history.push(boardMove)
+        val move = createMove(from, to)
+        history.push(move)
 
-        if (boardMove.toPiece != null) Log.d(LOG_TAG, "${from.getNotation()} beat piece on ${to.getNotation()}")
+        if (move.toPiece != null) Log.d(LOG_TAG, "${from.getNotation()} beat piece on ${to.getNotation()}")
         else Log.d(LOG_TAG, "Move piece from ${from.getNotation()} to ${to.getNotation()}")
     }
 
@@ -76,22 +75,17 @@ class BoardRepository(
      * @param from source position
      * @param to target position
      * @return board move
+     *
+     * @see Board.createMove
      */
-    private fun createBoardMove(from: PiecePosition, to: PiecePosition): Move {
-        val fromPiece = board.getField(from)!!
-        val toPiece = board.getField(to)
-
-        fromPiece.markAsMove()
-
-        board.setField(from, null)
-        if (fromPiece is Pawn && to.row == fromPiece.color.opponent().borderlineIndex) {
-            // pawn can be transfer to an higher valency piece
-            board.setField(to, Queen(fromPiece.color))
-        } else {
-            // normal move
-            board.setField(to, fromPiece)
+    private fun createMove(from: PiecePosition, to: PiecePosition): Move {
+        board.getField(from)!!.let { piece ->
+            if (BoardValidator.isPawnTransformation(piece, to)) {
+                // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/49
+                return board.createMove(from, to)
+            } else {
+                return board.createMove(from, to)
+            }
         }
-
-        Board(board).let { boardCopy -> return Move(boardCopy.getFields(), from, to, fromPiece, toPiece) }
     }
 }

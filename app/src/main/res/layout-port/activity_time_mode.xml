@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12sp"
+        android:text="@string/time_mode_select"
+        android:textAlignment="center"
+        android:textSize="32sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_time_mode_bullet"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128sp"
+        android:padding="12sp"
+        android:text="@string/time_mode_bullet"
+        android:textSize="@dimen/button_text_size"
+        android:theme="@style/MyTheme.Button" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_time_mode_blitz"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64sp"
+        android:padding="12sp"
+        android:text="@string/time_mode_blitz"
+        android:textSize="@dimen/button_text_size"
+        android:theme="@style/MyTheme.Button" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_time_mode_rapid"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64sp"
+        android:padding="12sp"
+        android:text="@string/time_mode_rapid"
+        android:textSize="@dimen/button_text_size"
+        android:theme="@style/MyTheme.Button" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_time_mode_unlimited"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64sp"
+        android:padding="12sp"
+        android:text="@string/time_mode_unlimited_time"
+        android:textSize="@dimen/button_text_size"
+        android:theme="@style/MyTheme.Button" />
+
+
+</LinearLayout>

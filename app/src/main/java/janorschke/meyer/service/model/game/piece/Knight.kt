@@ -4,7 +4,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.utils.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PiecePosition
 import kotlin.math.abs
 
 class Knight(color: PieceColor) : Piece(color, PieceInfo.KNIGHT) {
