@@ -239,7 +239,7 @@ class GameActivity : AppCompatActivity() {
 
                 GameStatus.RUNNING -> {}
 
-                else -> { throw IllegalArgumentException("Illegal status argument")}
+                else -> { throw IllegalArgumentException("Invalid status")}
             }
         }
 
