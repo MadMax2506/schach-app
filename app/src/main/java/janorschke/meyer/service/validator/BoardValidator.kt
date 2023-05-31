@@ -4,10 +4,10 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.model.game.piece.King
 import janorschke.meyer.service.model.game.piece.Pawn
 import janorschke.meyer.service.model.game.piece.Piece
-import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.utils.piece.PieceSequence
 
 object BoardValidator {
@@ -38,16 +38,15 @@ object BoardValidator {
         if (!isKingInCheck(board, color)) return false
 
         // check if any piece can go somewhere, that is not checkmate
-        PieceSequence.allPiecesByColor(board, color)
-                .forEach {
-                    it.piece.possibleMoves(board, it.position).forEach { move ->
-                        Board(board).let { boardCopy ->
-                            boardCopy.createMove(it.position, move)
-                            // if King is not in check after this move, then it's not checkmate
-                            if (!isKingInCheck(boardCopy, color)) return false
-                        }
-                    }
+        for (indexedPiece in PieceSequence.allPiecesByColor(board, color)) {
+            for (move in indexedPiece.piece.possibleMoves(board, indexedPiece.position)) {
+                Board(board).let { boardCopy ->
+                    boardCopy.createMove(indexedPiece.position, move)
+                    // if King is not in check after this move, then it's not checkmate
+                    if (!isKingInCheck(boardCopy, color)) return false
                 }
+            }
+        }
         return true
     }
 
@@ -103,11 +102,10 @@ object BoardValidator {
      */
     private fun hasColorRepeatedMoves(moveHistory: List<Move>, color: PieceColor): Boolean {
         val filteredHistory = moveHistory.filter { it.fromPiece.color == color }
-        filteredHistory.withIndex()
-                .forEach {
-                    if (it.index % 2 == 0 && filteredHistory[0] != it.value) return false
-                    else if (it.index % 2 == 1 && filteredHistory[1] != it.value) return false
-                }
+        for (indexedMove in filteredHistory.withIndex()) {
+            if (indexedMove.index % 2 == 0 && filteredHistory[0] != indexedMove.value) return false
+            else if (indexedMove.index % 2 == 1 && filteredHistory[1] != indexedMove.value) return false
+        }
         return true
     }
 }

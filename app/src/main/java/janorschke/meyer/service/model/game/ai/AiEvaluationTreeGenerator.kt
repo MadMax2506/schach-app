@@ -1,6 +1,7 @@
 package janorschke.meyer.service.model.game.ai
 
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.service.model.game.AiEvaluationNode
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.piece.Knight
@@ -15,6 +16,7 @@ object AiEvaluationTreeGenerator {
      * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
     fun generateChildren(parent: AiEvaluationNode, board: Board, aiColor: PieceColor): MutableList<AiEvaluationNode> {
+        // TODO Parallelling
         return PieceSequence.allPiecesByColor(board, aiColor)
                 // Create a flatten list of moves for each possible move
                 .map { piece -> generateMovesForPiece(board, piece) }
