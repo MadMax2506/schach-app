@@ -7,32 +7,20 @@ import janorschke.meyer.service.model.game.piece.Piece
  */
 class Move(
         val fieldsAfterMoving: Array<Array<Piece?>>,
-        val from: PiecePosition,
-        val to: PiecePosition,
-        val fromPiece: Piece,
-        val toPiece: Piece?,
-) {
-    override fun hashCode(): Int {
-        var result = fieldsAfterMoving.contentDeepHashCode()
-        result = 31 * result + from.hashCode()
-        result = 31 * result + to.hashCode()
-        result = 31 * result + fromPiece.hashCode()
-        result = 31 * result + (toPiece?.hashCode() ?: 0)
-        return result
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Move
-
-        if (!fieldsAfterMoving.contentDeepEquals(other.fieldsAfterMoving)) return false
-        if (from != other.from) return false
-        if (to != other.to) return false
-        if (fromPiece != other.fromPiece) return false
-        if (toPiece != other.toPiece) return false
-
-        return true
-    }
+        from: PiecePosition,
+        to: PiecePosition,
+        fromPiece: Piece,
+        beatenPiece: Piece?,
+        isEnPassant: Boolean,
+        promotionTo: Piece?
+) : PossibleMove(from, to, fromPiece, beatenPiece, isEnPassant, promotionTo) {
+    constructor(fieldsAfterMoving: Array<Array<Piece?>>, possibleMove: PossibleMove) : this(
+            fieldsAfterMoving,
+            possibleMove.from,
+            possibleMove.to,
+            possibleMove.fromPiece,
+            possibleMove.beatenPiece,
+            possibleMove.isEnPassant,
+            possibleMove.promotionTo
+    )
 }

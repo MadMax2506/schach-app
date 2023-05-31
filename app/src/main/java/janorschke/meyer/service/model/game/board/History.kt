@@ -50,7 +50,7 @@ class History {
      * @param move of a piece
      */
     fun push(move: Move) {
-        if (move.toPiece != null) beatenPieces.also { it.add(move.toPiece) }.sortByDescending { it.pieceInfo.valence }
+        if (move.beatenPiece != null) beatenPieces.also { it.add(move.beatenPiece) }.sortByDescending { it.pieceInfo.valence }
         moves.add(move)
     }
 
@@ -59,7 +59,7 @@ class History {
      */
     fun undo(): Move {
         val move = moves.removeLast()
-        if (move.toPiece != null) beatenPieces.removeLast()
+        if (move.beatenPiece != null) beatenPieces.removeLast()
         return move
     }
 }

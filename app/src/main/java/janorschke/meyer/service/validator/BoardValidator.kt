@@ -13,7 +13,7 @@ import janorschke.meyer.service.utils.piece.PieceSequence
 object BoardValidator {
     private const val N_MOVE_REPETITIONS_FOR_STALEMATE = 10
 
-    fun isPawnTransformation(piece: Piece, to: PiecePosition) = piece is Pawn && to.row == piece.color.opponent().borderlineIndex
+    fun isPawnTransformation(piece: Piece, to: PiecePosition) = piece is Pawn && to.row == piece.color.opponent().borderRow
 
     /**
      * @param board instance

@@ -16,6 +16,7 @@ import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.service.repository.BoardRepository
 import janorschke.meyer.service.repository.GameRepository
 import janorschke.meyer.service.repository.ai.AiRepositoryFactory
+import janorschke.meyer.service.utils.ArrayUtils
 
 /**
  * View model for the game activity
@@ -140,6 +141,6 @@ class GameViewModel(
      * @param data
      */
     private fun updateIfDifferent(liveData: MutableLiveData<Array<Array<Piece?>>>, data: Array<Array<Piece?>>) {
-        if (!liveData.value.contentDeepEquals(data)) liveData.value = data.map { it.copyOf() }.toTypedArray()
+        if (!liveData.value.contentDeepEquals(data)) liveData.value = ArrayUtils.copy(data)
     }
 }

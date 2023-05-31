@@ -64,7 +64,7 @@ class BoardRepository(
         val move = createMove(from, to)
         history.push(move)
 
-        if (move.toPiece != null) Log.d(LOG_TAG, "${from.getNotation()} beat piece on ${to.getNotation()}")
+        if (move.beatenPiece != null) Log.d(LOG_TAG, "${from.getNotation()} beat piece on ${to.getNotation()}")
         else Log.d(LOG_TAG, "Move piece from ${from.getNotation()} to ${to.getNotation()}")
     }
 
