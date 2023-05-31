@@ -100,7 +100,7 @@ abstract class Piece(
 
         Board(board).let { boardCopy ->
             boardCopy.createMove(currentPosition, possiblePosition)
-            if (!BoardValidator.isKingInCheck(boardCopy, color, history)) possibleMoves.add(possiblePosition)
+            if (!BoardValidator.isKingInCheck(boardCopy, history, color)) possibleMoves.add(possiblePosition)
         }
     }
 }

@@ -27,7 +27,7 @@ class AiEvaluationNode(aiColor: PieceColor, val move: Move?, val history: Histor
 
                 val color = move.fromPiece.color.opponent()
 
-                if (BoardValidator.isKingCheckmate(boardCopy, color, history)) Int.MAX_VALUE
+                if (BoardValidator.isKingCheckmate(boardCopy, history, color)) Int.MAX_VALUE
                 if (BoardValidator.isStalemate(boardCopy, history, color)) Int.MIN_VALUE
                 getPieceValue(boardCopy, PieceColor.WHITE) - getPieceValue(boardCopy, PieceColor.BLACK)
             }

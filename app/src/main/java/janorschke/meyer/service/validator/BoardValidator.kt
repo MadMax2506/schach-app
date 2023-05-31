@@ -21,7 +21,7 @@ object BoardValidator {
      *
      * @return true, if King is in check
      */
-    fun isKingInCheck(board: Board, color: PieceColor, history: History): Boolean {
+    fun isKingInCheck(board: Board, history: History, color: PieceColor): Boolean {
         val kingPosition = board.findKingPosition(color) ?: return true
 
         return PieceSequence.allPiecesByColor(board, color.opponent())
@@ -34,8 +34,8 @@ object BoardValidator {
      *
      * @return true, if the king of the given color is in checkmate
      */
-    fun isKingCheckmate(board: Board, color: PieceColor, history: History): Boolean {
-        if (!isKingInCheck(board, color, history)) return false
+    fun isKingCheckmate(board: Board, history: History, color: PieceColor): Boolean {
+        if (!isKingInCheck(board, history, color)) return false
 
         // check if any piece can go somewhere, that is not checkmate
         PieceSequence.allPiecesByColor(board, color)
@@ -44,7 +44,7 @@ object BoardValidator {
                         Board(board).let { boardCopy ->
                             boardCopy.createMove(it.position, move)
                             // if King is not in check after this move, then it's not checkmate
-                            if (!isKingInCheck(boardCopy, color, history)) return false
+                            if (!isKingInCheck(boardCopy, history, color)) return false
                         }
                     }
                 }
@@ -59,7 +59,7 @@ object BoardValidator {
      * @return true, if the game with the rest pieces is stalemate
      */
     fun isStalemate(board: Board, history: History, color: PieceColor): Boolean {
-        if (isKingInCheck(board, color, history)) return false
+        if (isKingInCheck(board, history, color)) return false
 
         val pieceSequence = PieceSequence.allPiecesByColor(board, color)
         val pieceSequenceOpponent = PieceSequence.allPiecesByColor(board, color.opponent())

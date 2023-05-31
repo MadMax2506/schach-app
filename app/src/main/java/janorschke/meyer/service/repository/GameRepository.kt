@@ -18,7 +18,7 @@ class GameRepository(private val board: Board, private val history: History, pri
      * @return true if the game is finished
      */
     fun checkEndOfGame(piece: Piece): Boolean {
-        if (BoardValidator.isKingCheckmate(board, piece.color.opponent(), history)) {
+        if (BoardValidator.isKingCheckmate(board, history, piece.color.opponent())) {
             Log.d(LOG_TAG, "setStatus CHECKMATE")
             game.setStatus(GameStatus.CHECKMATE)
             return true
