@@ -2,6 +2,7 @@ name: CI
 
 # Run if something is commited on `main` or there is still an open pulll request with `main` as target branch
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
