@@ -31,7 +31,7 @@ object AiEvaluationTreeGenerator {
     private fun generateMovesForPiece(board: Board, history: History, indexedPiece: PieceSequence.IndexedPiece): MutableList<Move> {
         return indexedPiece.piece
                 // Get possible moves
-                .possibleMoves(board, indexedPiece.position, history)
+                .possibleMoves(board, history, indexedPiece.position)
                 .map { possibleMove ->
                     // Create moves
                     if (BoardValidator.isPawnTransformation(indexedPiece.piece, possibleMove)) {

@@ -40,7 +40,7 @@ object BoardValidator {
         // check if any piece can go somewhere, that is not checkmate
         PieceSequence.allPiecesByColor(board, color)
                 .forEach {
-                    it.piece.possibleMoves(board, it.position, history).forEach { move ->
+                    it.piece.possibleMoves(board, history, it.position).forEach { move ->
                         Board(board).let { boardCopy ->
                             boardCopy.createMove(it.position, move)
                             // if King is not in check after this move, then it's not checkmate
@@ -65,7 +65,7 @@ object BoardValidator {
         val pieceSequenceOpponent = PieceSequence.allPiecesByColor(board, color.opponent())
 
         // check if no possible move for the given color is left
-        pieceSequence.map { it.piece.possibleMoves(board, it.position, history) }
+        pieceSequence.map { it.piece.possibleMoves(board, history, it.position) }
                 .flatten()
                 .toList()
                 .isEmpty()

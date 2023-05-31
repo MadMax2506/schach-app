@@ -60,8 +60,8 @@ abstract class Piece(
      */
     fun possibleMoves(
             board: Board,
-            currentPosition: PiecePosition,
-            history: History
+            history: History,
+            currentPosition: PiecePosition
     ): MutableList<PiecePosition> {
         return possibleMoves(board, history, currentPosition, false)
     }

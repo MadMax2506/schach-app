@@ -31,7 +31,7 @@ class BoardRepository(
      */
     private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition, isAiMove: Boolean) {
         val piece = board.getField(fromPosition)
-        val possibleMoves = piece?.possibleMoves(board, fromPosition, history) ?: emptyList()
+        val possibleMoves = piece?.possibleMoves(board, history, fromPosition) ?: emptyList()
 
         // Check if requested position is a possible move of the piece
         if (toPosition !in possibleMoves) {

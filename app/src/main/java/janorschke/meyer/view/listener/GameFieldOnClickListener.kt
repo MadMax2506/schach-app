@@ -22,7 +22,7 @@ class GameFieldOnClickListener(
 ) : OnClickListener {
     override fun onClick(v: View?) {
         val piece = board[position.row][position.col]
-        val possibleMoves = piece?.possibleMoves(Board(board), position, history) ?: mutableListOf()
+        val possibleMoves = piece?.possibleMoves(Board(board), history, position) ?: mutableListOf()
 
         val isPlayersPiece = (piece?.color == playerColor)
 
