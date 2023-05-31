@@ -85,7 +85,7 @@ class GameActivity : AppCompatActivity() {
         binding.moveHistoryWrapper?.moveHistory?.adapter = moveHistoryAdapter
 
         // Navigation Bar
-        setBottomLayoutListener()
+        setBottomBarListener()
 
         // Beaten Pieces By White
         beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)
@@ -103,7 +103,7 @@ class GameActivity : AppCompatActivity() {
     /**
      * Sets the on click listener for the buttons on the bottom bar
      */
-    private fun setBottomLayoutListener() {
+    private fun setBottomBarListener() {
         val layoutVoteDraw = binding.bottomBar?.layoutVoteDraw
         val layoutSurrender = binding.bottomBar?.layoutSurrender
         layoutVoteDraw?.findViewById<LinearLayout>(R.id.layout_vote_draw)?.setOnClickListener(GameVoteDrawOnClickListener(this, gameViewModel))
