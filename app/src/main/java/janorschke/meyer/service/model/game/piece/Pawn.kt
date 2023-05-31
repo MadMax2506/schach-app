@@ -37,7 +37,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
                 addPossibleMove(board, history, currentPosition, piecePosition, possibleMoves, disableCheckCheck)
 
                 // move from base line only possible if normal move is also possible
-                specialMoveFromBaseLine(currentPosition, board, possibleMoves, disableCheckCheck, history)
+                specialMoveFromBaseLine(board, history, currentPosition, possibleMoves, disableCheckCheck)
             }
         }
 
@@ -79,11 +79,11 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
     }
 
     private fun specialMoveFromBaseLine(
-            currentPosition: PiecePosition,
             board: Board,
+            history: History,
+            currentPosition: PiecePosition,
             possibleMoves: MutableList<PiecePosition>,
-            disableCheckCheck: Boolean,
-            history: History
+            disableCheckCheck: Boolean
     ) {
         if (currentPosition.row != color.pawnLine) return
         PiecePosition(currentPosition.row + 2 * getMoveDirection(), currentPosition.col).let { piecePosition ->
