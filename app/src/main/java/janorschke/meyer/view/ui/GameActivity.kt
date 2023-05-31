@@ -92,7 +92,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     /**
-     * Sets the onClickListener for the Layouts at the Bottom of the View
+     * Sets the on click listener for the buttons on the bottom bar
      */
     private fun setBottomLayoutListener() {
         val layoutVoteDraw = binding.bottomBar?.layoutVoteDraw
