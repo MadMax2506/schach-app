@@ -74,24 +74,31 @@ class GameOverDialog : BaseDialog() {
             playerBlack: Player,
             endByVote: Boolean
     ): String {
-        if (endByVote && winningColor == null)  return resources.getString(R.string.gameover_dialog_text_draw_voted)
-        
-        if (endByVote) return resources.getString(
-                    R.string.gameover_dialog_text_surrender,
-                    resources.getString(
-                            if (winningColor == PieceColor.WHITE) playerWhite.textResource
-                            else playerBlack.textResource
-                    )
-            )
+        when {
+            endByVote && winningColor == null -> return resources.getString(R.string.gameover_dialog_text_draw_voted)
 
-        return resources.getString(R.string.gameover_dialog_text_stalemate)
-        return resources.getString(
-                R.string.gameover_dialog_text_win,
-                resources.getString(
-                        if (winningColor == PieceColor.WHITE) playerWhite.textResource
-                        else playerBlack.textResource
+            endByVote && winningColor != null -> {
+                return resources.getString(
+                        R.string.gameover_dialog_text_surrender,
+                        resources.getString(
+                                if (winningColor == PieceColor.WHITE) playerWhite.textResource
+                                else playerBlack.textResource
+                        )
                 )
-        )
+            }
+
+            winningColor == null -> return resources.getString(R.string.gameover_dialog_text_stalemate)
+
+            else -> {
+                return resources.getString(
+                        R.string.gameover_dialog_text_win,
+                        resources.getString(
+                                if (winningColor == PieceColor.WHITE) playerWhite.textResource
+                                else playerBlack.textResource
+                        )
+                )
+            }
+        }
     }
 
     private fun setButtonOnClickHandlers(timeMode: TimeMode) {
