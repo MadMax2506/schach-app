@@ -9,6 +9,12 @@ import janorschke.meyer.service.model.game.board.PiecePosition
  */
 object FieldValidator {
     /**
+     * @param position being checked
+     * @return true, if the piece in the extended center
+     */
+    fun isExtendedCenter(position: PiecePosition) = position.row in 2..5 && position.col in 2..5
+
+    /**
      * @param board instance
      * @param color of the piece
      * @param position being checked

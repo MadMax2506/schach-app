@@ -15,7 +15,7 @@ const val LOG_TAG = "AiEvaluationNode"
 /**
  * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
  */
-class AiEvaluationNode(private val aiColor: PieceColor, val move: Move?, val history: History) {
+class AiEvaluationNode(val history: History, val move: Move?, private val aiColor: PieceColor) {
     val valency: Int
 
     val requiredMove get() = move!!

@@ -38,12 +38,12 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
 
         val time = measureTimeMillis {
             val lastMove = history.getMoves().lastOrNull()
-            val root = AiEvaluationNode(aiColor, lastMove, History(history))
+            val root = AiEvaluationNode(History(history), lastMove, aiColor)
 
             for (child in AiEvaluationTreeGenerator.generateChildren(root, board, aiColor)) {
                 val value = minimax(child, 1, alpha, Int.MAX_VALUE, aiColor)
 
-                if (value > alpha) {
+                if (alpha < value) {
                     alpha = value
                     node = child
                 }
