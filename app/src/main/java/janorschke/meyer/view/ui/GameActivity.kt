@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
-import android.widget.LinearLayout
 import android.view.View
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +18,7 @@ import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.enums.TransferKeys
-import janorschke.meyer.service.model.game.Player
+import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.view.adapter.BoardAdapter
 import janorschke.meyer.view.adapter.MoveHistoryAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPieceDecorator
@@ -194,7 +194,7 @@ class GameActivity : AppCompatActivity() {
             playerBlack: Player,
             endByVote: Boolean = false
     ) {
-        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote, timeMode).show(supportFragmentManager, GAMEOVER_DIALOG_TAG)
+        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote, timeMode).show(supportFragmentManager, GAME_OVER_DIALOG_TAG)
     }
 
     /**
