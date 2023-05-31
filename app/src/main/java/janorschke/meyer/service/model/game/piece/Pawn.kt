@@ -11,9 +11,9 @@ import kotlin.math.abs
 class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
     override fun givesOpponentKingCheck(
             board: Board,
-            ownPosition: PiecePosition,
+            history: History,
             kingPosition: PiecePosition,
-            history: History
+            ownPosition: PiecePosition
     ): Boolean {
         for (i in arrayOf(-1, 1)) {
             PiecePosition(ownPosition.row + getMoveDirection(), ownPosition.col + i).let { piecePosition ->

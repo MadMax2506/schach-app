@@ -44,9 +44,9 @@ abstract class Piece(
      */
     open fun givesOpponentKingCheck(
             board: Board,
-            ownPosition: PiecePosition,
+            history: History,
             kingPosition: PiecePosition,
-            history: History
+            ownPosition: PiecePosition
     ): Boolean {
         val possibleMoves = this.possibleMoves(board, ownPosition, true, history)
         return possibleMoves.contains(kingPosition)
