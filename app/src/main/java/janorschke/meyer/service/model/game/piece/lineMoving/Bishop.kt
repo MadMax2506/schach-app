@@ -13,6 +13,6 @@ class Bishop(color: PieceColor) : LineMovingPiece(color, PieceInfo.BISHOP) {
             currentPosition: PiecePosition,
             disableCheckCheck: Boolean
     ): MutableList<PiecePosition> {
-        return possibleMovesOnDiagonalLine(board, currentPosition, disableCheckCheck, history)
+        return possibleMovesOnDiagonalLine(board, history, currentPosition, disableCheckCheck)
     }
 }

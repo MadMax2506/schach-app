@@ -22,34 +22,34 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
      */
     protected fun possibleMovesOnDiagonalLine(
             board: Board,
+            history: History,
             currentPosition: PiecePosition,
-            disableCheckCheck: Boolean,
-            history: History
+            disableCheckCheck: Boolean
     ): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
 
         // right up
         for (i in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row + i, currentPosition.col + i)
-            if (addPosition(board, currentPosition, possiblePosition, possibleMoves, disableCheckCheck, history)) break
+            if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         // right down
         for (i in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row + i, currentPosition.col - i)
-            if (addPosition(board, currentPosition, possiblePosition, possibleMoves, disableCheckCheck, history)) break
+            if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         // left up
         for (i in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row - i, currentPosition.col + i)
-            if (addPosition(board, currentPosition, possiblePosition, possibleMoves, disableCheckCheck, history)) break
+            if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         // left down
         for (i in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row - i, currentPosition.col - i)
-            if (addPosition(board, currentPosition, possiblePosition, possibleMoves, disableCheckCheck, history)) break
+            if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         return possibleMoves
@@ -64,34 +64,34 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
      */
     protected fun possibleMovesOnStraightLine(
             board: Board,
+            history: History,
             currentPosition: PiecePosition,
-            disableCheckCheck: Boolean,
-            history: History
+            disableCheckCheck: Boolean
     ): MutableList<PiecePosition> {
         val possibleMoves = mutableListOf<PiecePosition>()
 
         // up
         for (row in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row + row, currentPosition.col)
-            if (addPosition(board, currentPosition, possiblePosition, possibleMoves, disableCheckCheck, history)) break
+            if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         // down
         for (row in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row - row, currentPosition.col)
-            if (addPosition(board, currentPosition, possiblePosition, possibleMoves, disableCheckCheck, history)) break
+            if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         // right
         for (col in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row, currentPosition.col + col)
-            if (addPosition(board, currentPosition, possiblePosition, possibleMoves, disableCheckCheck, history)) break
+            if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         // left
         for (col in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row, currentPosition.col - col)
-            if (addPosition(board, currentPosition, possiblePosition, possibleMoves, disableCheckCheck, history)) break
+            if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
         return possibleMoves
@@ -108,11 +108,11 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
      */
     private fun addPosition(
             board: Board,
+            history: History,
             currentPosition: PiecePosition,
             possiblePosition: PiecePosition,
             possibleMoves: MutableList<PiecePosition>,
-            disableCheckCheck: Boolean,
-            history: History
+            disableCheckCheck: Boolean
     ): Boolean {
         if (isFieldUnavailable(board, possiblePosition)) return true
 
