@@ -1,8 +1,14 @@
 package janorschke.meyer.service.utils
 
 /**
- * TODO
+ * Provides functionality for Arrays
  */
 object ArrayUtils {
-    inline fun <reified T> copy(el: Array<Array<T>>) = el.map { it.copyOf() }.toTypedArray()
+
+    /**
+     * Copies a 2D Array
+     * @param el Array that shall be copied
+     * @return Array-Copy
+     */
+    inline fun <reified T> deepCopy(el: Array<Array<T>>) = el.map { it.copyOf() }.toTypedArray()
 }
