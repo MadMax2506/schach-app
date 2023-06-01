@@ -27,12 +27,9 @@ object BoardValidator {
     fun isPawnTransformation(piece: Piece, to: PiecePosition) = piece is Pawn && to.row == piece.color.opponent().borderRow
 
     fun isEnPassantMove(
-            board: Board,
             lastMove: Move?,
             color: PieceColor,
-            currentPosition: PiecePosition,
-            possibleMoves: MutableList<PiecePosition>,
-            disableCheckCheck: Boolean
+            currentPosition: PiecePosition
     ): Boolean {
         lastMove ?: return false
 

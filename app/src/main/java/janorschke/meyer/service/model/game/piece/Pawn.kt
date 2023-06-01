@@ -65,7 +65,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
     ) {
         val lastMove = history.getLastMoves(1).getOrNull(0)
 
-        if (BoardValidator.isEnPassantMove(board, lastMove, color, currentPosition, possibleMoves, disableCheckCheck)) {
+        if (BoardValidator.isEnPassantMove(lastMove, color, currentPosition)) {
             val enPassantPosition = PiecePosition(color.enPassantRow + getMoveDirection(), lastMove!!.to.col)
             addPossibleMove(board, history, currentPosition, enPassantPosition, possibleMoves, disableCheckCheck)
         }
