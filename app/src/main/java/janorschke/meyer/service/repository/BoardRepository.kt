@@ -59,7 +59,7 @@ class BoardRepository(
      * @param to target position
      */
     private fun movePiece(from: PiecePosition, to: PiecePosition) {
-        // TODO toPosition is not always the position of the beaten Piece => enPassant
+        // TODO enPassant, toPosition is not always the position of the beaten Piece
 
         val move = createMove(from, to)
         history.push(move)
@@ -80,6 +80,7 @@ class BoardRepository(
      */
     private fun createMove(from: PiecePosition, to: PiecePosition): Move {
         board.getField(from)!!.let { piece ->
+            // TODO enPassant
             if (BoardValidator.isPawnTransformation(piece, to)) {
                 // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/49
                 return board.createMove(from, to)

@@ -9,11 +9,42 @@ import janorschke.meyer.service.model.game.piece.Pawn
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.utils.piece.PieceSequence
+import kotlin.math.abs
 
+/**
+ * Provides functionality to validate the Board
+ */
 object BoardValidator {
     private const val N_MOVE_REPETITIONS_FOR_STALEMATE = 10
 
+    /**
+     * Validates if a Pawn shall be promoted
+     *
+     * @param piece the piece that gets proved
+     * @param to the position where the piece is going
+     * @return true if a pawn reaches the end of the board, false otherwise
+     */
     fun isPawnTransformation(piece: Piece, to: PiecePosition) = piece is Pawn && to.row == piece.color.opponent().borderRow
+
+    fun isEnPassantMove(
+            board: Board,
+            lastMove: Move?,
+            color: PieceColor,
+            currentPosition: PiecePosition,
+            possibleMoves: MutableList<PiecePosition>,
+            disableCheckCheck: Boolean
+    ): Boolean {
+        lastMove ?: return false
+
+        val lastMovedPiece = lastMove.fromPiece
+        if (lastMovedPiece !is Pawn || lastMovedPiece.color == color) return false
+
+        val lastMoveTargetRow = lastMove.to.row
+        val lastMoveTargetCol = lastMove.to.col
+        if (currentPosition.row != lastMoveTargetRow || abs(currentPosition.col - lastMoveTargetCol) != 1) return false
+        if (currentPosition.row != color.enPassantRow) return false
+        return true
+    }
 
     /**
      * @param board instance

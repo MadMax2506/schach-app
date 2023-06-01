@@ -57,7 +57,7 @@ class Board {
     // Copy Constructor
     constructor(board: Board) : this(board.getFields())
     constructor(fields: Array<Array<Piece?>>) {
-        this.fields = ArrayUtils.copy(fields)
+        this.fields = ArrayUtils.deepCopy(fields)
     }
 
     /**
@@ -99,13 +99,13 @@ class Board {
     }
 
     /**
-     * TODO
-     * Moves an piece to another position
+     * Creates a possible Move for a piece
      *
      * @param from source position
      * @param to target position
-     * @param pawnReplaceWith piece which is used for the pawn replace after transform on the opponent base line
-     * @return board move
+     * @param pawnReplaceWith piece which is used for the pawn promotion TODO atm (Default = Queen)
+     * @param isEnPassant boolean that (Default = false)
+     * @return possible board move
      */
     fun createPossibleMove(
             from: PiecePosition,
@@ -114,7 +114,7 @@ class Board {
             isEnPassant: Boolean = false,
     ): PossibleMove {
         val fromPiece = getField(from)!!
-        val beatenPiece = getField(to) // TODO enPassant
+        val beatenPiece = if (!isEnPassant) getField(to) else null // TODO enPassant
 
         return PossibleMove(
                 from,
@@ -127,7 +127,13 @@ class Board {
     }
 
     /**
-     * TODO
+     * Moves a piece to another position
+     *
+     * @param from source position
+     * @param to target position
+     * @param pawnReplaceWith piece which is used for the pawn promotion TODO atm (Default = Queen)
+     * @param isEnPassant boolean that (Default = false)
+     * @return board move
      */
     fun createMove(
             from: PiecePosition,
@@ -145,6 +151,6 @@ class Board {
             // normal move
             setField(to, possibleMove.fromPiece)
         }
-        return Move(ArrayUtils.copy(fields), possibleMove)
+        return Move(ArrayUtils.deepCopy(fields), possibleMove)
     }
 }

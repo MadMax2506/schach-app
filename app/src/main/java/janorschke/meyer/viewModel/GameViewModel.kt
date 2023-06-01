@@ -141,6 +141,6 @@ class GameViewModel(
      * @param data
      */
     private fun updateIfDifferent(liveData: MutableLiveData<Array<Array<Piece?>>>, data: Array<Array<Piece?>>) {
-        if (!liveData.value.contentDeepEquals(data)) liveData.value = ArrayUtils.copy(data)
+        if (!liveData.value.contentDeepEquals(data)) liveData.value = ArrayUtils.deepCopy(data)
     }
 }
