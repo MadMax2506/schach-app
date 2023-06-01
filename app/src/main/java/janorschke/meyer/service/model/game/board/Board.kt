@@ -110,7 +110,7 @@ class Board {
     fun createPossibleMove(
             from: PiecePosition,
             to: PiecePosition,
-            pawnReplaceWith: Piece = Queen(getField(from)!!.color),
+            pawnReplaceWith: Piece? = null,
             isEnPassant: Boolean = false,
     ): PossibleMove {
         val fromPiece = getField(from)!!
@@ -122,7 +122,7 @@ class Board {
                 fromPiece,
                 beatenPiece,
                 isEnPassant,
-                if (BoardValidator.isPawnTransformation(fromPiece, to)) pawnReplaceWith else null
+                pawnReplaceWith
         )
     }
 
@@ -138,7 +138,7 @@ class Board {
     fun createMove(
             from: PiecePosition,
             to: PiecePosition,
-            pawnReplaceWith: Piece = Queen(getField(from)!!.color),
+            pawnReplaceWith: Piece? = null,
             isEnPassant: Boolean = false,
     ): Move {
         val possibleMove = createPossibleMove(from, to, pawnReplaceWith, isEnPassant)

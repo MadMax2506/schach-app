@@ -68,9 +68,9 @@ object BoardValidator {
         // check if any piece can go somewhere, that is not checkmate
         PieceSequence.allPiecesByColor(board, color)
                 .forEach {
-                    it.piece.possibleMoves(board, history, it.position).forEach { move ->
+                    it.piece.possibleMoves(board, history, it.position).forEach { possibleMove ->
                         Board(board).let { boardCopy ->
-                            boardCopy.createMove(it.position, move)
+                            boardCopy.createMove(it.position, possibleMove.to)
                             // if King is not in check after this move, then it's not checkmate
                             if (!isKingInCheck(boardCopy, history, color)) return false
                         }

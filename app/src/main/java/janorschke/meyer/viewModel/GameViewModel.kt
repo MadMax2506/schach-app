@@ -11,6 +11,7 @@ import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PossibleMove
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.service.repository.BoardRepository
@@ -36,7 +37,7 @@ class GameViewModel(
     val playerBlack: MutableLiveData<Player> = MutableLiveData()
     val status: MutableLiveData<GameStatus> = MutableLiveData()
     val selectedPosition: MutableLiveData<PiecePosition?> = MutableLiveData()
-    val possibleMoves: MutableLiveData<MutableList<PiecePosition>> = MutableLiveData()
+    val possibleMoves: MutableLiveData<MutableList<PossibleMove>> = MutableLiveData()
     val fields: MutableLiveData<Array<Array<Piece?>>> = MutableLiveData()
     val moves: MutableLiveData<MutableList<Move>> = MutableLiveData()
     val beatenPiecesByWhite: MutableLiveData<MutableList<Piece>> = MutableLiveData()
@@ -88,7 +89,7 @@ class GameViewModel(
      *
      * @see Game.selectedPosition
      */
-    fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PiecePosition> = mutableListOf()) {
+    fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PossibleMove> = mutableListOf()) {
         game.setSelectedPiece(selectedPosition, possibleMoves)
         setValues()
     }

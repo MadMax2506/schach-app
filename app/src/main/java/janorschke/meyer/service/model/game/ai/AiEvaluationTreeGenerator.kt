@@ -34,15 +34,17 @@ object AiEvaluationTreeGenerator {
                 .possibleMoves(board, history, indexedPiece.position)
                 .map { possibleMove ->
                     // Create moves
-                    if (BoardValidator.isPawnTransformation(indexedPiece.piece, possibleMove)) {
+                    val to = possibleMove.to
+                    
+                    if (BoardValidator.isPawnTransformation(indexedPiece.piece, to)) {
                         // Special case for the pawn transformation
                         val color = indexedPiece.piece.color
                         arrayOf(Knight(color), Bishop(color), Rook(color), Queen(color)).map { piece ->
-                            Board(board).createMove(indexedPiece.position, possibleMove, piece)
+                            Board(board).createMove(indexedPiece.position, to, piece)
                         }.toMutableList()
                     } else {
                         // Normal move
-                        mutableListOf(Board(board).createMove(indexedPiece.position, possibleMove))
+                        mutableListOf(Board(board).createMove(indexedPiece.position, to))
                     }
                 }
                 .flatten()

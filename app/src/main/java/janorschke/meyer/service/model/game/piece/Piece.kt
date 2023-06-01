@@ -5,6 +5,7 @@ import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PossibleMove
 import janorschke.meyer.service.validator.BoardValidator
 import janorschke.meyer.service.validator.FieldValidator
 
@@ -33,7 +34,7 @@ abstract class Piece(
             history: History,
             currentPosition: PiecePosition,
             disableCheckCheck: Boolean
-    ): MutableList<PiecePosition>
+    ): MutableList<PossibleMove>
 
     /**
      * @param board instance
@@ -48,8 +49,9 @@ abstract class Piece(
             kingPosition: PiecePosition,
             ownPosition: PiecePosition
     ): Boolean {
+        // TODO Bug => Schach wird ignoriert => alle Moves möglich...
         val possibleMoves = this.possibleMoves(board, history, ownPosition, true)
-        return possibleMoves.contains(kingPosition)
+        return possibleMoves.map { it.to }.contains(kingPosition)
     }
 
     /**
@@ -62,7 +64,7 @@ abstract class Piece(
             board: Board,
             history: History,
             currentPosition: PiecePosition
-    ): MutableList<PiecePosition> {
+    ): MutableList<PossibleMove> {
         return possibleMoves(board, history, currentPosition, false)
     }
 
@@ -90,18 +92,20 @@ abstract class Piece(
             history: History,
             currentPosition: PiecePosition,
             possiblePosition: PiecePosition,
-            possibleMoves: MutableList<PiecePosition>,
-            disableCheckCheck: Boolean
+            possibleMoves: MutableList<PossibleMove>,
+            disableCheckCheck: Boolean,
+            isEnPassant: Boolean = false // TODO enPassant wie einbauen?
     ) {
         if (disableCheckCheck) {
-            possibleMoves.add(possiblePosition)
+            board.createPossibleMove(currentPosition, possiblePosition, isEnPassant = isEnPassant)
             return
         }
 
         Board(board).let { boardCopy ->
             History(history).let { historyCopy ->
                 boardCopy.createMove(currentPosition, possiblePosition).let { historyCopy.push(it) }
-                if (!BoardValidator.isKingInCheck(boardCopy, historyCopy, color)) possibleMoves.add(possiblePosition)
+                if (!BoardValidator.isKingInCheck(boardCopy, historyCopy, color))
+                    possibleMoves.add(board.createPossibleMove(currentPosition, possiblePosition, isEnPassant = isEnPassant))
             }
         }
     }

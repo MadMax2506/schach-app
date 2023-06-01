@@ -5,6 +5,7 @@ import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PossibleMove
 import kotlin.math.abs
 
 class Knight(color: PieceColor) : Piece(color, PieceInfo.KNIGHT) {
@@ -13,8 +14,8 @@ class Knight(color: PieceColor) : Piece(color, PieceInfo.KNIGHT) {
             history: History,
             currentPosition: PiecePosition,
             disableCheckCheck: Boolean
-    ): MutableList<PiecePosition> {
-        val possibleMoves = mutableListOf<PiecePosition>()
+    ): MutableList<PossibleMove> {
+        val possibleMoves = mutableListOf<PossibleMove>()
         for (i in -2..2) {
             for (j in -2..2) {
                 // proves that the position can be reached by the knight

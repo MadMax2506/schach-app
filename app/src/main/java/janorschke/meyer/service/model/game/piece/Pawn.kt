@@ -5,6 +5,7 @@ import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PossibleMove
 import janorschke.meyer.service.validator.BoardValidator
 import janorschke.meyer.service.validator.FieldValidator
 import kotlin.math.abs
@@ -29,8 +30,8 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
             history: History,
             currentPosition: PiecePosition,
             disableCheckCheck: Boolean
-    ): MutableList<PiecePosition> {
-        val possibleMoves = mutableListOf<PiecePosition>()
+    ): MutableList<PossibleMove> {
+        val possibleMoves = mutableListOf<PossibleMove>()
 
         // normal move
         PiecePosition(currentPosition.row + getMoveDirection(), currentPosition.col).let { piecePosition ->
@@ -60,7 +61,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
             board: Board,
             history: History,
             currentPosition: PiecePosition,
-            possibleMoves: MutableList<PiecePosition>,
+            possibleMoves: MutableList<PossibleMove>,
             disableCheckCheck: Boolean
     ) {
         val lastMove = history.getLastMoves(1).getOrNull(0)
@@ -75,7 +76,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
             board: Board,
             history: History,
             currentPosition: PiecePosition,
-            possibleMoves: MutableList<PiecePosition>,
+            possibleMoves: MutableList<PossibleMove>,
             disableCheckCheck: Boolean
     ) {
         if (currentPosition.row != color.pawnSpawnRow) return

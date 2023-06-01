@@ -6,6 +6,7 @@ import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.piece.lineMoving.Queen
 import janorschke.meyer.service.repository.ai.AiRepository
 import janorschke.meyer.service.validator.BoardValidator
 
@@ -31,7 +32,7 @@ class BoardRepository(
      */
     private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition, isAiMove: Boolean) {
         val piece = board.getField(fromPosition)
-        val possibleMoves = piece?.possibleMoves(board, history, fromPosition) ?: emptyList()
+        val possibleMoves = piece?.possibleMoves(board, history, fromPosition)?.map { it.to } ?: emptyList()
 
         // Check if requested position is a possible move of the piece
         if (toPosition !in possibleMoves) {
@@ -83,7 +84,7 @@ class BoardRepository(
             // TODO enPassant
             if (BoardValidator.isPawnTransformation(piece, to)) {
                 // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/49
-                return board.createMove(from, to)
+                return board.createMove(from, to, Queen(piece.color))
             } else {
                 return board.createMove(from, to)
             }

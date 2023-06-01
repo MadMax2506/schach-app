@@ -5,6 +5,7 @@ import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.player.PlayerFactory
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PossibleMove
 
 class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) {
 
@@ -29,7 +30,7 @@ class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel
     /**
      * Possible moves for the piece on the selected position
      */
-    private var possibleMoves: MutableList<PiecePosition> = mutableListOf()
+    private var possibleMoves: MutableList<PossibleMove> = mutableListOf()
 
     /**
      * Sets color of the current player
@@ -55,7 +56,7 @@ class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel
      * @param selectedPosition the position of the selected piece
      * @param possibleMoves the possible moves for the selected piece
      */
-    fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PiecePosition> = mutableListOf()) {
+    fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PossibleMove> = mutableListOf()) {
         this.selectedPosition = selectedPosition
         this.possibleMoves = possibleMoves
     }

@@ -12,6 +12,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PossibleMove
 import janorschke.meyer.service.utils.piece.PieceDrawables
 import janorschke.meyer.view.listener.GameFieldOnClickListener
 import janorschke.meyer.viewModel.GameViewModel
@@ -28,7 +29,7 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
 
     private lateinit var fields: Array<Array<Piece?>>
     private lateinit var playerColor: PieceColor
-    private lateinit var possibleMoves: MutableList<PiecePosition>
+    private lateinit var possibleMoves: MutableList<PossibleMove>
 
     fun setSelectedPosition(selectedPosition: PiecePosition?) {
         this.selectedPosition = selectedPosition
@@ -45,7 +46,7 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
         notifyDataSetChanged()
     }
 
-    fun setPossibleMoves(possibleMoves: MutableList<PiecePosition>) {
+    fun setPossibleMoves(possibleMoves: MutableList<PossibleMove>) {
         this.possibleMoves = possibleMoves
         notifyDataSetChanged()
     }
@@ -87,7 +88,7 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
     private fun getViewBackgroundColor(position: PiecePosition): Int = if (position.row % 2 != position.col % 2) R.color.red_brown else R.color.beige
 
     private fun getPieceBackground(piece: Piece?, position: PiecePosition): Drawable? {
-        val isPossibleMove = possibleMoves.contains(position)
+        val isPossibleMove = possibleMoves.map { it.to }.contains(position)
         if (piece == null) {
             return if (isPossibleMove) PieceDrawables.getPossibleMove(context) else null
         }

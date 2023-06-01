@@ -6,6 +6,7 @@ import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PossibleMove
 import janorschke.meyer.service.validator.FieldValidator
 
 /**
@@ -25,8 +26,8 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
             history: History,
             currentPosition: PiecePosition,
             disableCheckCheck: Boolean
-    ): MutableList<PiecePosition> {
-        val possibleMoves = mutableListOf<PiecePosition>()
+    ): MutableList<PossibleMove> {
+        val possibleMoves = mutableListOf<PossibleMove>()
 
         // right up
         for (i in 1 until Board.LINE_SIZE) {
@@ -67,8 +68,8 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
             history: History,
             currentPosition: PiecePosition,
             disableCheckCheck: Boolean
-    ): MutableList<PiecePosition> {
-        val possibleMoves = mutableListOf<PiecePosition>()
+    ): MutableList<PossibleMove> {
+        val possibleMoves = mutableListOf<PossibleMove>()
 
         // up
         for (row in 1 until Board.LINE_SIZE) {
@@ -111,7 +112,7 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
             history: History,
             currentPosition: PiecePosition,
             possiblePosition: PiecePosition,
-            possibleMoves: MutableList<PiecePosition>,
+            possibleMoves: MutableList<PossibleMove>,
             disableCheckCheck: Boolean
     ): Boolean {
         if (isFieldUnavailable(board, possiblePosition)) return true
