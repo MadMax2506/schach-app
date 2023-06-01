@@ -8,11 +8,20 @@ import janorschke.meyer.service.model.game.board.PiecePosition
  * Validator for a specific field on the chess board for a piece
  */
 object FieldValidator {
+    private val CENTER_RANGE = 3..4
+    private val EXTENDED_CENTER_RANGE = 2..5
+
+    /**
+     * @param position being checked
+     * @return true, if the piece in the center
+     */
+    fun isCenter(position: PiecePosition) = position.row in CENTER_RANGE && position.col in CENTER_RANGE
+
     /**
      * @param position being checked
      * @return true, if the piece in the extended center
      */
-    fun isExtendedCenter(position: PiecePosition) = position.row in 2..5 && position.col in 2..5
+    fun isExtendedCenter(position: PiecePosition) = position.row in EXTENDED_CENTER_RANGE && position.col in EXTENDED_CENTER_RANGE
 
     /**
      * @param board instance

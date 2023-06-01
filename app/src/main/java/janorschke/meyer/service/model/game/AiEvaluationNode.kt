@@ -2,6 +2,7 @@ package janorschke.meyer.service.model.game
 
 import android.util.Log
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
@@ -20,7 +21,6 @@ class AiEvaluationNode(val history: History, val move: Move?, private val aiColo
 
     val requiredMove get() = move!!
     val color get() = requiredMove.fromPiece.color
-    private val valencyFactor get() = if (aiColor == PieceColor.WHITE) 1 else -1
 
     init {
         val time = measureTimeMillis {
@@ -29,12 +29,20 @@ class AiEvaluationNode(val history: History, val move: Move?, private val aiColo
                 0
             } else {
                 // Calculates valency of the current position
-                valencyFactor * Board(move.fieldsAfterMoving).let { boardCopy ->
+                Board(move.fieldsAfterMoving).let { boardCopy ->
                     history.push(move)
 
-                    if (BoardValidator.isKingCheckmate(boardCopy, color.opponent())) Int.MAX_VALUE
-                    if (BoardValidator.isStalemate(boardCopy, history, color.opponent())) Int.MIN_VALUE
-                    getPieceValue(boardCopy, PieceColor.WHITE) - getPieceValue(boardCopy, PieceColor.BLACK)
+                    val valueAi = getPieceValue(boardCopy, aiColor)
+                    val valueDiff = valueAi - getPieceValue(boardCopy, aiColor.opponent())
+                    
+                    if (BoardValidator.isKingCheckmate(boardCopy, color.opponent())) return@let Int.MAX_VALUE
+                    if (BoardValidator.isStalemate(boardCopy, history, color.opponent())) {
+                        // Try to achieve an stalemate if the opponent has a big advantage
+                        if (valueAi <= PieceInfo.PAWN.valence && valueDiff < 0) return@let Int.MAX_VALUE
+                        if (valueDiff < PieceInfo.QUEEN.valence) return@let Int.MAX_VALUE
+                        return@let Int.MIN_VALUE
+                    }
+                    return@let valueDiff
                 }
             }
         }
