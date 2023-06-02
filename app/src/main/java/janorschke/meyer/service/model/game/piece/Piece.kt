@@ -49,7 +49,6 @@ abstract class Piece(
             kingPosition: PiecePosition,
             ownPosition: PiecePosition
     ): Boolean {
-        // TODO Bug => Schach wird ignoriert => alle Moves möglich...
         val possibleMoves = this.possibleMoves(board, history, ownPosition, true)
         return possibleMoves.map { it.beatenPiecePosition }.contains(kingPosition)
     }
@@ -97,7 +96,7 @@ abstract class Piece(
             isEnPassant: Boolean = false
     ) {
         if (disableCheckCheck) {
-            board.createPossibleMove(currentPosition, possiblePosition, isEnPassant = isEnPassant)
+            possibleMoves.add(board.createPossibleMove(currentPosition, possiblePosition, isEnPassant = isEnPassant))
             return
         }
 
