@@ -34,7 +34,7 @@ object AiEvaluationTreeGenerator {
                 .possibleMoves(board, history, indexedPiece.position)
                 .map { possibleMove ->
                     // Create moves
-                    val to = possibleMove.to
+                    val to = possibleMove.toPosition
                     
                     if (BoardValidator.isPawnTransformation(indexedPiece.piece, to)) {
                         // Special case for the pawn transformation

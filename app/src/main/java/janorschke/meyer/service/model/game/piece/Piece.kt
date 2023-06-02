@@ -51,7 +51,7 @@ abstract class Piece(
     ): Boolean {
         // TODO Bug => Schach wird ignoriert => alle Moves möglich...
         val possibleMoves = this.possibleMoves(board, history, ownPosition, true)
-        return possibleMoves.map { it.to }.contains(kingPosition)
+        return possibleMoves.map { it.toPosition }.contains(kingPosition)
     }
 
     /**
@@ -94,7 +94,7 @@ abstract class Piece(
             possiblePosition: PiecePosition,
             possibleMoves: MutableList<PossibleMove>,
             disableCheckCheck: Boolean,
-            isEnPassant: Boolean = false // TODO enPassant wie einbauen?
+            isEnPassant: Boolean = false
     ) {
         if (disableCheckCheck) {
             board.createPossibleMove(currentPosition, possiblePosition, isEnPassant = isEnPassant)
@@ -103,7 +103,7 @@ abstract class Piece(
 
         Board(board).let { boardCopy ->
             History(history).let { historyCopy ->
-                boardCopy.createMove(currentPosition, possiblePosition).let { historyCopy.push(it) }
+                boardCopy.createMove(currentPosition, possiblePosition, isEnPassant = isEnPassant).let { historyCopy.push(it) }
                 if (!BoardValidator.isKingInCheck(boardCopy, historyCopy, color))
                     possibleMoves.add(board.createPossibleMove(currentPosition, possiblePosition, isEnPassant = isEnPassant))
             }

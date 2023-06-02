@@ -3,8 +3,9 @@ package janorschke.meyer.service.model.game.board
 import janorschke.meyer.service.model.game.piece.Piece
 
 open class PossibleMove(
-        val from: PiecePosition,
-        val to: PiecePosition,
+        val fromPosition: PiecePosition,
+        val toPosition: PiecePosition,
+        val beatenPiecePosition: PiecePosition,
         val fromPiece: Piece,
         val beatenPiece: Piece?,
         val isEnPassant: Boolean,

@@ -7,17 +7,19 @@ import janorschke.meyer.service.model.game.piece.Piece
  */
 class Move(
         val fieldsAfterMoving: Array<Array<Piece?>>,
-        from: PiecePosition,
-        to: PiecePosition,
+        fromPosition: PiecePosition,
+        toPosition: PiecePosition,
+        beatenPiecePosition: PiecePosition,
         fromPiece: Piece,
         beatenPiece: Piece?,
         isEnPassant: Boolean,
         promotionTo: Piece?
-) : PossibleMove(from, to, fromPiece, beatenPiece, isEnPassant, promotionTo) {
+) : PossibleMove(fromPosition, toPosition, beatenPiecePosition, fromPiece, beatenPiece, isEnPassant, promotionTo) {
     constructor(fieldsAfterMoving: Array<Array<Piece?>>, possibleMove: PossibleMove) : this(
             fieldsAfterMoving,
-            possibleMove.from,
-            possibleMove.to,
+            possibleMove.fromPosition,
+            possibleMove.toPosition,
+            possibleMove.beatenPiecePosition,
             possibleMove.fromPiece,
             possibleMove.beatenPiece,
             possibleMove.isEnPassant,

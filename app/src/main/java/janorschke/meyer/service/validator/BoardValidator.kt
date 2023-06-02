@@ -36,8 +36,8 @@ object BoardValidator {
         val lastMovedPiece = lastMove.fromPiece
         if (lastMovedPiece !is Pawn || lastMovedPiece.color == color) return false
 
-        val lastMoveTargetRow = lastMove.to.row
-        val lastMoveTargetCol = lastMove.to.col
+        val lastMoveTargetRow = lastMove.toPosition.row
+        val lastMoveTargetCol = lastMove.toPosition.col
         if (currentPosition.row != lastMoveTargetRow || abs(currentPosition.col - lastMoveTargetCol) != 1) return false
         if (currentPosition.row != color.enPassantRow) return false
         return true
@@ -70,7 +70,7 @@ object BoardValidator {
                 .forEach {
                     it.piece.possibleMoves(board, history, it.position).forEach { possibleMove ->
                         Board(board).let { boardCopy ->
-                            boardCopy.createMove(it.position, possibleMove.to)
+                            boardCopy.createMove(it.position, possibleMove.toPosition)
                             // if King is not in check after this move, then it's not checkmate
                             if (!isKingInCheck(boardCopy, history, color)) return false
                         }
