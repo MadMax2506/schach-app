@@ -3,12 +3,12 @@ package janorschke.meyer.service.repository.ai
 import android.util.Log
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
-import janorschke.meyer.service.model.game.AiEvaluationNode
-import janorschke.meyer.service.model.game.LOG_TAG
-import janorschke.meyer.service.model.game.ai.AiEvaluationTreeGenerator
+import janorschke.meyer.service.model.game.ai.AiEvaluationNode
+import janorschke.meyer.service.model.game.ai.LOG_TAG
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.utils.AiEvaluationTreeGenerator
 import kotlin.system.measureTimeMillis
 
 /**
@@ -34,24 +34,40 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
      */
     private fun calculateBestMove(board: Board, history: History): Move {
         var alpha = Int.MIN_VALUE
-        var node: AiEvaluationNode? = null
+        var priority = Int.MIN_VALUE
+        var nodes: MutableList<AiEvaluationNode> = mutableListOf()
 
         val time = measureTimeMillis {
             val lastMove = history.getMoves().lastOrNull()
-            val root = AiEvaluationNode(History(history), lastMove, aiColor)
+            val root = AiEvaluationNode(History(history), lastMove, aiColor, 0)
 
             for (child in AiEvaluationTreeGenerator.generateChildren(root, board, aiColor)) {
                 val value = minimax(child, 1, alpha, Int.MAX_VALUE, aiColor)
 
-                if (alpha < value) {
-                    alpha = value
-                    node = child
+                when {
+                    // Node has a better valency
+                    alpha < value -> {
+                        alpha = value
+                        priority = child.priority
+                        nodes = mutableListOf(child)
+                    }
+
+                    // Node has the same valency and priority
+                    alpha == value && priority == child.priority -> nodes.add(child)
+
+
+                    // Node has the same valency and a better priority
+                    alpha == value && priority < child.priority -> {
+                        priority = child.priority
+                        nodes = mutableListOf(child)
+                    }
                 }
             }
         }
 
         Log.d(LOG_TAG, "Calculate the best move in ${time}ms")
-        return node!!.requiredMove
+        // Choose random the best move with the highest priority
+        return nodes.random().requiredMove
     }
 
     /**
