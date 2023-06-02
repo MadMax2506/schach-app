@@ -29,25 +29,25 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
     ): MutableList<PossibleMove> {
         val possibleMoves = mutableListOf<PossibleMove>()
 
-        // right up
+        // right down
         for (i in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row + i, currentPosition.col + i)
             if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
-        // right down
+        // left down
         for (i in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row + i, currentPosition.col - i)
             if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
-        // left up
+        // right up
         for (i in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row - i, currentPosition.col + i)
             if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
-        // left down
+        // left up
         for (i in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row - i, currentPosition.col - i)
             if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
@@ -71,13 +71,13 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
     ): MutableList<PossibleMove> {
         val possibleMoves = mutableListOf<PossibleMove>()
 
-        // up
+        // down
         for (row in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row + row, currentPosition.col)
             if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
-        // down
+        // up
         for (row in 1 until Board.LINE_SIZE) {
             val possiblePosition = PiecePosition(currentPosition.row - row, currentPosition.col)
             if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break

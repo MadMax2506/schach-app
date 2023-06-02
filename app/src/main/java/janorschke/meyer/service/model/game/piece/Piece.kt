@@ -51,7 +51,7 @@ abstract class Piece(
     ): Boolean {
         // TODO Bug => Schach wird ignoriert => alle Moves möglich...
         val possibleMoves = this.possibleMoves(board, history, ownPosition, true)
-        return possibleMoves.map { it.toPosition }.contains(kingPosition)
+        return possibleMoves.map { it.beatenPiecePosition }.contains(kingPosition)
     }
 
     /**
