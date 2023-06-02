@@ -61,8 +61,6 @@ class BoardRepository(
      * @param to target position
      */
     private fun movePiece(possibleMove: PossibleMove) {
-        // TODO enPassant, toPosition is not always the position of the beaten Piece
-
         val move = createMove(possibleMove)
         history.push(move)
 

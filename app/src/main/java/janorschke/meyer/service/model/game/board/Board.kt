@@ -102,7 +102,7 @@ class Board {
      *
      * @param fromPosition source position
      * @param toPosition target position
-     * @param pawnReplaceWith piece which is used for the pawn promotion TODO atm (Default = Queen)
+     * @param pawnReplaceWith piece which is used for the pawn promotion
      * @param isEnPassant boolean that (Default = false)
      * @return possible board move
      */
@@ -138,7 +138,7 @@ class Board {
      *
      * @param from source position
      * @param to target position
-     * @param pawnReplaceWith piece which is used for the pawn promotion TODO atm (Default = Queen)
+     * @param pawnReplaceWith piece which is used for the pawn promotion
      * @param isEnPassant boolean that (Default = false)
      * @return board move
      */
