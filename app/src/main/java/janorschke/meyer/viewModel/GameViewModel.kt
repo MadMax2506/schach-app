@@ -49,7 +49,7 @@ class GameViewModel(
 
     private val aiRepository = AiRepositoryFactory(game).create()
     private val gameRepository = GameRepository(board, history, game)
-    private val boardRepository = BoardRepository(board, history, game, gameRepository, aiRepository)
+    private val boardRepository = BoardRepository(this, board, history, game, gameRepository, aiRepository)
 
     init {
         playerWhite.value = game.playerWhite
@@ -75,6 +75,10 @@ class GameViewModel(
         // TODO ki draw analysieren und dann entscheiden ob angenommen wird oder nicht
         //  https://github.com/users/MadMax2506/projects/19/views/1?pane=issue&itemId=29566739
         game.setStatus(GameStatus.DRAW)
+        setValues()
+    }
+
+    fun aiMoved() {
         setValues()
     }
 
