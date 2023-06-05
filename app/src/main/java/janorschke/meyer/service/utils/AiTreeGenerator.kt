@@ -17,11 +17,17 @@ import janorschke.meyer.service.utils.piece.PieceSequence
 import janorschke.meyer.service.validator.BoardValidator
 import janorschke.meyer.service.validator.FieldValidator
 
-object AiEvaluationTreeGenerator {
+/**
+ * Utility class for the generation of the ai tree
+ */
+object AiTreeGenerator {
     /**
-     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
+     * @param parent for the [AiEvaluationNode] which will be generated
+     * @param board instance
+     * @param aiColor
+     * @return a sequence of nodes [AiEvaluationNode]
      */
-    fun generateChildren(parent: AiEvaluationNode, board: Board, aiColor: PieceColor): MutableList<AiEvaluationNode> {
+    fun generateChildren(parent: AiEvaluationNode, board: Board, aiColor: PieceColor): Sequence<AiEvaluationNode> {
         val numberOfMove = parent.history.numberOfMoves
         var pieceSequence = PieceSequence.allPiecesByColor(board, aiColor)
 
@@ -34,7 +40,6 @@ object AiEvaluationTreeGenerator {
                 .flatten()
                 // Create a evaluation for each move
                 .map { move -> prioritizePieces(parent, move, aiColor, numberOfMove) }
-                .toMutableList()
     }
 
     /**

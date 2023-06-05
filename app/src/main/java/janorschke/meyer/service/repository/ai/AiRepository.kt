@@ -8,7 +8,7 @@ import janorschke.meyer.service.model.game.ai.LOG_TAG
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
-import janorschke.meyer.service.utils.AiEvaluationTreeGenerator
+import janorschke.meyer.service.utils.AiTreeGenerator
 import kotlin.system.measureTimeMillis
 
 /**
@@ -30,7 +30,11 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
     fun calculateNextMove(board: Board, history: History) = calculateBestMove(board, history)
 
     /**
-     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
+     * Calculates the best move of the ai
+     *
+     * @param board instance
+     * @param history instance
+     * @return the best move for the current ai
      */
     private fun calculateBestMove(board: Board, history: History): Move {
         var alpha = Int.MIN_VALUE
@@ -41,7 +45,7 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
             val lastMove = history.getMoves().lastOrNull()
             val root = AiEvaluationNode(History(history), lastMove, aiColor, 0)
 
-            for (child in AiEvaluationTreeGenerator.generateChildren(root, board, aiColor)) {
+            for (child in AiTreeGenerator.generateChildren(root, board, aiColor)) {
                 val value = minimax(child, 1, alpha, Int.MAX_VALUE, aiColor)
 
                 when {
@@ -71,7 +75,12 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
     }
 
     /**
-     * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
+     * @param parent [AiEvaluationNode]
+     * @param currentDepth of the tree
+     * @param alpha value to optimize the minimax-algorithm
+     * @param beta value to optimize the minimax-algorithm
+     * @param color of the pieces for the current depth
+     * @return best valency of the evaluated children
      */
     private fun minimax(parent: AiEvaluationNode, currentDepth: Int, alpha: Int, beta: Int, color: PieceColor): Int {
         if (currentDepth == depth) return parent.valency
@@ -83,7 +92,7 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
         var mutableAlpha = alpha
         var mutableBeta = beta
 
-        for (child in AiEvaluationTreeGenerator.generateChildren(parent, board, color.opponent())) {
+        for (child in AiTreeGenerator.generateChildren(parent, board, color.opponent())) {
             val calcNode = minimax(child, currentDepth + 1, mutableAlpha, mutableBeta, color.opponent())
 
             if (maximizingPlayer) {

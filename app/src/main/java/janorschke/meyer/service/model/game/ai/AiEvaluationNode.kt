@@ -12,7 +12,10 @@ import kotlin.system.measureTimeMillis
 const val LOG_TAG = "AiEvaluationNode"
 
 /**
- * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
+ * @param history instance
+ * @param move of the current evaluation step
+ * @param aiColor
+ * @param priority in the evaluation cycle
  */
 class AiEvaluationNode(val history: History, val move: Move?, private val aiColor: PieceColor, val priority: Int) {
     val valency: Int
