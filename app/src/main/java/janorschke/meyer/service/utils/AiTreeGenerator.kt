@@ -28,18 +28,17 @@ object AiTreeGenerator {
      * @return a sequence of nodes [AiEvaluationNode]
      */
     fun generateChildren(parent: AiEvaluationNode, board: Board, aiColor: PieceColor): Sequence<AiEvaluationNode> {
-        val numberOfMove = parent.history.numberOfMoves
         var pieceSequence = PieceSequence.allPiecesByColor(board, aiColor)
 
         // Do the first move with a pawn
-        if (numberOfMove <= 2) pieceSequence = pieceSequence.filter { it.piece is Pawn }
+        if (BoardValidator.isFirstMove(parent.history)) pieceSequence = pieceSequence.filter { it.piece is Pawn }
 
         return pieceSequence
                 // Create a flatten list of moves for each possible move
                 .map { piece -> generateMovesForPiece(board, piece) }
                 .flatten()
                 // Create a evaluation for each move
-                .map { move -> prioritizePieces(parent, move, aiColor, numberOfMove) }
+                .map { move -> prioritizePieces(parent, move, aiColor) }
     }
 
     /**
@@ -48,27 +47,22 @@ object AiTreeGenerator {
      * @param parent node
      * @param move on the board
      * @param aiColor
-     * @param numberOfMove which are currently done
      * @return prioritized evaluation node
      */
-    private fun prioritizePieces(
-            parent: AiEvaluationNode,
-            move: Move,
-            aiColor: PieceColor,
-            numberOfMove: Int
-    ): AiEvaluationNode {
+    private fun prioritizePieces(parent: AiEvaluationNode, move: Move, aiColor: PieceColor): AiEvaluationNode {
         val history = parent.history
         val factory = AiEvaluationNodeFactory(history, move, aiColor)
 
         return when {
             // TODO https://de.wikipedia.org/wiki/Endspiel_(Schach)
             // Endgame
+            // TODO BoardValidator.isEndgame(parent.history) ->
 
             // First move
-            numberOfMove <= 2 -> if (FieldValidator.isCenter(move.to)) factory.create(1) else factory.create()
+            BoardValidator.isFirstMove(parent.history) -> if (FieldValidator.isCenter(move.to)) factory.create(1) else factory.create()
 
             // Opening
-            numberOfMove <= 30 -> openingPiecePrioritization(factory, move, history, aiColor)
+            BoardValidator.isOpening(parent.history) -> openingPiecePrioritization(factory, move, history, aiColor)
 
             else -> factory.create()
         }

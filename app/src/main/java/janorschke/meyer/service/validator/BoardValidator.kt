@@ -12,14 +12,32 @@ import janorschke.meyer.service.utils.piece.PieceSequence
 
 object BoardValidator {
     private const val N_MOVE_REPETITIONS_FOR_STALEMATE = 10
+    private const val N_MOVES_FOR_THE_FIRST_MOVE = 2
+    private const val N_MOVES_FOR_THE_OPENING = 30
 
+    /**
+     * @param history instance
+     * @return `true`, if the first move of both players is done
+     */
+    fun isFirstMove(history: History) = history.numberOfMoves <= N_MOVES_FOR_THE_FIRST_MOVE
+
+    /**
+     * @param history instance
+     * @return `true`, if the current game is in the opening
+     */
+    fun isOpening(history: History) = history.numberOfMoves <= N_MOVES_FOR_THE_OPENING
+
+    /**
+     * @param piece which is moving
+     * @param to [PiecePosition] of the [Piece]
+     * @return `true`, if the moved piece represents a pawn transformation
+     */
     fun isPawnTransformation(piece: Piece, to: PiecePosition) = piece is Pawn && to.row == piece.color.opponent().borderlineIndex
 
     /**
      * @param board instance
-     * @param color of the king that can be in check
-     *
-     * @return true, if King is in check
+     * @param color of the [King] that can be in check
+     * @return `true`, if [King] is in check
      */
     fun isKingInCheck(board: Board, color: PieceColor): Boolean {
         val kingPosition = board.findKingPosition(color) ?: return true
@@ -30,9 +48,8 @@ object BoardValidator {
 
     /**
      * @param board instance
-     * @param color of the king that can be in checkmate
-     *
-     * @return true, if the king of the given color is in checkmate
+     * @param color of the [King] that can be in checkmate
+     * @return `true`, if the [King] of the given color is in checkmate
      */
     fun isKingCheckmate(board: Board, color: PieceColor): Boolean {
         if (!isKingInCheck(board, color)) return false
@@ -54,8 +71,7 @@ object BoardValidator {
      * @param board instance
      * @param history to check the move-repetition
      * @param color of the player who has the next turn
-     *
-     * @return true, if the game with the rest pieces is stalemate
+     * @return `true`, if the current [Board] with the remaining [Piece]s is stalemate
      */
     fun isStalemate(board: Board, history: History, color: PieceColor): Boolean {
         if (isKingInCheck(board, color)) return false
