@@ -152,8 +152,9 @@ class GameActivity : AppCompatActivity() {
             enumValueOf<AiLevel>(aiLevelStr).let {
                 val sharedPreferences = getSharedPreferences(SettingKeys.SETTINGS_SHARED_PREF_TAG.name, Context.MODE_PRIVATE)
 
-                var playerNameWhite = sharedPreferences.getString(SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name, "")
-                playerNameWhite = playerNameWhite?.ifBlank { getString(R.string.default_player_name) } ?: getString(R.string.default_player_name)
+                val playerNameWhite = sharedPreferences.getString(SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name, "")
+                        ?.takeUnless(String::isBlank)
+                        ?: getString(R.string.default_player_name)
 
                 val playerNameBlack = getString(it.resourceId)
 
