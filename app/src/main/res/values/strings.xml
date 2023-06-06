@@ -32,7 +32,6 @@
 
     <!-- game -->
     <string name="default_player_name">Spieler 1</string>
-    <string name="edit_player_name">%s</string>
 
     <!-- game-over dialog -->
     <string name="gameover_dialog_new_game">Neues Spiel</string>

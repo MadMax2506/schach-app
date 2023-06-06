@@ -2,7 +2,6 @@ package janorschke.meyer.view.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -34,7 +33,6 @@ import janorschke.meyer.viewModel.GameViewModelFactory
 
 private const val LOG_TAG = "GameActivity"
 private const val GAME_OVER_DIALOG_TAG = "GameOverDialog"
-private const val SETTINGS_PREF_TAG = "AppSettings"
 
 /**
  * Activity for an chess game
@@ -152,20 +150,20 @@ class GameActivity : AppCompatActivity() {
 
             enumValueOf<AiLevel>(aiLevelStr).let {
                 val sharedPreferences = getSharedPreferences(SETTINGS_PREF_TAG, Context.MODE_PRIVATE)
-                val playerName = sharedPreferences.getString("PlayerName", "")
-                Log.d(LOG_TAG, "PlayerName: $playerName")
 
-                val textResourceWhite = R.string.default_player_name
-                val textResourceBlack = it.resourceId
+                var playerNameWhite = sharedPreferences.getString(SETTINGS_SAVED_PLAYERNAME, "")
+                playerNameWhite = playerNameWhite?.ifBlank { getString(R.string.default_player_name) } ?: getString(R.string.default_player_name)
+
+                val playerNameBlack = getString(it.resourceId)
 
                 // ViewModel
                 gameViewModel = ViewModelProvider(
                         this,
-                        GameViewModelFactory(application, textResourceWhite, textResourceBlack, null, it)
+                        GameViewModelFactory(application, playerNameWhite, playerNameBlack, null, it)
                 )[GameViewModel::class.java]
 
-                playerInfoWhite.name.text = resources.getString(textResourceWhite)
-                playerInfoBlack.name.text = resources.getString(textResourceBlack)
+                playerInfoWhite.name.text = playerNameWhite
+                playerInfoBlack.name.text = playerNameBlack
             }
         }
     }
