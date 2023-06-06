@@ -29,12 +29,11 @@ class SettingsActivity : AppCompatActivity() {
         binding.buttonSettingsSave?.setOnClickListener { saveSettings() }
         binding.buttonSettingsCancel?.setOnClickListener { finish() }
 
-        // Load settings and display them in the UI
         loadSettings()
     }
 
     /**
-     * Loads the Settings from the SharedPreferences
+     * Loads the Settings from the SharedPreferences and displays them in the UI
      */
     private fun loadSettings() {
         val sharedPreferences: SharedPreferences = getSharedPreferences(SettingKeys.SETTINGS_SHARED_PREF_TAG.name, Context.MODE_PRIVATE)
