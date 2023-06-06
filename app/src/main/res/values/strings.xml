@@ -60,7 +60,6 @@
     <string name="dialog_draw_message">Möchten Sie dem Gegner wirklich ein Remi anbieten?</string>
 
     <!-- settings -->
-    <string name="player_1">Spieler 1</string>
     <string name="save">Speichern</string>
     <string name="cancel">Abbrechen</string>
 
