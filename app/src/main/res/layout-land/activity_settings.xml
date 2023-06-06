@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <TextView
-        android:layout_marginTop="30sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30sp"
         android:text="@string/settings"
         android:textSize="@dimen/h1" />
 
@@ -19,13 +19,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16sp"
-        android:autofillHints="@string/player_1"
+        android:hint="@string/player_1"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
+        android:maxLength="12"
         android:padding="12sp"
         android:textSize="@dimen/button_text_size"
         android:theme="@style/MyTheme.Button"
         tools:ignore="LabelFor" />
-
 
     <RelativeLayout
         android:layout_width="match_parent"

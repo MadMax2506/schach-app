@@ -19,12 +19,13 @@
         android:layout_height="wrap_content"
         android:layout_margin="16sp"
         android:hint="@string/player_1"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
+        android:maxLength="12"
         android:padding="12sp"
         android:textSize="@dimen/button_text_size"
         android:theme="@style/MyTheme.Button"
-        tools:ignore="LabelFor"
-        android:importantForAutofill="no" />
+        tools:ignore="LabelFor" />
 
 
     <RelativeLayout
