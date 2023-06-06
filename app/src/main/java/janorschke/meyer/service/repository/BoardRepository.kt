@@ -43,15 +43,13 @@ class BoardRepository(
 
         // Move piece and reset selection
         movePiece(possibleMove)
-        game.setColor(piece!!.color.opponent()) // TODO added for enPassantTest
         game.setSelectedPiece()
 
         // Check if game is finished or move was done by the ai
-        if (gameRepository.checkEndOfGame(piece) || isAiMove) return
+        if (gameRepository.checkEndOfGame(piece!!) || isAiMove) return
 
-        // TODO commented out to test enpassant
         // Calculate the next move from the ai
-        //aiRepository.calculateNextMove(board, history).let { move -> tryToMovePiece(move.from, move.to, true) }
+        aiRepository.calculateNextMove(board, history).let { move -> tryToMovePiece(move.fromPosition, move.toPosition, true) }
     }
 
     /**
