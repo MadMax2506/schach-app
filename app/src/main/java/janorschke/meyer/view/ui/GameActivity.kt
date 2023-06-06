@@ -153,7 +153,7 @@ class GameActivity : AppCompatActivity() {
                 val sharedPreferences = getSharedPreferences(SettingKeys.SETTINGS_SHARED_PREF_TAG.name, Context.MODE_PRIVATE)
 
                 val playerNameWhite = sharedPreferences.getString(SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name, "")
-                        ?.takeUnless(String::isBlank)
+                        ?.takeUnless(String::isEmpty)
                         ?: getString(R.string.default_player_name)
 
                 val playerNameBlack = getString(it.resourceId)
