@@ -86,7 +86,7 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
         if (currentDepth == depth) return parent.valency
 
         val board = Board(parent.requiredMove.fieldsAfterMoving)
-        val maximizingPlayer = color == aiColor
+        val maximizingPlayer = (color == aiColor)
 
         var bestVal = if (maximizingPlayer) Int.MIN_VALUE else Int.MAX_VALUE
         var mutableAlpha = alpha
