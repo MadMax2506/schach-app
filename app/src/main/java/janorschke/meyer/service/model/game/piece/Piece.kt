@@ -3,7 +3,9 @@ package janorschke.meyer.service.model.game.piece
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
+import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PossibleMove
 import janorschke.meyer.service.validator.BoardValidator
 import janorschke.meyer.service.validator.FieldValidator
 
@@ -27,7 +29,12 @@ abstract class Piece(
      *
      * @return possible moves
      */
-    protected abstract fun possibleMoves(board: Board, currentPosition: PiecePosition, disableCheckCheck: Boolean): MutableList<PiecePosition>
+    protected abstract fun possibleMoves(
+            board: Board,
+            history: History,
+            currentPosition: PiecePosition,
+            disableCheckCheck: Boolean
+    ): MutableList<PossibleMove>
 
     /**
      * @param board instance
@@ -36,9 +43,14 @@ abstract class Piece(
      *
      * @return true, if the piece gives check to the opponent king
      */
-    open fun givesOpponentKingCheck(board: Board, ownPosition: PiecePosition, kingPosition: PiecePosition): Boolean {
-        val possibleMoves = this.possibleMoves(board, ownPosition, true)
-        return possibleMoves.contains(kingPosition)
+    open fun givesOpponentKingCheck(
+            board: Board,
+            history: History,
+            kingPosition: PiecePosition,
+            ownPosition: PiecePosition
+    ): Boolean {
+        val possibleMoves = this.possibleMoves(board, history, ownPosition, true)
+        return possibleMoves.map { it.beatenPiecePosition }.contains(kingPosition)
     }
 
     /**
@@ -47,8 +59,12 @@ abstract class Piece(
      *
      * @return possible moves
      */
-    fun possibleMoves(board: Board, currentPosition: PiecePosition): MutableList<PiecePosition> {
-        return possibleMoves(board, currentPosition, false)
+    fun possibleMoves(
+            board: Board,
+            history: History,
+            currentPosition: PiecePosition
+    ): MutableList<PossibleMove> {
+        return possibleMoves(board, history, currentPosition, false)
     }
 
     /**
@@ -72,19 +88,24 @@ abstract class Piece(
      */
     protected fun addPossibleMove(
             board: Board,
+            history: History,
             currentPosition: PiecePosition,
             possiblePosition: PiecePosition,
-            possibleMoves: MutableList<PiecePosition>,
+            possibleMoves: MutableList<PossibleMove>,
             disableCheckCheck: Boolean,
+            isEnPassant: Boolean = false
     ) {
         if (disableCheckCheck) {
-            possibleMoves.add(possiblePosition)
+            possibleMoves.add(board.createPossibleMove(currentPosition, possiblePosition, isEnPassant = isEnPassant))
             return
         }
 
         Board(board).let { boardCopy ->
-            boardCopy.createMove(currentPosition, possiblePosition)
-            if (!BoardValidator.isKingInCheck(boardCopy, color)) possibleMoves.add(possiblePosition)
+            History(history).let { historyCopy ->
+                boardCopy.createMove(currentPosition, possiblePosition, isEnPassant = isEnPassant).let { historyCopy.push(it) }
+                if (!BoardValidator.isKingInCheck(boardCopy, historyCopy, color))
+                    possibleMoves.add(board.createPossibleMove(currentPosition, possiblePosition, isEnPassant = isEnPassant))
+            }
         }
     }
 }

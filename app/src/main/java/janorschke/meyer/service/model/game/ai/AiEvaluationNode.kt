@@ -27,7 +27,7 @@ class AiEvaluationNode(aiColor: PieceColor, val move: Move?, val history: Histor
 
                 val color = move.fromPiece.color.opponent()
 
-                if (BoardValidator.isKingCheckmate(boardCopy, color)) Int.MAX_VALUE
+                if (BoardValidator.isKingCheckmate(boardCopy, history, color)) Int.MAX_VALUE
                 if (BoardValidator.isStalemate(boardCopy, history, color)) Int.MIN_VALUE
                 getPieceValue(boardCopy, PieceColor.WHITE) - getPieceValue(boardCopy, PieceColor.BLACK)
             }
@@ -40,8 +40,7 @@ class AiEvaluationNode(aiColor: PieceColor, val move: Move?, val history: Histor
      * @return the valence of all pieces by the given color
      */
     private fun getPieceValue(board: Board, color: PieceColor): Int {
-        return PieceSequence
-                .allPiecesByColor(board, color)
+        return PieceSequence.allPiecesByColor(board, color)
                 .filter { indexedPiece -> indexedPiece.piece !is King }
                 .sumOf { indexedPiece -> indexedPiece.piece.pieceInfo.valence }
     }

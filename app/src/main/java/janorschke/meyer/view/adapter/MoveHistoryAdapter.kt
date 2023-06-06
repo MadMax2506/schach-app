@@ -52,11 +52,11 @@ class MoveHistoryAdapter(private val context: Context) : BaseAdapter() {
     private fun getMoveNotation(move: Move): String {
         StringBuilder().let {
             it.append(context.resources.getString(move.fromPiece.pieceInfo.notationId))
-            if (move.toPiece != null) {
-                if (move.fromPiece is Pawn) it.append(move.from.getColNotation())
+            if (move.beatenPiece != null) {
+                if (move.fromPiece is Pawn) it.append(move.fromPosition.getColNotation())
                 it.append("x")
             }
-            it.append(move.to.getNotation())
+            it.append(move.toPosition.getNotation())
 
             return it.toString()
         }
