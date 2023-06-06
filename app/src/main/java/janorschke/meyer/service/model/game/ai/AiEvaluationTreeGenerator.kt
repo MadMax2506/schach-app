@@ -44,7 +44,7 @@ object AiEvaluationTreeGenerator {
                         }.toMutableList()
                     } else {
                         // Normal move
-                        mutableListOf(Board(board).createMove(indexedPiece.position, to))
+                        mutableListOf(Board(board).createMove(possibleMove))
                     }
                 }
                 .flatten()
