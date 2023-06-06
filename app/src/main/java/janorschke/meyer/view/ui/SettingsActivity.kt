@@ -50,7 +50,7 @@ class SettingsActivity : AppCompatActivity() {
      */
     private fun saveSettings() {
         getSharedPreferences(SettingKeys.SETTINGS_SHARED_PREF_TAG.name, Context.MODE_PRIVATE).edit().let { editor ->
-            val newPlayerName: String = playerNameEditText?.text.toString()
+            val newPlayerName: String = playerNameEditText?.text.toString().trim()
 
             // Save the changes in the SharedPreferences
             editor.putString(SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name, newPlayerName)
