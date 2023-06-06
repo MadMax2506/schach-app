@@ -9,11 +9,42 @@ import janorschke.meyer.service.model.game.piece.Pawn
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.utils.piece.PieceSequence
+import kotlin.math.abs
 
+/**
+ * Provides functionality to validate the Board
+ */
 object BoardValidator {
     private const val N_MOVE_REPETITIONS_FOR_STALEMATE = 10
 
-    fun isPawnTransformation(piece: Piece, to: PiecePosition) = piece is Pawn && to.row == piece.color.opponent().borderlineIndex
+    /**
+     * Validates if a Pawn shall be promoted
+     *
+     * @param piece the piece that gets proved
+     * @param to the position where the piece is going
+     * @return true if a pawn reaches the end of the board, false otherwise
+     */
+    fun isPawnTransformation(piece: Piece, to: PiecePosition) = piece is Pawn && to.row == piece.color.opponent().borderRow
+
+    fun isEnPassantMove(
+            lastMove: Move?,
+            color: PieceColor,
+            currentPosition: PiecePosition
+    ): Boolean {
+        lastMove ?: return false
+
+        val lastMovedPiece = lastMove.fromPiece
+        if (lastMovedPiece !is Pawn || lastMovedPiece.color == color) return false
+
+        val lastMoveTargetRow = lastMove.toPosition.row
+        val lastMoveTargetCol = lastMove.toPosition.col
+        val currentRow = currentPosition.row
+        val currentCol = currentPosition.col
+
+        if (currentRow != lastMoveTargetRow || abs(currentCol - lastMoveTargetCol) != 1) return false
+        if (currentRow != color.enPassantRow) return false
+        return true
+    }
 
     /**
      * @param board instance
@@ -21,11 +52,11 @@ object BoardValidator {
      *
      * @return true, if King is in check
      */
-    fun isKingInCheck(board: Board, color: PieceColor): Boolean {
+    fun isKingInCheck(board: Board, history: History, color: PieceColor): Boolean {
         val kingPosition = board.findKingPosition(color) ?: return true
 
         return PieceSequence.allPiecesByColor(board, color.opponent())
-                .any { it.piece.givesOpponentKingCheck(board, it.position, kingPosition) }
+                .any { it.piece.givesOpponentKingCheck(board, history, kingPosition, it.position) }
     }
 
     /**
@@ -34,17 +65,17 @@ object BoardValidator {
      *
      * @return true, if the king of the given color is in checkmate
      */
-    fun isKingCheckmate(board: Board, color: PieceColor): Boolean {
-        if (!isKingInCheck(board, color)) return false
+    fun isKingCheckmate(board: Board, history: History, color: PieceColor): Boolean {
+        if (!isKingInCheck(board, history, color)) return false
 
         // check if any piece can go somewhere, that is not checkmate
         PieceSequence.allPiecesByColor(board, color)
                 .forEach {
-                    it.piece.possibleMoves(board, it.position).forEach { move ->
+                    it.piece.possibleMoves(board, history, it.position).forEach { possibleMove ->
                         Board(board).let { boardCopy ->
-                            boardCopy.createMove(it.position, move)
+                            boardCopy.createMove(possibleMove)
                             // if King is not in check after this move, then it's not checkmate
-                            if (!isKingInCheck(boardCopy, color)) return false
+                            if (!isKingInCheck(boardCopy, history, color)) return false
                         }
                     }
                 }
@@ -59,13 +90,13 @@ object BoardValidator {
      * @return true, if the game with the rest pieces is stalemate
      */
     fun isStalemate(board: Board, history: History, color: PieceColor): Boolean {
-        if (isKingInCheck(board, color)) return false
+        if (isKingInCheck(board, history, color)) return false
 
         val pieceSequence = PieceSequence.allPiecesByColor(board, color)
         val pieceSequenceOpponent = PieceSequence.allPiecesByColor(board, color.opponent())
 
         // check if no possible move for the given color is left
-        pieceSequence.map { it.piece.possibleMoves(board, it.position) }
+        pieceSequence.map { it.piece.possibleMoves(board, history, it.position) }
                 .flatten()
                 .toList()
                 .isEmpty()

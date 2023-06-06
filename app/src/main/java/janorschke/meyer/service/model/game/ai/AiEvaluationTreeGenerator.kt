@@ -2,6 +2,7 @@ package janorschke.meyer.service.model.game.ai
 
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
+import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.piece.Knight
 import janorschke.meyer.service.model.game.piece.lineMoving.Bishop
@@ -17,7 +18,7 @@ object AiEvaluationTreeGenerator {
     fun generateChildren(parent: AiEvaluationNode, board: Board, aiColor: PieceColor): MutableList<AiEvaluationNode> {
         return PieceSequence.allPiecesByColor(board, aiColor)
                 // Create a flatten list of moves for each possible move
-                .map { piece -> generateMovesForPiece(board, piece) }
+                .map { piece -> generateMovesForPiece(board, parent.history, piece) }
                 .flatten()
                 // Create a evaluation for each move
                 .map { move -> AiEvaluationNode(aiColor, move, parent.history) }
@@ -27,21 +28,23 @@ object AiEvaluationTreeGenerator {
     /**
      * TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/107
      */
-    private fun generateMovesForPiece(board: Board, indexedPiece: PieceSequence.IndexedPiece): MutableList<Move> {
+    private fun generateMovesForPiece(board: Board, history: History, indexedPiece: PieceSequence.IndexedPiece): MutableList<Move> {
         return indexedPiece.piece
                 // Get possible moves
-                .possibleMoves(board, indexedPiece.position)
+                .possibleMoves(board, history, indexedPiece.position)
                 .map { possibleMove ->
                     // Create moves
-                    if (BoardValidator.isPawnTransformation(indexedPiece.piece, possibleMove)) {
+                    val to = possibleMove.toPosition
+                    
+                    if (BoardValidator.isPawnTransformation(indexedPiece.piece, to)) {
                         // Special case for the pawn transformation
                         val color = indexedPiece.piece.color
                         arrayOf(Knight(color), Bishop(color), Rook(color), Queen(color)).map { piece ->
-                            Board(board).createMove(indexedPiece.position, possibleMove, piece)
+                            Board(board).createMove(indexedPiece.position, to, piece)
                         }.toMutableList()
                     } else {
                         // Normal move
-                        mutableListOf(Board(board).createMove(indexedPiece.position, possibleMove))
+                        mutableListOf(Board(board).createMove(possibleMove))
                     }
                 }
                 .flatten()

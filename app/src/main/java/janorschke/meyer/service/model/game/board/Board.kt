@@ -8,8 +8,8 @@ import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.piece.lineMoving.Bishop
 import janorschke.meyer.service.model.game.piece.lineMoving.Queen
 import janorschke.meyer.service.model.game.piece.lineMoving.Rook
+import janorschke.meyer.service.utils.ArrayUtils
 import janorschke.meyer.service.utils.piece.PieceSequence
-import janorschke.meyer.service.validator.BoardValidator
 
 /**
  * Chess board
@@ -56,7 +56,7 @@ class Board {
     // Copy Constructor
     constructor(board: Board) : this(board.getFields())
     constructor(fields: Array<Array<Piece?>>) {
-        this.fields = fields.map { it.copyOf() }.toTypedArray()
+        this.fields = ArrayUtils.deepCopy(fields)
     }
 
     /**
@@ -98,26 +98,71 @@ class Board {
     }
 
     /**
-     * Moves an piece to another position
+     * Creates a possible Move for a piece
+     *
+     * @param fromPosition source position
+     * @param toPosition target position
+     * @param pawnReplaceWith piece which is used for the pawn promotion
+     * @param isEnPassant boolean that (Default = false)
+     * @return possible board move
+     */
+    fun createPossibleMove(
+            fromPosition: PiecePosition,
+            toPosition: PiecePosition,
+            pawnReplaceWith: Piece? = null,
+            isEnPassant: Boolean = false,
+    ): PossibleMove {
+        val fromPiece = getField(fromPosition)!!
+
+        val beatenPiecePosition = if (!isEnPassant) toPosition
+        else {
+            fromPiece as Pawn
+            PiecePosition(toPosition.row - fromPiece.getMoveDirection(), toPosition.col)
+        }
+
+        val beatenPiece = getField(beatenPiecePosition)
+
+        return PossibleMove(
+                fromPosition,
+                toPosition,
+                beatenPiecePosition,
+                fromPiece,
+                beatenPiece,
+                isEnPassant,
+                pawnReplaceWith
+        )
+    }
+
+    /**
+     * Moves a piece to another position
      *
      * @param from source position
      * @param to target position
-     * @param pawnReplaceWith piece which is used for the pawn replace after transform on the opponent base line
+     * @param pawnReplaceWith piece which is used for the pawn promotion
+     * @param isEnPassant boolean that (Default = false)
      * @return board move
      */
-    fun createMove(from: PiecePosition, to: PiecePosition, pawnReplaceWith: Piece = Queen(getField(from)!!.color)): Move {
-        val fromPiece = getField(from)!!
-        val toPiece = getField(to)
+    fun createMove(
+            from: PiecePosition,
+            to: PiecePosition,
+            pawnReplaceWith: Piece? = null,
+            isEnPassant: Boolean = false,
+    ): Move {
+        return createMove(createPossibleMove(from, to, pawnReplaceWith, isEnPassant))
+    }
 
-        setField(from, null)
-        if (BoardValidator.isPawnTransformation(fromPiece, to)) {
+    fun createMove(possibleMove: PossibleMove): Move {
+
+        setField(possibleMove.fromPosition, null)
+        setField(possibleMove.beatenPiecePosition, null)
+
+        if (possibleMove.promotionTo != null) {
             // pawn can be transfer to an higher valency piece
-            setField(to, pawnReplaceWith)
+            setField(possibleMove.toPosition, possibleMove.promotionTo)
         } else {
             // normal move
-            setField(to, fromPiece)
+            setField(possibleMove.toPosition, possibleMove.fromPiece)
         }
-
-        return Move(Board(this).fields, from, to, fromPiece, toPiece)
+        return Move(ArrayUtils.deepCopy(fields), possibleMove)
     }
 }

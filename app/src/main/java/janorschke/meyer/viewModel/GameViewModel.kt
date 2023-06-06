@@ -11,11 +11,13 @@ import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.PossibleMove
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.service.repository.BoardRepository
 import janorschke.meyer.service.repository.GameRepository
 import janorschke.meyer.service.repository.ai.AiRepositoryFactory
+import janorschke.meyer.service.utils.ArrayUtils
 
 /**
  * View model for the game activity
@@ -35,7 +37,7 @@ class GameViewModel(
     val playerBlack: MutableLiveData<Player> = MutableLiveData()
     val status: MutableLiveData<GameStatus> = MutableLiveData()
     val selectedPosition: MutableLiveData<PiecePosition?> = MutableLiveData()
-    val possibleMoves: MutableLiveData<MutableList<PiecePosition>> = MutableLiveData()
+    val possibleMoves: MutableLiveData<MutableList<PossibleMove>> = MutableLiveData()
     val fields: MutableLiveData<Array<Array<Piece?>>> = MutableLiveData()
     val moves: MutableLiveData<MutableList<Move>> = MutableLiveData()
     val beatenPiecesByWhite: MutableLiveData<MutableList<Piece>> = MutableLiveData()
@@ -46,10 +48,11 @@ class GameViewModel(
     private val game = Game(textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
-
     private val aiRepository = AiRepositoryFactory(game).create()
     private val gameRepository = GameRepository(board, history, game)
     private val boardRepository = BoardRepository(board, history, game, gameRepository, aiRepository)
+
+    fun getHistory() = history
 
     init {
         playerWhite.value = game.playerWhite
@@ -86,7 +89,7 @@ class GameViewModel(
      *
      * @see Game.selectedPosition
      */
-    fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PiecePosition> = mutableListOf()) {
+    fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PossibleMove> = mutableListOf()) {
         game.setSelectedPiece(selectedPosition, possibleMoves)
         setValues()
     }
@@ -139,6 +142,6 @@ class GameViewModel(
      * @param data
      */
     private fun updateIfDifferent(liveData: MutableLiveData<Array<Array<Piece?>>>, data: Array<Array<Piece?>>) {
-        if (!liveData.value.contentDeepEquals(data)) liveData.value = data.map { it.copyOf() }.toTypedArray()
+        if (!liveData.value.contentDeepEquals(data)) liveData.value = ArrayUtils.deepCopy(data)
     }
 }
