@@ -101,12 +101,13 @@ object AiTreeGenerator {
             // Move a heavy piece
             move.fromPiece.pieceInfo.type == PieceType.HEAVY -> factory.create(-2)
 
+            // TODO
             // Move a piece multiple times
-            history.getLastMoves(history.numberOfMoves.coerceAtMost(6))
-                    .filter { it.fromPiece.color == aiColor }
-                    .none { move.from == it.to } -> {
-                factory.create(-1)
-            }
+//            history.getLastMoves(history.numberOfMoves.coerceAtMost(6))
+//                    .filter { it.fromPiece.color == aiColor }
+//                    .none { move.from == it.to && move.fromPiece == it.fromPiece } -> {
+//                factory.create(-1)
+//            }
 
             // TODO Druck Zentrum priorisieren
             // TODO priority = 2
