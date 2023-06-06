@@ -1,5 +1,6 @@
 package janorschke.meyer.service.repository
 
+import android.util.Log
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.board.Board
@@ -17,10 +18,12 @@ class GameRepository(private val board: Board, private val history: History, pri
      * @return true if the game is finished
      */
     fun checkEndOfGame(piece: Piece): Boolean {
-        if (BoardValidator.isKingCheckmate(board, piece.color.opponent())) {
+        if (BoardValidator.isKingCheckmate(board, history, piece.color.opponent())) {
+            Log.d(LOG_TAG, "Game ends with CHECKMATE")
             game.setStatus(GameStatus.CHECKMATE)
             return true
         } else if (BoardValidator.isStalemate(board, history, piece.color.opponent())) {
+            Log.d(LOG_TAG, "Game ends with STALEMATE")
             game.setStatus(GameStatus.STALEMATE)
             return true
         }

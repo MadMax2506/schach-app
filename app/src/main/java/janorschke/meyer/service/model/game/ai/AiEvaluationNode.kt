@@ -39,8 +39,8 @@ class AiEvaluationNode(val history: History, val move: Move?, private val aiColo
                     val valueDiff = valueAi - getPieceValue(boardCopy, aiColor.opponent())
 
                     // TODO optimize https://github.com/MadMax2506/android-wahlmodul-project/issues/111
-                    if (BoardValidator.isKingCheckmate(boardCopy, color.opponent())) return@let Int.MAX_VALUE
-                    if (BoardValidator.isKingInCheck(boardCopy, color.opponent())) return@let Int.MAX_VALUE - 1
+                    if (BoardValidator.isKingCheckmate(boardCopy, history, color.opponent())) return@let Int.MAX_VALUE
+                    if (BoardValidator.isKingInCheck(boardCopy, history, color.opponent())) return@let Int.MAX_VALUE - 1
                     if (BoardValidator.isStalemate(boardCopy, history, color.opponent())) {
                         // Try to achieve an stalemate if the opponent has a big advantage
                         if (valueAi <= PieceInfo.PAWN.valence && valueDiff < 0) return@let Int.MAX_VALUE

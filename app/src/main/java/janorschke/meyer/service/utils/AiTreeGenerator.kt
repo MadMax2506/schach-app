@@ -35,7 +35,7 @@ object AiTreeGenerator {
 
         return pieceSequence
                 // Create a flatten list of moves for each possible move
-                .map { piece -> generateMovesForPiece(board, piece) }
+                .map { piece -> generateMovesForPiece(board, parent.history, piece) }
                 .flatten()
                 // Create a evaluation for each move
                 .map { move -> prioritizePieces(parent, move, aiColor) }
@@ -59,7 +59,7 @@ object AiTreeGenerator {
             // TODO BoardValidator.isEndgame(parent.history) ->
 
             // First move
-            BoardValidator.isFirstMove(parent.history) -> if (FieldValidator.isCenter(move.to)) factory.create(1) else factory.create()
+            BoardValidator.isFirstMove(parent.history) -> if (FieldValidator.isCenter(move.toPosition)) factory.create(1) else factory.create()
 
             // Opening
             BoardValidator.isOpening(parent.history) -> openingPiecePrioritization(factory, move, history, aiColor)
@@ -114,7 +114,7 @@ object AiTreeGenerator {
             // Pressure on the center
 
             // Place pieces in the extended center
-            FieldValidator.isExtendedCenter(move.to) -> if (move.fromPiece is Pawn) factory.create(2) else factory.create(1)
+            FieldValidator.isExtendedCenter(move.toPosition) -> if (move.fromPiece is Pawn) factory.create(2) else factory.create(1)
 
             else -> factory.create()
         }
@@ -125,21 +125,21 @@ object AiTreeGenerator {
      * @param indexedPiece which is on the board
      * @return all possible moves of the given piece
      */
-    private fun generateMovesForPiece(board: Board, indexedPiece: PieceSequence.IndexedPiece): Sequence<Move> {
+    private fun generateMovesForPiece(board: Board, history: History, indexedPiece: PieceSequence.IndexedPiece): Sequence<Move> {
         return indexedPiece.piece
-                .possibleMoves(board, indexedPiece.position)
+                .possibleMoves(board, history, indexedPiece.position)
                 .asSequence()
                 .map { possibleMove ->
                     // Create moves
-                    if (BoardValidator.isPawnTransformation(indexedPiece.piece, possibleMove)) {
+                    if (BoardValidator.isPawnTransformation(indexedPiece.piece, possibleMove.toPosition)) {
                         // Special case for the pawn transformation
                         val color = indexedPiece.piece.color
                         arrayOf(Knight(color), Bishop(color), Rook(color), Queen(color)).map { piece ->
-                            Board(board).createMove(indexedPiece.position, possibleMove, piece)
+                            Board(board).createMove(indexedPiece.position, possibleMove.toPosition, piece)
                         }.toMutableList()
                     } else {
                         // Normal move
-                        mutableListOf(Board(board).createMove(indexedPiece.position, possibleMove))
+                        mutableListOf(Board(board).createMove(indexedPiece.position, possibleMove.toPosition))
                     }
                 }
                 .flatten()
