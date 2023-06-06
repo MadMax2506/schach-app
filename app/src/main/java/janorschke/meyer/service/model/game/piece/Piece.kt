@@ -49,8 +49,9 @@ abstract class Piece(
             kingPosition: PiecePosition,
             ownPosition: PiecePosition
     ): Boolean {
-        val possibleMoves = this.possibleMoves(board, history, ownPosition, true)
-        return possibleMoves.map { it.beatenPiecePosition }.contains(kingPosition)
+        return possibleMoves(board, history, ownPosition, true)
+                .map { it.beatenPiecePosition }
+                .contains(kingPosition)
     }
 
     /**

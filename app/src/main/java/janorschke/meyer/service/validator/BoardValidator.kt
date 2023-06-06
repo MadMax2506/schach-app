@@ -38,11 +38,7 @@ object BoardValidator {
      */
     fun isPawnTransformation(piece: Piece, to: PiecePosition) = piece is Pawn && to.row == piece.color.opponent().borderRow
 
-    fun isEnPassantMove(
-            lastMove: Move?,
-            color: PieceColor,
-            currentPosition: PiecePosition
-    ): Boolean {
+    fun isEnPassantMove(lastMove: Move?, color: PieceColor, currentPosition: PiecePosition): Boolean {
         lastMove ?: return false
 
         val lastMovedPiece = lastMove.fromPiece
@@ -106,8 +102,7 @@ object BoardValidator {
         // check if no possible move for the given color is left
         pieceSequence.map { it.piece.possibleMoves(board, history, it.position) }
                 .flatten()
-                .toList()
-                .isEmpty()
+                .none()
                 .let { isEmpty -> if (isEmpty) return true }
 
         // check if both player have enough pieces

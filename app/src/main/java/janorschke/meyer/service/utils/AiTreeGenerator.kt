@@ -54,9 +54,9 @@ object AiTreeGenerator {
         val factory = AiEvaluationNodeFactory(history, move, aiColor)
 
         return when {
-            // TODO https://de.wikipedia.org/wiki/Endspiel_(Schach)
+            // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/122
             // Endgame
-            // TODO BoardValidator.isEndgame(parent.history) ->
+            // BoardValidator.isEndgame(parent.history) ->
 
             // First move
             BoardValidator.isFirstMove(parent.history) -> if (FieldValidator.isCenter(move.toPosition)) factory.create(1) else factory.create()
@@ -92,7 +92,7 @@ object AiTreeGenerator {
     ): AiEvaluationNode {
         return when {
             // TODO Rochade bevorzugen: https://github.com/MadMax2506/android-wahlmodul-project/issues/115
-            // TODO priority = 3
+            // priority = 3
             // Castling
 
             // Move the king
@@ -101,7 +101,7 @@ object AiTreeGenerator {
             // Move a heavy piece
             move.fromPiece.pieceInfo.type == PieceType.HEAVY -> factory.create(-2)
 
-            // TODO
+            // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/124
             // Move a piece multiple times
 //            history.getLastMoves(history.numberOfMoves.coerceAtMost(6))
 //                    .filter { it.fromPiece.color == aiColor }
@@ -109,8 +109,8 @@ object AiTreeGenerator {
 //                factory.create(-1)
 //            }
 
-            // TODO Druck Zentrum priorisieren
-            // TODO priority = 2
+            // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/123
+            // priority = 2
             // Pressure on the center
 
             // Place pieces in the extended center
