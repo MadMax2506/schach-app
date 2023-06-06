@@ -38,8 +38,11 @@ object BoardValidator {
 
         val lastMoveTargetRow = lastMove.toPosition.row
         val lastMoveTargetCol = lastMove.toPosition.col
-        if (currentPosition.row != lastMoveTargetRow || abs(currentPosition.col - lastMoveTargetCol) != 1) return false
-        if (currentPosition.row != color.enPassantRow) return false
+        val currentRow = currentPosition.row
+        val currentCol = currentPosition.col
+
+        if (currentRow != lastMoveTargetRow || abs(currentCol - lastMoveTargetCol) != 1) return false
+        if (currentRow != color.enPassantRow) return false
         return true
     }
 
