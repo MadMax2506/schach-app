@@ -2,11 +2,13 @@ package janorschke.meyer.service.model.game.ai
 
 import android.util.Log
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.piece.King
 import janorschke.meyer.service.utils.piece.PieceSequence
+import janorschke.meyer.service.validator.BoardValidator
 import kotlin.system.measureTimeMillis
 
 const val LOG_TAG = "AiEvaluationNode"
@@ -37,13 +39,14 @@ class AiEvaluationNode(val history: History, val move: Move?, private val aiColo
                     val valueDiff = valueAi - getPieceValue(boardCopy, aiColor.opponent())
 
                     // TODO optimize https://github.com/MadMax2506/android-wahlmodul-project/issues/111
-//                    if (BoardValidator.isKingCheckmate(boardCopy, color.opponent())) return@let Int.MAX_VALUE
-//                    if (BoardValidator.isStalemate(boardCopy, history, color.opponent())) {
-//                        // Try to achieve an stalemate if the opponent has a big advantage
-//                        if (valueAi <= PieceInfo.PAWN.valence && valueDiff < 0) return@let Int.MAX_VALUE
-//                        if (valueDiff < PieceInfo.QUEEN.valence) return@let Int.MAX_VALUE
-//                        return@let Int.MIN_VALUE
-//                    }
+                    if (BoardValidator.isKingCheckmate(boardCopy, color.opponent())) return@let Int.MAX_VALUE
+                    if (BoardValidator.isKingInCheck(boardCopy, color.opponent())) return@let Int.MAX_VALUE - 1
+                    if (BoardValidator.isStalemate(boardCopy, history, color.opponent())) {
+                        // Try to achieve an stalemate if the opponent has a big advantage
+                        if (valueAi <= PieceInfo.PAWN.valence && valueDiff < 0) return@let Int.MAX_VALUE
+                        if (valueDiff < PieceInfo.QUEEN.valence) return@let Int.MAX_VALUE
+                        return@let Int.MIN_VALUE
+                    }
                     return@let valueDiff
                 }
             }
