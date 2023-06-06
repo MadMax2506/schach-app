@@ -1,6 +1,8 @@
 package janorschke.meyer.view.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -31,7 +33,8 @@ import janorschke.meyer.viewModel.GameViewModel
 import janorschke.meyer.viewModel.GameViewModelFactory
 
 private const val LOG_TAG = "GameActivity"
-private const val GAME_OVER_DIALOG_TAG: String = "GameOverDialog"
+private const val GAME_OVER_DIALOG_TAG = "GameOverDialog"
+private const val SETTINGS_PREF_TAG = "AppSettings"
 
 /**
  * Activity for an chess game
@@ -148,6 +151,10 @@ class GameActivity : AppCompatActivity() {
             if (aiLevelStr == null) throw IllegalArgumentException("Wrong ai level")
 
             enumValueOf<AiLevel>(aiLevelStr).let {
+                val sharedPreferences = getSharedPreferences(SETTINGS_PREF_TAG, Context.MODE_PRIVATE)
+                val playerName = sharedPreferences.getString("PlayerName", "")
+                Log.d(LOG_TAG, "PlayerName: $playerName")
+
                 val textResourceWhite = R.string.default_player_name
                 val textResourceBlack = it.resourceId
 
