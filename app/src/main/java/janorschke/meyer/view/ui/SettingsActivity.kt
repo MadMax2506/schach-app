@@ -8,15 +8,12 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import janorschke.meyer.databinding.ActivitySettingsBinding
+import janorschke.meyer.enums.SettingKeys
 
 private const val LOG_TAG = "SettingsActivity"
 
-// TODO Keys sind globale Variablen (ekelhaft)
-const val SETTINGS_PREF_TAG = "AppSettings"
-const val SETTINGS_SAVED_PLAYERNAME = "PlayerName"
-
 /**
- * TODO JavaDoc
+ * Activity for the Game Settings
  */
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -37,26 +34,26 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     /**
-     * TODO JavaDoc
+     * Loads the Settings from the SharedPreferences
      */
     private fun loadSettings() {
-        val sharedPreferences: SharedPreferences = getSharedPreferences(SETTINGS_PREF_TAG, Context.MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences = getSharedPreferences(SettingKeys.SETTINGS_SHARED_PREF_TAG.name, Context.MODE_PRIVATE)
 
         // Get the player name from the SharedPreferences and display it in the EditText
-        val playerName: String? = sharedPreferences.getString(SETTINGS_SAVED_PLAYERNAME, "")
+        val playerName: String? = sharedPreferences.getString(SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name, "")
         playerNameEditText?.setText(playerName)
         Log.d(LOG_TAG, "Settings loaded")
     }
 
     /**
-     * TODO JavaDoc
+     * Saves the Settings via SharedPreferences and returns back to the calling Activity
      */
     private fun saveSettings() {
-        getSharedPreferences(SETTINGS_PREF_TAG, Context.MODE_PRIVATE).edit().let { editor ->
+        getSharedPreferences(SettingKeys.SETTINGS_SHARED_PREF_TAG.name, Context.MODE_PRIVATE).edit().let { editor ->
             val newPlayerName: String = playerNameEditText?.text.toString()
 
             // Save the changes in the SharedPreferences
-            editor.putString(SETTINGS_SAVED_PLAYERNAME, newPlayerName)
+            editor.putString(SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name, newPlayerName)
             editor.apply()
         }
         Toast.makeText(applicationContext, "Settings saved", Toast.LENGTH_SHORT).show()
