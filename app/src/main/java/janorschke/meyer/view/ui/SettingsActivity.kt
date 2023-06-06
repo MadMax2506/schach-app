@@ -21,7 +21,9 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         playerNameEditText = binding.edittextSettingsPlayerName
+
         binding.buttonSettingsSave?.setOnClickListener { saveSettings() }
         binding.buttonSettingsCancel?.setOnClickListener { finish() }
 
