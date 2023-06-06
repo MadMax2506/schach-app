@@ -73,7 +73,7 @@ object BoardValidator {
                 .forEach {
                     it.piece.possibleMoves(board, history, it.position).forEach { possibleMove ->
                         Board(board).let { boardCopy ->
-                            boardCopy.createMove(it.position, possibleMove.toPosition)
+                            boardCopy.createMove(possibleMove)
                             // if King is not in check after this move, then it's not checkmate
                             if (!isKingInCheck(boardCopy, history, color)) return false
                         }
