@@ -81,6 +81,11 @@ class GameViewModel(
         setValues()
     }
 
+    fun gameTimeOver() {
+        game.setStatus(GameStatus.TIME_OVER)
+        setValues()
+    }
+
     fun aiMoved() {
         setValues()
     }

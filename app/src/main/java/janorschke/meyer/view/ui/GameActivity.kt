@@ -48,6 +48,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var gameViewModel: GameViewModel
     private lateinit var timeMode: TimeMode
     private var countdownTimer: CountDownTimer? = null
+    private var remainingTime: Long? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,8 +122,10 @@ class GameActivity : AppCompatActivity() {
         binding.playerOne!!.time.visibility = View.GONE
 
         if (timeMode != TimeMode.UNLIMITED) {
-            countdownTimer = object : CountDownTimer(timeMode.time, 1000) {
+            remainingTime = timeMode.time
+            countdownTimer = object : CountDownTimer(remainingTime!!, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
+                    remainingTime = millisUntilFinished
                     val seconds = millisUntilFinished / 1000
                     val minutes = seconds / 60
                     val remainingSeconds = seconds % 60
@@ -130,8 +133,7 @@ class GameActivity : AppCompatActivity() {
                 }
 
                 override fun onFinish() {
-                    binding.playerTwo!!.time.text = "---"
-                    // TODO Dialog öffnen: https://github.com/MadMax2506/android-wahlmodul-project/issues/96
+                    gameViewModel.gameTimeOver()
                 }
             }.start()
 
@@ -198,7 +200,8 @@ class GameActivity : AppCompatActivity() {
             endByVote: Boolean = false
     ) {
         countdownTimer?.cancel()
-        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote, timeMode).show(supportFragmentManager, GAME_OVER_DIALOG_TAG)
+        val endByTimeOver = (timeMode != TimeMode.UNLIMITED) && (remainingTime!! <= 999L)
+        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote, timeMode, endByTimeOver).show(supportFragmentManager, GAME_OVER_DIALOG_TAG)
     }
 
     /**
@@ -241,7 +244,10 @@ class GameActivity : AppCompatActivity() {
                             gameViewModel.playerBlack.value!!, true)
                 }
 
-                // TODO TimeOver https://github.com/MadMax2506/android-wahlmodul-project/issues/96
+                GameStatus.TIME_OVER -> {
+                    Log.d(LOG_TAG, "TimeOver")
+                    showGameOverDialogAndStopTimer(gameViewModel.activePlayer.value?.color?.opponent(), gameViewModel.playerWhite.value!!, gameViewModel.playerBlack.value!!)
+                }
 
                 GameStatus.RUNNING -> {}
 

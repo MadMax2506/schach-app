@@ -7,7 +7,7 @@ enum class TimeMode(val time: Long) {
     /**
      * Bullet mode: 1 minute time limit.
      */
-    BULLET(60000),
+    BULLET(6000),
 
     /**
      * Blitz mode: 5 minutes time limit.
