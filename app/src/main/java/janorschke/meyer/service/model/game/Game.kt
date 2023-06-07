@@ -7,10 +7,10 @@ import janorschke.meyer.service.model.game.player.PlayerFactory
 import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.model.game.board.PossibleMove
 
-class Game(textResourceWhite: Int, textResourceBlack: Int, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) {
+class Game(playerNameWhite: String, playerNameBlack: String, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) {
 
-    val playerWhite = PlayerFactory(PieceColor.WHITE, textResourceWhite, aiLevelWhite).create()
-    val playerBlack = PlayerFactory(PieceColor.BLACK, textResourceBlack, aiLevelBlack).create()
+    val playerWhite = PlayerFactory(PieceColor.WHITE, playerNameWhite, aiLevelWhite).create()
+    val playerBlack = PlayerFactory(PieceColor.BLACK, playerNameBlack, aiLevelBlack).create()
 
     /**
      * Color of the player who is moving

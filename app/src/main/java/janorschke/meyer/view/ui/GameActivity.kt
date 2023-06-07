@@ -16,9 +16,11 @@ import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameMode
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.enums.SettingKeys
 import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.enums.TransferKeys
 import janorschke.meyer.service.model.game.player.Player
+import janorschke.meyer.service.utils.SettingsManager
 import janorschke.meyer.view.adapter.BoardAdapter
 import janorschke.meyer.view.adapter.MoveHistoryAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPieceDecorator
@@ -31,10 +33,10 @@ import janorschke.meyer.viewModel.GameViewModel
 import janorschke.meyer.viewModel.GameViewModelFactory
 
 private const val LOG_TAG = "GameActivity"
-private const val GAME_OVER_DIALOG_TAG: String = "GameOverDialog"
+private const val GAME_OVER_DIALOG_TAG = "GameOverDialog"
 
 /**
- * Activity for an chess game
+ * Activity for a chess game
  */
 class GameActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
@@ -148,17 +150,20 @@ class GameActivity : AppCompatActivity() {
             if (aiLevelStr == null) throw IllegalArgumentException("Wrong ai level")
 
             enumValueOf<AiLevel>(aiLevelStr).let {
-                val textResourceWhite = R.string.default_player_name
-                val textResourceBlack = it.resourceId
+                val playerNameWhite = SettingsManager.loadSettings(applicationContext, SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name)
+                        ?.takeUnless(String::isEmpty)
+                        ?: getString(R.string.default_player_name)
+
+                val playerNameBlack = getString(it.resourceId)
 
                 // ViewModel
                 gameViewModel = ViewModelProvider(
                         this,
-                        GameViewModelFactory(application, textResourceWhite, textResourceBlack, null, it)
+                        GameViewModelFactory(application, playerNameWhite, playerNameBlack, null, it)
                 )[GameViewModel::class.java]
 
-                playerInfoWhite.name.text = resources.getString(textResourceWhite)
-                playerInfoBlack.name.text = resources.getString(textResourceBlack)
+                playerInfoWhite.name.text = playerNameWhite
+                playerInfoBlack.name.text = playerNameBlack
             }
         }
     }
@@ -239,7 +244,9 @@ class GameActivity : AppCompatActivity() {
 
                 GameStatus.RUNNING -> {}
 
-                else -> { throw IllegalArgumentException("Invalid status")}
+                else -> {
+                    throw IllegalArgumentException("Invalid status")
+                }
             }
         }
 
