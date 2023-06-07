@@ -4,8 +4,8 @@ import android.util.Log
 import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.Move
 import janorschke.meyer.service.model.game.board.PossibleMove
 import janorschke.meyer.service.model.game.piece.lineMoving.Queen
 import janorschke.meyer.service.repository.ai.AiRepository
@@ -44,6 +44,7 @@ class BoardRepository(
         val piece = board.getField(fromPosition)
         val possibleMoves = piece?.possibleMoves(board, history, fromPosition) ?: emptyList()
         val possibleMove = possibleMoves.firstOrNull { it.toPosition == toPosition }
+
         // Check if requested position is a possible move of the piece
         if (possibleMove == null) {
             game.setSelectedPiece()
@@ -72,8 +73,7 @@ class BoardRepository(
     /**
      * Moves a piece to the target position
      *
-     * @param from source position
-     * @param to target position
+     * @param possibleMove
      */
     private fun movePiece(possibleMove: PossibleMove) {
         val move = createMove(possibleMove)
@@ -87,8 +87,7 @@ class BoardRepository(
     /**
      * Moves an piece to another position
      *
-     * @param from source position
-     * @param to target position
+     * @param possibleMove
      * @return board move
      *
      * @see Board.createMove
@@ -97,7 +96,7 @@ class BoardRepository(
         board.getField(possibleMove.fromPosition)!!.let { piece ->
             if (BoardValidator.isPawnTransformation(piece, possibleMove.toPosition)) {
                 // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/49
-                return board.createMove(possibleMove.fromPosition, possibleMove.toPosition, Queen(piece.color), possibleMove.isEnPassant)
+                return board.createMove(possibleMove.fromPosition, possibleMove.toPosition, Queen(piece.color))
             } else {
                 return board.createMove(possibleMove)
             }

@@ -5,6 +5,7 @@ import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.Castling
 import janorschke.meyer.service.model.game.board.PossibleMove
 import janorschke.meyer.service.validator.BoardValidator
 import janorschke.meyer.service.validator.FieldValidator
@@ -12,16 +13,7 @@ import janorschke.meyer.service.validator.FieldValidator
 /**
  * Represents a chess piece
  */
-abstract class Piece(
-        /**
-         * Specifies piece color
-         */
-        val color: PieceColor,
-        /**
-         * Static piece informations
-         */
-        val pieceInfo: PieceInfo
-) {
+abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
     /**
      * @param board instance
      * @param currentPosition of the piece
@@ -38,8 +30,9 @@ abstract class Piece(
 
     /**
      * @param board instance
-     * @param ownPosition of the piece
+     * @param history instance
      * @param kingPosition of the opponent king
+     * @param ownPosition of the piece
      *
      * @return true, if the piece gives check to the opponent king
      */
@@ -56,6 +49,7 @@ abstract class Piece(
 
     /**
      * @param board instance
+     * @param history instance
      * @param currentPosition of the piece
      *
      * @return possible moves
@@ -67,6 +61,12 @@ abstract class Piece(
     ): MutableList<PossibleMove> {
         return possibleMoves(board, history, currentPosition, false)
     }
+
+    /**
+     * @param history instance
+     * @return `true`, if the [Piece] has been moved before
+     */
+    fun hasMoved(history: History) = history.getMoves().any { it.fromPiece == this }
 
     /**
      * @param board instance
@@ -82,10 +82,13 @@ abstract class Piece(
      * Add the possible move if it is a valid move to the possible moves list
      *
      * @param board instance
+     * @param history instance
      * @param currentPosition of the piece
      * @param possiblePosition of the piece
      * @param possibleMoves already added moves
      * @param disableCheckCheck disables the check is the king is in check
+     * @param isEnPassant indicates if the move is en passant
+     * @param castling information
      */
     protected fun addPossibleMove(
             board: Board,
@@ -94,18 +97,30 @@ abstract class Piece(
             possiblePosition: PiecePosition,
             possibleMoves: MutableList<PossibleMove>,
             disableCheckCheck: Boolean,
-            isEnPassant: Boolean = false
+            isEnPassant: Boolean = false,
+            castling: Castling? = null
     ) {
         if (disableCheckCheck) {
-            possibleMoves.add(board.createPossibleMove(currentPosition, possiblePosition, isEnPassant = isEnPassant))
+            board.createPossibleMove(
+                    fromPosition = currentPosition,
+                    toPosition = possiblePosition,
+                    isEnPassant = isEnPassant
+            ).let { possibleMoves.add(it) }
             return
         }
 
         Board(board).let { boardCopy ->
             History(history).let { historyCopy ->
-                boardCopy.createMove(currentPosition, possiblePosition, isEnPassant = isEnPassant).let { historyCopy.push(it) }
-                if (!BoardValidator.isKingInCheck(boardCopy, historyCopy, color))
-                    possibleMoves.add(board.createPossibleMove(currentPosition, possiblePosition, isEnPassant = isEnPassant))
+                val move = boardCopy.createMove(
+                        fromPosition = currentPosition,
+                        toPosition = possiblePosition,
+                        isEnPassant = isEnPassant,
+                        castling = castling
+                )
+                historyCopy.push(move)
+
+                if (BoardValidator.isKingInCheck(boardCopy, historyCopy, color)) return
+                possibleMoves.add(PossibleMove(move))
             }
         }
     }

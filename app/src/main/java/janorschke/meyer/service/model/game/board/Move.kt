@@ -13,8 +13,9 @@ class Move(
         fromPiece: Piece,
         beatenPiece: Piece?,
         isEnPassant: Boolean,
+        castling: Castling?,
         promotionTo: Piece?
-) : PossibleMove(fromPosition, toPosition, beatenPiecePosition, fromPiece, beatenPiece, isEnPassant, promotionTo) {
+) : PossibleMove(fromPosition, toPosition, beatenPiecePosition, fromPiece, beatenPiece, isEnPassant, castling, promotionTo) {
     constructor(fieldsAfterMoving: Array<Array<Piece?>>, possibleMove: PossibleMove) : this(
             fieldsAfterMoving,
             possibleMove.fromPosition,
@@ -23,6 +24,7 @@ class Move(
             possibleMove.fromPiece,
             possibleMove.beatenPiece,
             possibleMove.isEnPassant,
+            possibleMove.castling,
             possibleMove.promotionTo
     )
 }

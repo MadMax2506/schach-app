@@ -66,7 +66,7 @@ class Board {
 
     /**
      * @param position target
-     * @return piece on the target
+     * @return piece on the target position
      */
     fun getField(position: PiecePosition) = fields[position.row][position.col]
 
@@ -111,6 +111,7 @@ class Board {
             toPosition: PiecePosition,
             pawnReplaceWith: Piece? = null,
             isEnPassant: Boolean = false,
+            castling: Castling? = null,
     ): PossibleMove {
         val fromPiece = getField(fromPosition)!!
 
@@ -119,7 +120,6 @@ class Board {
             fromPiece as Pawn
             PiecePosition(toPosition.row - fromPiece.getMoveDirection(), toPosition.col)
         }
-
         val beatenPiece = getField(beatenPiecePosition)
 
         return PossibleMove(
@@ -129,6 +129,7 @@ class Board {
                 fromPiece,
                 beatenPiece,
                 isEnPassant,
+                castling,
                 pawnReplaceWith
         )
     }
@@ -136,23 +137,23 @@ class Board {
     /**
      * Moves a piece to another position
      *
-     * @param from source position
-     * @param to target position
+     * @param fromPosition source position
+     * @param toPosition target position
      * @param pawnReplaceWith piece which is used for the pawn promotion
      * @param isEnPassant boolean that (Default = false)
      * @return board move
      */
     fun createMove(
-            from: PiecePosition,
-            to: PiecePosition,
+            fromPosition: PiecePosition,
+            toPosition: PiecePosition,
             pawnReplaceWith: Piece? = null,
             isEnPassant: Boolean = false,
+            castling: Castling? = null,
     ): Move {
-        return createMove(createPossibleMove(from, to, pawnReplaceWith, isEnPassant))
+        return createMove(createPossibleMove(fromPosition, toPosition, pawnReplaceWith, isEnPassant, castling))
     }
 
     fun createMove(possibleMove: PossibleMove): Move {
-
         setField(possibleMove.fromPosition, null)
         setField(possibleMove.beatenPiecePosition, null)
 
@@ -162,6 +163,14 @@ class Board {
         } else {
             // normal move
             setField(possibleMove.toPosition, possibleMove.fromPiece)
+
+            // castling
+            val castling = possibleMove.castling
+            if (castling != null) {
+                // Move rook
+                setField(castling.rookCastlingTargetPosition, getField(castling.rookPosition))
+                setField(castling.rookPosition, null)
+            }
         }
         return Move(ArrayUtils.deepCopy(fields), possibleMove)
     }

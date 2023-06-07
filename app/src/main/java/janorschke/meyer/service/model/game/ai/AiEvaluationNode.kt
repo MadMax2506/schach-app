@@ -37,7 +37,7 @@ class AiEvaluationNode(val history: History, val move: Move?, private val aiColo
 
                     val valueAi = getPieceValue(boardCopy, aiColor)
                     val valueDiff = valueAi - getPieceValue(boardCopy, aiColor.opponent())
-                    
+
                     if (BoardValidator.isKingCheckmate(boardCopy, history, color.opponent())) return@let Int.MAX_VALUE
                     if (BoardValidator.isKingInCheck(boardCopy, history, color.opponent())) return@let Int.MAX_VALUE - 1
                     if (BoardValidator.isStalemate(boardCopy, history, color.opponent())) {
