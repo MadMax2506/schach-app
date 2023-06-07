@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import janorschke.meyer.R
@@ -283,19 +282,12 @@ class GameActivity : AppCompatActivity() {
                 playerInfoWhite.active.setImageResource(R.drawable.inactive)
                 playerInfoBlack.active.setImageResource(R.drawable.active)
 
-
-                if (timeMode != TimeMode.UNLIMITED) {
-                    countdownTimer!!.cancel()
-                    binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.dark_gray))
-                }
+                if (timeMode != TimeMode.UNLIMITED) countdownTimer!!.cancel()
             } else {
                 playerInfoWhite.active.setImageResource(R.drawable.active)
                 playerInfoBlack.active.setImageResource(R.drawable.inactive)
 
-                if (timeMode != TimeMode.UNLIMITED) {
-                    setCountdownTimer()
-                    binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
-                }
+                if (timeMode != TimeMode.UNLIMITED) setCountdownTimer()
             }
 
             Log.d(LOG_TAG, "Update activePlayer")
