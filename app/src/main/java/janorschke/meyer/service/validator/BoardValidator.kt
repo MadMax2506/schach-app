@@ -4,10 +4,10 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.model.game.piece.King
 import janorschke.meyer.service.model.game.piece.Pawn
 import janorschke.meyer.service.model.game.piece.Piece
-import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.utils.piece.PieceSequence
 import kotlin.math.abs
 
@@ -16,21 +16,29 @@ import kotlin.math.abs
  */
 object BoardValidator {
     private const val N_MOVE_REPETITIONS_FOR_STALEMATE = 10
+    private const val N_MOVES_FOR_THE_FIRST_MOVE = 2
+    private const val N_MOVES_FOR_THE_OPENING = 30
 
     /**
-     * Validates if a Pawn shall be promoted
-     *
-     * @param piece the piece that gets proved
-     * @param to the position where the piece is going
-     * @return true if a pawn reaches the end of the board, false otherwise
+     * @param history instance
+     * @return `true`, if the first move of both players is done
+     */
+    fun isFirstMove(history: History) = history.numberOfMoves <= N_MOVES_FOR_THE_FIRST_MOVE
+
+    /**
+     * @param history instance
+     * @return `true`, if the current game is in the opening
+     */
+    fun isOpening(history: History) = history.numberOfMoves <= N_MOVES_FOR_THE_OPENING
+
+    /**
+     * @param piece which is moving
+     * @param to [PiecePosition] of the [Piece]
+     * @return `true`, if the moved piece represents a pawn transformation
      */
     fun isPawnTransformation(piece: Piece, to: PiecePosition) = piece is Pawn && to.row == piece.color.opponent().borderRow
 
-    fun isEnPassantMove(
-            lastMove: Move?,
-            color: PieceColor,
-            currentPosition: PiecePosition
-    ): Boolean {
+    fun isEnPassantMove(lastMove: Move?, color: PieceColor, currentPosition: PiecePosition): Boolean {
         lastMove ?: return false
 
         val lastMovedPiece = lastMove.fromPiece
@@ -48,9 +56,8 @@ object BoardValidator {
 
     /**
      * @param board instance
-     * @param color of the king that can be in check
-     *
-     * @return true, if King is in check
+     * @param color of the [King] that can be in check
+     * @return `true`, if [King] is in check
      */
     fun isKingInCheck(board: Board, history: History, color: PieceColor): Boolean {
         val kingPosition = board.findKingPosition(color) ?: return true
@@ -61,24 +68,22 @@ object BoardValidator {
 
     /**
      * @param board instance
-     * @param color of the king that can be in checkmate
-     *
-     * @return true, if the king of the given color is in checkmate
+     * @param color of the [King] that can be in checkmate
+     * @return `true`, if the [King] of the given color is in checkmate
      */
     fun isKingCheckmate(board: Board, history: History, color: PieceColor): Boolean {
         if (!isKingInCheck(board, history, color)) return false
 
         // check if any piece can go somewhere, that is not checkmate
-        PieceSequence.allPiecesByColor(board, color)
-                .forEach {
-                    it.piece.possibleMoves(board, history, it.position).forEach { possibleMove ->
-                        Board(board).let { boardCopy ->
-                            boardCopy.createMove(possibleMove)
-                            // if King is not in check after this move, then it's not checkmate
-                            if (!isKingInCheck(boardCopy, history, color)) return false
-                        }
-                    }
+        for (indexedPiece in PieceSequence.allPiecesByColor(board, color)) {
+            for (move in indexedPiece.piece.possibleMoves(board, history, indexedPiece.position)) {
+                Board(board).let { boardCopy ->
+                    boardCopy.createMove(move)
+                    // if King is not in check after this move, then it's not checkmate
+                    if (!isKingInCheck(boardCopy, history, color)) return false
                 }
+            }
+        }
         return true
     }
 
@@ -86,8 +91,7 @@ object BoardValidator {
      * @param board instance
      * @param history to check the move-repetition
      * @param color of the player who has the next turn
-     *
-     * @return true, if the game with the rest pieces is stalemate
+     * @return `true`, if the current [Board] with the remaining [Piece]s is stalemate
      */
     fun isStalemate(board: Board, history: History, color: PieceColor): Boolean {
         if (isKingInCheck(board, history, color)) return false
@@ -98,8 +102,7 @@ object BoardValidator {
         // check if no possible move for the given color is left
         pieceSequence.map { it.piece.possibleMoves(board, history, it.position) }
                 .flatten()
-                .toList()
-                .isEmpty()
+                .none()
                 .let { isEmpty -> if (isEmpty) return true }
 
         // check if both player have enough pieces
@@ -134,11 +137,10 @@ object BoardValidator {
      */
     private fun hasColorRepeatedMoves(moveHistory: List<Move>, color: PieceColor): Boolean {
         val filteredHistory = moveHistory.filter { it.fromPiece.color == color }
-        filteredHistory.withIndex()
-                .forEach {
-                    if (it.index % 2 == 0 && filteredHistory[0] != it.value) return false
-                    else if (it.index % 2 == 1 && filteredHistory[1] != it.value) return false
-                }
+        for (indexedMove in filteredHistory.withIndex()) {
+            if (indexedMove.index % 2 == 0 && filteredHistory[0] != indexedMove.value) return false
+            else if (indexedMove.index % 2 == 1 && filteredHistory[1] != indexedMove.value) return false
+        }
         return true
     }
 }
