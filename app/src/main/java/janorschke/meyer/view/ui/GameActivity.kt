@@ -123,6 +123,7 @@ class GameActivity : AppCompatActivity() {
 
         if (timeMode != TimeMode.UNLIMITED) {
             remainingTime = timeMode.time
+            // TODO Umbau zu Stopwatch https://github.com/MadMax2506/android-wahlmodul-project/issues/96
             countdownTimer = object : CountDownTimer(remainingTime!!, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     remainingTime = millisUntilFinished
