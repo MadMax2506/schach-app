@@ -233,23 +233,38 @@ class GameActivity : AppCompatActivity() {
             when (status) {
                 GameStatus.CHECKMATE -> {
                     Log.d(LOG_TAG, "Checkmate")
-                    showGameOverDialogAndStopTimer(gameViewModel.activePlayer.value?.color, gameViewModel.playerWhite.value!!, gameViewModel.playerBlack.value!!)
+                    showGameOverDialogAndStopTimer(
+                            winningColor = gameViewModel.activePlayer.value?.color,
+                            playerWhite = gameViewModel.playerWhite.value!!,
+                            playerBlack = gameViewModel.playerBlack.value!!
+                    )
                 }
 
                 GameStatus.STALEMATE -> {
                     Log.d(LOG_TAG, "Stalemate")
-                    showGameOverDialogAndStopTimer(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!)
+                    showGameOverDialogAndStopTimer(
+                            playerWhite = gameViewModel.playerWhite.value!!,
+                            playerBlack = gameViewModel.playerBlack.value!!
+                    )
                 }
 
                 GameStatus.DRAW -> {
                     Log.d(LOG_TAG, "Draw voted")
-                    showGameOverDialogAndStopTimer(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!, endByVote = true)
+                    showGameOverDialogAndStopTimer(
+                            playerWhite = gameViewModel.playerWhite.value!!,
+                            playerBlack = gameViewModel.playerBlack.value!!,
+                            endByVote = true
+                    )
                 }
 
                 GameStatus.SURRENDERED -> {
-                    Log.d(LOG_TAG, "Draw voted")
-                    showGameOverDialogAndStopTimer(gameViewModel.activePlayer.value?.color?.opponent(), gameViewModel.playerWhite.value!!,
-                            gameViewModel.playerBlack.value!!, true)
+                    Log.d(LOG_TAG, "Surrendered")
+                    showGameOverDialogAndStopTimer(
+                            winningColor = gameViewModel.activePlayer.value?.color?.opponent(),
+                            playerWhite = gameViewModel.playerWhite.value!!,
+                            playerBlack = gameViewModel.playerBlack.value!!,
+                            endByVote = true
+                    )
                 }
 
                 GameStatus.TIME_OVER -> {
@@ -276,6 +291,14 @@ class GameActivity : AppCompatActivity() {
 
             Log.d(LOG_TAG, "Update activePlayer")
             boardAdapter.setPlayerColor(activePlayer.color)
+
+            if (player.color == PieceColor.WHITE) {
+                playerInfoWhite.active.setImageResource(R.drawable.active)
+                playerInfoBlack.active.setImageResource(R.drawable.inactive)
+            } else {
+                playerInfoWhite.active.setImageResource(R.drawable.inactive)
+                playerInfoBlack.active.setImageResource(R.drawable.active)
+            }
         }
 
         gameViewModel.selectedPosition.observe(this) { selectedPosition ->
