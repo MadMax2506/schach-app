@@ -223,23 +223,38 @@ class GameActivity : AppCompatActivity() {
             when (status) {
                 GameStatus.CHECKMATE -> {
                     Log.d(LOG_TAG, "Checkmate")
-                    showGameOverDialog(gameViewModel.activePlayer.value?.color, gameViewModel.playerWhite.value!!, gameViewModel.playerBlack.value!!)
+                    showGameOverDialog(
+                            winningColor = gameViewModel.activePlayer.value?.color,
+                            playerWhite = gameViewModel.playerWhite.value!!,
+                            playerBlack = gameViewModel.playerBlack.value!!
+                    )
                 }
 
                 GameStatus.STALEMATE -> {
                     Log.d(LOG_TAG, "Stalemate")
-                    showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!)
+                    showGameOverDialog(
+                            playerWhite = gameViewModel.playerWhite.value!!,
+                            playerBlack = gameViewModel.playerBlack.value!!
+                    )
                 }
 
                 GameStatus.DRAW -> {
                     Log.d(LOG_TAG, "Draw voted")
-                    showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!, endByVote = true)
+                    showGameOverDialog(
+                            playerWhite = gameViewModel.playerWhite.value!!,
+                            playerBlack = gameViewModel.playerBlack.value!!,
+                            endByVote = true
+                    )
                 }
 
                 GameStatus.SURRENDERED -> {
-                    Log.d(LOG_TAG, "Draw voted")
-                    showGameOverDialog(gameViewModel.activePlayer.value?.color?.opponent(), gameViewModel.playerWhite.value!!,
-                            gameViewModel.playerBlack.value!!, true)
+                    Log.d(LOG_TAG, "Surrendered")
+                    showGameOverDialog(
+                            winningColor = gameViewModel.activePlayer.value?.color?.opponent(),
+                            playerWhite = gameViewModel.playerWhite.value!!,
+                            playerBlack = gameViewModel.playerBlack.value!!,
+                            endByVote = true
+                    )
                 }
 
                 GameStatus.RUNNING -> {}
