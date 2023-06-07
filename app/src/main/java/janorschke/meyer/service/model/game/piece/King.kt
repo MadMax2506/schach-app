@@ -53,7 +53,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
      * @param disableCheckCheck disables the check is the king is in check
      * @param kingPosition
      * @param rookCol
-     * @param shortCastling
+     * @param isShortCastling
      */
     private fun castling(
             board: Board,
@@ -62,10 +62,10 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
             disableCheckCheck: Boolean,
             kingPosition: PiecePosition,
             rookCol: Int,
-            shortCastling: Boolean = true
+            isShortCastling: Boolean = true
     ) {
         val borderRow = color.borderRow
-        val castlingCol = if (shortCastling) SHORT_CASTLING_COL else LONG_CASTLING_COL
+        val castlingCol = if (isShortCastling) SHORT_CASTLING_COL else LONG_CASTLING_COL
 
         val rookPosition = PiecePosition(borderRow, rookCol)
         val rook = board.getField(rookPosition) ?: return
@@ -80,7 +80,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
                 possiblePosition = PiecePosition(borderRow, castlingCol),
                 possibleMoves = possibleMoves,
                 disableCheckCheck = disableCheckCheck,
-                castling = Castling(rookPosition, color, castlingCol)
+                castling = Castling(rookPosition, color, castlingCol, isShortCastling)
         )
     }
 
