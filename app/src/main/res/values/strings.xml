@@ -31,7 +31,7 @@
     <string name="piece_info_pawn" />
 
     <!-- game -->
-    <string name="default_player_name">Spieler 1</string>
+    <string name="default_player_name">Spieler</string>
 
     <!-- game-over dialog -->
     <string name="gameover_dialog_new_game">Neues Spiel</string>
