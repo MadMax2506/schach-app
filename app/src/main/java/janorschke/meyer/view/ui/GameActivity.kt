@@ -130,7 +130,7 @@ class GameActivity : AppCompatActivity() {
                 }
 
                 override fun onFinish() {
-                    binding.playerTwo!!.time.text = "Countdown abgelaufen!"
+                    binding.playerTwo!!.time.text = "---"
                     // TODO Dialog öffnen: https://github.com/MadMax2506/android-wahlmodul-project/issues/96
                 }
             }.start()
@@ -191,12 +191,13 @@ class GameActivity : AppCompatActivity() {
      * @param playerBlack
      * @see GameOverDialog.onCreateDialog
      */
-    private fun showGameOverDialog(
+    private fun showGameOverDialogAndStopTimer(
             winningColor: PieceColor? = null,
             playerWhite: Player,
             playerBlack: Player,
             endByVote: Boolean = false
     ) {
+        countdownTimer?.cancel()
         GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote, timeMode).show(supportFragmentManager, GAME_OVER_DIALOG_TAG)
     }
 
@@ -221,22 +222,22 @@ class GameActivity : AppCompatActivity() {
             when (status) {
                 GameStatus.CHECKMATE -> {
                     Log.d(LOG_TAG, "Checkmate")
-                    showGameOverDialog(gameViewModel.activePlayer.value?.color, gameViewModel.playerWhite.value!!, gameViewModel.playerBlack.value!!)
+                    showGameOverDialogAndStopTimer(gameViewModel.activePlayer.value?.color, gameViewModel.playerWhite.value!!, gameViewModel.playerBlack.value!!)
                 }
 
                 GameStatus.STALEMATE -> {
                     Log.d(LOG_TAG, "Stalemate")
-                    showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!)
+                    showGameOverDialogAndStopTimer(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!)
                 }
 
                 GameStatus.DRAW -> {
                     Log.d(LOG_TAG, "Draw voted")
-                    showGameOverDialog(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!, endByVote = true)
+                    showGameOverDialogAndStopTimer(playerWhite = gameViewModel.playerWhite.value!!, playerBlack = gameViewModel.playerBlack.value!!, endByVote = true)
                 }
 
                 GameStatus.SURRENDERED -> {
                     Log.d(LOG_TAG, "Draw voted")
-                    showGameOverDialog(gameViewModel.activePlayer.value?.color?.opponent(), gameViewModel.playerWhite.value!!,
+                    showGameOverDialogAndStopTimer(gameViewModel.activePlayer.value?.color?.opponent(), gameViewModel.playerWhite.value!!,
                             gameViewModel.playerBlack.value!!, true)
                 }
 
