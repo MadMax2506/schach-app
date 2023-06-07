@@ -125,26 +125,27 @@ class GameActivity : AppCompatActivity() {
 
         if (timeMode != TimeMode.UNLIMITED) {
             remainingTime = timeMode.time
-            // TODO Umbau zu Stopwatch https://github.com/MadMax2506/android-wahlmodul-project/issues/96
-            countdownTimer = object : CountDownTimer(remainingTime!!, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    remainingTime = millisUntilFinished
-                    val seconds = millisUntilFinished / 1000
-                    val minutes = seconds / 60
-                    val remainingSeconds = seconds % 60
-                    binding.playerTwo!!.time.text = String.format("%02d:%02d", minutes, remainingSeconds)
-                }
-
-                override fun onFinish() {
-                    gameViewModel.gameTimeOver()
-                }
-            }
-            countdownTimer!!.start()
-
         } else {
             binding.playerTwo!!.time.visibility = View.GONE
             countdownTimer = null
         }
+    }
+
+    private fun setCountdownTimer() {
+        countdownTimer = object : CountDownTimer(remainingTime!!, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                remainingTime = millisUntilFinished
+                val seconds = millisUntilFinished / 1000
+                val minutes = seconds / 60
+                val remainingSeconds = seconds % 60
+                binding.playerTwo!!.time.text = String.format("%02d:%02d", minutes, remainingSeconds)
+            }
+
+            override fun onFinish() {
+                remainingTime = 0
+                gameViewModel.gameTimeOver()
+            }
+        }.start()
     }
 
     /**
@@ -207,7 +208,7 @@ class GameActivity : AppCompatActivity() {
             endByVote: Boolean = false
     ) {
         countdownTimer?.cancel()
-        val endByTimeOver = (timeMode != TimeMode.UNLIMITED) && (remainingTime!! <= 999L)
+        val endByTimeOver = (timeMode != TimeMode.UNLIMITED) && (remainingTime!! == 0L)
         GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote, timeMode, endByTimeOver).show(supportFragmentManager, GAME_OVER_DIALOG_TAG)
     }
 
@@ -268,8 +269,7 @@ class GameActivity : AppCompatActivity() {
                     countdownTimer!!.cancel()
                     binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.gray))
                 } else {
-                    // TODO Time gets reset => should resume https://github.com/MadMax2506/android-wahlmodul-project/issues/96
-                    countdownTimer!!.start()
+                    setCountdownTimer()
                     binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
                 }
             }
