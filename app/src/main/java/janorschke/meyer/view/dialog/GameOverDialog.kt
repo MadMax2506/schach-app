@@ -94,10 +94,7 @@ class GameOverDialog : BaseDialog() {
             endByTimeOut -> {
                 return resources.getString(
                         R.string.gameover_dialog_text_timeout,
-                        resources.getString(
-                                if (winningColor == PieceColor.WHITE) playerWhite.textResource
-                                else playerBlack.textResource
-                        )
+                        if (winningColor == PieceColor.WHITE) playerWhite.name else playerBlack.name
                 )
             }
 
