@@ -26,8 +26,8 @@ import janorschke.meyer.service.utils.ArrayUtils
  */
 class GameViewModel(
         application: Application,
-        textResourceWhite: Int,
-        textResourceBlack: Int,
+        playerNameWhite: String,
+        playerNameBlack: String,
         aiLevelWhite: AiLevel?,
         aiLevelBlack: AiLevel?
 ) : AndroidViewModel(application) {
@@ -45,7 +45,7 @@ class GameViewModel(
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
     val pawnDifferenceBlack: MutableLiveData<Int> = MutableLiveData()
 
-    private val game = Game(textResourceWhite, textResourceBlack, aiLevelWhite, aiLevelBlack)
+    private val game = Game(playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
     private val aiRepository = AiRepositoryFactory(game).create()

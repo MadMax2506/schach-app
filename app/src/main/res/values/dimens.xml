@@ -21,4 +21,7 @@
 
     <!-- BottomBar -->
     <dimen name="bottom_bar_button_text_size">15sp</dimen>
+
+    <!-- settings -->
+    <dimen name="setting_bottom_button_size">150sp</dimen>
 </resources>

@@ -1,15 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <TextView
-        android:layout_marginTop="30sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30sp"
         android:text="@string/settings"
         android:textSize="@dimen/h1" />
+
+
+    <EditText
+        android:id="@+id/edittext_settings_player_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16sp"
+        android:hint="@string/default_player_name"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        android:maxLength="12"
+        android:padding="12sp"
+        android:textSize="@dimen/button_text_size"
+        android:theme="@style/MyTheme.Button"
+        tools:ignore="LabelFor" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_settings_save"
+            android:layout_width="@dimen/setting_bottom_button_size"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="16sp"
+            android:layout_marginBottom="32sp"
+            android:padding="12sp"
+            android:text="@string/save"
+            android:textSize="@dimen/button_text_size"
+            android:theme="@style/MyTheme.Button" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_settings_cancel"
+            android:layout_width="@dimen/setting_bottom_button_size"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="16sp"
+            android:layout_marginBottom="32sp"
+            android:padding="12sp"
+            android:text="@string/cancel"
+            android:textSize="@dimen/button_text_size"
+            android:theme="@style/MyTheme.Button" />
+    </RelativeLayout>
 
 </LinearLayout>
