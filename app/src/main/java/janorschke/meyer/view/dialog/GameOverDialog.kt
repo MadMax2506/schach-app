@@ -74,20 +74,20 @@ class GameOverDialog : BaseDialog() {
             playerBlack: Player,
             endByVote: Boolean
     ): String {
-        when {
-            endByVote && winningColor == null -> return resources.getString(R.string.gameover_dialog_text_draw_voted)
+        return when {
+            endByVote && winningColor == null -> resources.getString(R.string.gameover_dialog_text_draw_voted)
 
             endByVote && winningColor != null -> {
-                return resources.getString(
+                resources.getString(
                         R.string.gameover_dialog_text_surrender,
                         if (winningColor == PieceColor.WHITE) playerWhite.name else playerBlack.name
                 )
             }
 
-            winningColor == null -> return resources.getString(R.string.gameover_dialog_text_stalemate)
+            winningColor == null -> resources.getString(R.string.gameover_dialog_text_stalemate)
 
             else -> {
-                return resources.getString(
+                resources.getString(
                         R.string.gameover_dialog_text_win,
                         if (winningColor == PieceColor.WHITE) playerWhite.name else playerBlack.name
                 )

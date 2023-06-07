@@ -4,6 +4,8 @@
     <dimen name="button_text_size">20sp</dimen>
     <dimen name="button_horizontal_margin">50sp</dimen>
 
+    <dimen name="activity_indicator">20sp</dimen>
+    <dimen name="player_name_margin_y">10sp</dimen>
     <dimen name="beaten_pieces_list_width">40sp</dimen>
 
     <dimen name="pawn_difference_margin_y">10sp</dimen>
