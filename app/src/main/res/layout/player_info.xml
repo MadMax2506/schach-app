@@ -11,20 +11,29 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
-        <TextView
-            android:id="@+id/name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:textAlignment="center"
-            android:textSize="@dimen/h1"
-            tools:ignore="RelativeOverlap" />
+            tools:ignore="RelativeOverlap">
 
-        <ImageView
-            android:id="@+id/active"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/inactive" />
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_marginHorizontal="@dimen/player_name_margin_y"
+                android:textSize="@dimen/h1" />
+
+            <ImageView
+                android:id="@+id/active"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:src="@drawable/inactive" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/time"
