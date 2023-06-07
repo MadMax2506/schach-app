@@ -135,7 +135,8 @@ class GameActivity : AppCompatActivity() {
                 override fun onFinish() {
                     gameViewModel.gameTimeOver()
                 }
-            }.start()
+            }
+            countdownTimer!!.start()
 
         } else {
             binding.playerTwo!!.time.visibility = View.GONE
@@ -261,6 +262,7 @@ class GameActivity : AppCompatActivity() {
                     countdownTimer!!.cancel()
                     binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.gray))
                 } else {
+                    // TODO Time gets reset => should resume https://github.com/MadMax2506/android-wahlmodul-project/issues/96
                     countdownTimer!!.start()
                     binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
                 }
