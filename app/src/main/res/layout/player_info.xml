@@ -20,6 +20,12 @@
             android:textSize="@dimen/h1"
             tools:ignore="RelativeOverlap" />
 
+        <ImageView
+            android:id="@+id/active"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/inactive" />
+
         <TextView
             android:id="@+id/time"
             android:layout_width="70sp"
