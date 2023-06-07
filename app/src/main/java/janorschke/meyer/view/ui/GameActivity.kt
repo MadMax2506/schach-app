@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import janorschke.meyer.R
@@ -46,6 +47,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var beatenPiecesByBlackAdapter: BeatenPiecesAdapter
     private lateinit var gameViewModel: GameViewModel
     private lateinit var timeMode: TimeMode
+    private var countdownTimer: CountDownTimer? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,8 +121,7 @@ class GameActivity : AppCompatActivity() {
         binding.playerOne!!.time.visibility = View.GONE
 
         if (timeMode != TimeMode.UNLIMITED) {
-            // TODO pausieren, wenn KI am Zug ist: https://github.com/MadMax2506/android-wahlmodul-project/issues/96
-            object : CountDownTimer(timeMode.time, 1000) {
+            countdownTimer = object : CountDownTimer(timeMode.time, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     val seconds = millisUntilFinished / 1000
                     val minutes = seconds / 60
@@ -133,8 +134,10 @@ class GameActivity : AppCompatActivity() {
                     // TODO Dialog öffnen: https://github.com/MadMax2506/android-wahlmodul-project/issues/96
                 }
             }.start()
+
         } else {
             binding.playerTwo!!.time.visibility = View.GONE
+            countdownTimer = null
         }
     }
 
@@ -237,15 +240,27 @@ class GameActivity : AppCompatActivity() {
                             gameViewModel.playerBlack.value!!, true)
                 }
 
+                // TODO TimeOver https://github.com/MadMax2506/android-wahlmodul-project/issues/96
+
                 GameStatus.RUNNING -> {}
 
-                else -> { throw IllegalArgumentException("Invalid status")}
+                else -> throw IllegalArgumentException("Invalid status")
             }
         }
 
-        gameViewModel.activePlayer.observe(this) { player ->
-            Log.d(LOG_TAG, "Update player")
-            boardAdapter.setPlayerColor(player.color)
+        gameViewModel.activePlayer.observe(this) { activePlayer ->
+            if (timeMode != TimeMode.UNLIMITED) {
+                if (activePlayer.color == PieceColor.BLACK) {
+                    countdownTimer!!.cancel()
+                    binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.gray))
+                } else {
+                    countdownTimer!!.start()
+                    binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
+                }
+            }
+
+            Log.d(LOG_TAG, "Update activePlayer")
+            boardAdapter.setPlayerColor(activePlayer.color)
         }
 
         gameViewModel.selectedPosition.observe(this) { selectedPosition ->
