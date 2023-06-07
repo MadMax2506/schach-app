@@ -10,10 +10,18 @@ import janorschke.meyer.service.model.game.board.PossibleMove
 import janorschke.meyer.service.model.game.piece.lineMoving.Queen
 import janorschke.meyer.service.repository.ai.AiRepository
 import janorschke.meyer.service.validator.BoardValidator
+import janorschke.meyer.viewModel.GameViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val LOG_TAG = "BoardRepository"
 
 class BoardRepository(
+        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/99
+        private val gameViewModel: GameViewModel,
         private val board: Board,
         private val history: History,
         private val game: Game,
@@ -31,6 +39,7 @@ class BoardRepository(
      * @param toPosition the target position to move the chess piece to
      * @param isAiMove if true, the move was produced by an ai
      */
+    @OptIn(DelicateCoroutinesApi::class)
     private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition, isAiMove: Boolean) {
         val piece = board.getField(fromPosition)
         val possibleMoves = piece?.possibleMoves(board, history, fromPosition) ?: emptyList()
@@ -48,8 +57,11 @@ class BoardRepository(
         // Check if game is finished or move was done by the ai
         if (gameRepository.checkEndOfGame(piece!!) || isAiMove) return
 
-        // Calculate the next move from the ai
-        aiRepository.calculateNextMove(board, history).let { move -> tryToMovePiece(move.fromPosition, move.toPosition, true) }
+        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/99
+        GlobalScope.launch {
+            aiRepository.calculateNextMove(board, history).let { move -> tryToMovePiece(move.fromPosition, move.toPosition, true) }
+            withContext(Dispatchers.Main) { gameViewModel.aiMoved() }
+        }
     }
 
     /**
