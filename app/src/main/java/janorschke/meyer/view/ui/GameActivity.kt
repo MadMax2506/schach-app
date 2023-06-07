@@ -279,11 +279,20 @@ class GameActivity : AppCompatActivity() {
         }
 
         gameViewModel.activePlayer.observe(this) { activePlayer ->
-            if (timeMode != TimeMode.UNLIMITED) {
-                if (activePlayer.color == PieceColor.BLACK) {
+            if (activePlayer.color == PieceColor.BLACK) {
+                playerInfoWhite.active.setImageResource(R.drawable.inactive)
+                playerInfoBlack.active.setImageResource(R.drawable.active)
+
+
+                if (timeMode != TimeMode.UNLIMITED) {
                     countdownTimer!!.cancel()
-                    binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.gray))
-                } else {
+                    binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.dark_gray))
+                }
+            } else {
+                playerInfoWhite.active.setImageResource(R.drawable.active)
+                playerInfoBlack.active.setImageResource(R.drawable.inactive)
+
+                if (timeMode != TimeMode.UNLIMITED) {
                     setCountdownTimer()
                     binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
                 }
@@ -291,14 +300,6 @@ class GameActivity : AppCompatActivity() {
 
             Log.d(LOG_TAG, "Update activePlayer")
             boardAdapter.setPlayerColor(activePlayer.color)
-
-            if (player.color == PieceColor.WHITE) {
-                playerInfoWhite.active.setImageResource(R.drawable.active)
-                playerInfoBlack.active.setImageResource(R.drawable.inactive)
-            } else {
-                playerInfoWhite.active.setImageResource(R.drawable.inactive)
-                playerInfoBlack.active.setImageResource(R.drawable.active)
-            }
         }
 
         gameViewModel.selectedPosition.observe(this) { selectedPosition ->
