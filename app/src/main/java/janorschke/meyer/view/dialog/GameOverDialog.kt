@@ -85,10 +85,7 @@ class GameOverDialog : BaseDialog() {
             endByVote && winningColor != null -> {
                 return resources.getString(
                         R.string.gameover_dialog_text_surrender,
-                        resources.getString(
-                                if (winningColor == PieceColor.WHITE) playerWhite.textResource
-                                else playerBlack.textResource
-                        )
+                        if (winningColor == PieceColor.WHITE) playerWhite.name else playerBlack.name
                 )
             }
 
@@ -107,10 +104,7 @@ class GameOverDialog : BaseDialog() {
             else -> {
                 return resources.getString(
                         R.string.gameover_dialog_text_win,
-                        resources.getString(
-                                if (winningColor == PieceColor.WHITE) playerWhite.textResource
-                                else playerBlack.textResource
-                        )
+                        if (winningColor == PieceColor.WHITE) playerWhite.name else playerBlack.name
                 )
             }
         }
