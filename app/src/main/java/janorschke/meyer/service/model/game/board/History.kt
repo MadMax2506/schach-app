@@ -1,6 +1,7 @@
 package janorschke.meyer.service.model.game.board
 
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.piece.Piece
 
 /**

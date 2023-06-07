@@ -6,7 +6,7 @@ import janorschke.meyer.service.model.game.ai.AiEvaluationNode
 import janorschke.meyer.service.model.game.ai.AiEvaluationNodeFactory
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.piece.King
 import janorschke.meyer.service.model.game.piece.Knight
 import janorschke.meyer.service.model.game.piece.Pawn

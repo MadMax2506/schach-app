@@ -5,7 +5,7 @@ import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.player.PlayerFactory
 import janorschke.meyer.service.model.game.board.PiecePosition
-import janorschke.meyer.service.model.game.board.PossibleMove
+import janorschke.meyer.service.model.game.board.move.PossibleMove
 
 class Game(playerNameWhite: String, playerNameBlack: String, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) {
 

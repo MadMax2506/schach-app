@@ -9,9 +9,9 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.board.PiecePosition
-import janorschke.meyer.service.model.game.board.PossibleMove
+import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.service.repository.BoardRepository

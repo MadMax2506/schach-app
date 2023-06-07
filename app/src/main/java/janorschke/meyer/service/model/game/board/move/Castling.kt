@@ -1,4 +1,4 @@
-package janorschke.meyer.service.model.game.board
+package janorschke.meyer.service.model.game.board.move
 
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.PiecePosition

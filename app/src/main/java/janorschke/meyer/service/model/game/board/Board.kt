@@ -1,6 +1,9 @@
 package janorschke.meyer.service.model.game.board
 
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.service.model.game.board.move.Castling
+import janorschke.meyer.service.model.game.board.move.Move
+import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.King
 import janorschke.meyer.service.model.game.piece.Knight
 import janorschke.meyer.service.model.game.piece.Pawn

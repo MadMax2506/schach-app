@@ -12,7 +12,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.board.PiecePosition
-import janorschke.meyer.service.model.game.board.PossibleMove
+import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.utils.piece.PieceDrawables
 import janorschke.meyer.view.listener.GameFieldOnClickListener
 import janorschke.meyer.viewModel.GameViewModel
