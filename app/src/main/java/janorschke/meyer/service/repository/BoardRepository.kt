@@ -10,6 +10,7 @@ import janorschke.meyer.service.model.game.board.PossibleMove
 import janorschke.meyer.service.model.game.piece.lineMoving.Queen
 import janorschke.meyer.service.repository.ai.AiRepository
 import janorschke.meyer.service.validator.BoardValidator
+import janorschke.meyer.view.dialog.PromotionDialog
 import janorschke.meyer.viewModel.GameViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private const val LOG_TAG = "BoardRepository"
+private const val PROMOTION_DIALOG_TAG = "PromotionDialog"
 
 class BoardRepository(
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/99
@@ -97,6 +99,8 @@ class BoardRepository(
         board.getField(possibleMove.fromPosition)!!.let { piece ->
             if (BoardValidator.isPawnTransformation(piece, possibleMove.toPosition)) {
                 // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/49
+                //PromotionDialog.newInstance().show(supportFragmentManager, PROMOTION_DIALOG_TAG)
+
                 return board.createMove(possibleMove.fromPosition, possibleMove.toPosition, Queen(piece.color), possibleMove.isEnPassant)
             } else {
                 return board.createMove(possibleMove)

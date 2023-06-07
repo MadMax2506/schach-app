@@ -7,6 +7,6 @@
 
     <!-- Dialog -->
     <dimen name="dialog_button_text_size">12sp</dimen>
-    <dimen name="dialog_button_width">160sp</dimen>
-    <dimen name="dialog_button_height">50sp</dimen>
+    <dimen name="dialog_game_over_button_width">160sp</dimen>
+    <dimen name="dialog_game_over_button_height">50sp</dimen>
 </resources>

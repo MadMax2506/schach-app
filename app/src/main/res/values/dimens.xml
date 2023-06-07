@@ -18,8 +18,14 @@
 
     <!-- Dialog -->
     <dimen name="dialog_button_text_size">15sp</dimen>
-    <dimen name="dialog_button_width">180sp</dimen>
-    <dimen name="dialog_button_height">55sp</dimen>
+
+    <!-- Dialog GameOver -->
+    <dimen name="dialog_game_over_button_width">180sp</dimen>
+    <dimen name="dialog_game_over_button_height">55sp</dimen>
+
+    <!-- Dialog Promotion -->
+    <dimen name="dialog_promotion_button_width">110sp</dimen>
+    <dimen name="dialog_promotion_button_height">110sp</dimen>
 
     <!-- BottomBar -->
     <dimen name="bottom_bar_button_text_size">15sp</dimen>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300sp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="24sp"
+    android:theme="@style/MyTheme.Dialog">
+
+    <TextView
+        android:id="@+id/text_game_over_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24sp"
+        android:background="@color/beige"
+        android:text="@string/dialog_promotion_title"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/h2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_knight_promotion"
+            android:layout_width="@dimen/dialog_promotion_button_width"
+            android:layout_height="@dimen/dialog_promotion_button_height"
+            android:layout_margin="8sp"
+            android:background="@drawable/chess_knight"
+            android:textSize="@dimen/dialog_button_text_size"
+            android:theme="@style/MyTheme.Button" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_bishop_promotion"
+            android:layout_width="@dimen/dialog_promotion_button_width"
+            android:layout_height="@dimen/dialog_promotion_button_height"
+            android:layout_margin="8sp"
+            android:background="@drawable/chess_bishop"
+            android:textSize="@dimen/dialog_button_text_size"
+            android:theme="@style/MyTheme.Button" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_rook_promotion"
+            android:layout_width="@dimen/dialog_promotion_button_width"
+            android:layout_height="@dimen/dialog_promotion_button_height"
+            android:layout_margin="8sp"
+            android:background="@drawable/chess_rook"
+            android:textSize="@dimen/dialog_button_text_size"
+            android:theme="@style/MyTheme.Button" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_queen_promotion"
+            android:layout_width="@dimen/dialog_promotion_button_width"
+            android:layout_height="@dimen/dialog_promotion_button_height"
+            android:layout_margin="8sp"
+            android:background="@drawable/chess_queen"
+            android:textSize="@dimen/dialog_button_text_size"
+            android:theme="@style/MyTheme.Button" />
+    </LinearLayout>
+</LinearLayout>
