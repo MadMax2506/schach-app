@@ -1,14 +1,14 @@
 package janorschke.meyer.view.ui
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import janorschke.meyer.R
 import janorschke.meyer.databinding.ActivitySettingsBinding
 import janorschke.meyer.enums.SettingKeys
+import janorschke.meyer.service.utils.SettingsManager
 
 private const val LOG_TAG = "SettingsActivity"
 
@@ -26,36 +26,30 @@ class SettingsActivity : AppCompatActivity() {
 
         playerNameEditText = binding.edittextSettingsPlayerName
 
-        binding.buttonSettingsSave?.setOnClickListener { saveSettings() }
+        binding.buttonSettingsSave?.setOnClickListener { saveAndExit() }
         binding.buttonSettingsCancel?.setOnClickListener { finish() }
 
         loadSettings()
     }
 
     /**
-     * Loads the Settings from the SharedPreferences and displays them in the UI
+     * Gets the Settings from the SettingsManager and displays them in the UI
      */
     private fun loadSettings() {
-        val sharedPreferences: SharedPreferences = getSharedPreferences(SettingKeys.SETTINGS_SHARED_PREF_TAG.name, Context.MODE_PRIVATE)
-
-        // Get the player name from the SharedPreferences and display it in the EditText
-        val playerName: String? = sharedPreferences.getString(SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name, "")
+        val playerName: String? = SettingsManager.loadSettings(applicationContext, SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name)
         playerNameEditText?.setText(playerName)
+
         Log.d(LOG_TAG, "Settings loaded")
     }
 
     /**
-     * Saves the Settings via SharedPreferences and returns back to the calling Activity
+     * Saves the Settings through the SettingsManager and returns back to the calling Activity
      */
-    private fun saveSettings() {
-        getSharedPreferences(SettingKeys.SETTINGS_SHARED_PREF_TAG.name, Context.MODE_PRIVATE).edit().let { editor ->
-            val newPlayerName: String = playerNameEditText?.text.toString().trim()
+    private fun saveAndExit() {
+        val newPlayerName: String = playerNameEditText?.text.toString().trim()
+        SettingsManager.saveSettings(applicationContext, SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name, newPlayerName)
 
-            // Save the changes in the SharedPreferences
-            editor.putString(SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name, newPlayerName)
-            editor.apply()
-        }
-        Toast.makeText(applicationContext, "Settings saved", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, getString(R.string.saved_settings), Toast.LENGTH_SHORT).show()
 
         Log.d(LOG_TAG, "Settings saved")
         finish()

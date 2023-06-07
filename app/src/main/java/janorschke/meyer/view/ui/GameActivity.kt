@@ -1,7 +1,6 @@
 package janorschke.meyer.view.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -21,6 +20,7 @@ import janorschke.meyer.enums.SettingKeys
 import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.enums.TransferKeys
 import janorschke.meyer.service.model.game.player.Player
+import janorschke.meyer.service.utils.SettingsManager
 import janorschke.meyer.view.adapter.BoardAdapter
 import janorschke.meyer.view.adapter.MoveHistoryAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPieceDecorator
@@ -150,9 +150,7 @@ class GameActivity : AppCompatActivity() {
             if (aiLevelStr == null) throw IllegalArgumentException("Wrong ai level")
 
             enumValueOf<AiLevel>(aiLevelStr).let {
-                val sharedPreferences = getSharedPreferences(SettingKeys.SETTINGS_SHARED_PREF_TAG.name, Context.MODE_PRIVATE)
-
-                val playerNameWhite = sharedPreferences.getString(SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name, "")
+                val playerNameWhite = SettingsManager.loadSettings(applicationContext, SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name)
                         ?.takeUnless(String::isEmpty)
                         ?: getString(R.string.default_player_name)
 
@@ -246,7 +244,9 @@ class GameActivity : AppCompatActivity() {
 
                 GameStatus.RUNNING -> {}
 
-                else -> { throw IllegalArgumentException("Invalid status")}
+                else -> {
+                    throw IllegalArgumentException("Invalid status")
+                }
             }
         }
 
