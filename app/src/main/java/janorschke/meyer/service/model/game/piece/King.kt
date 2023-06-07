@@ -34,6 +34,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
         }
 
         if (hasMoved(history)) return possibleMoves
+        if (BoardValidator.isKingInCheck(board, history, color)) return possibleMoves
 
         // long castling
         castling(board, history, possibleMoves, disableCheckCheck, currentPosition, 0, false)
@@ -70,8 +71,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
         val rookPosition = PiecePosition(borderRow, rookCol)
         val rook = board.getField(rookPosition) ?: return
 
-        if (rook.hasMoved(history)) return
-        if (!isCastlingPossible(board, history, kingPosition, rookPosition)) return
+        if (rook.hasMoved(history) || !isCastlingPossible(board, history, kingPosition, rookPosition)) return
 
         addPossibleMove(
                 board = board,
