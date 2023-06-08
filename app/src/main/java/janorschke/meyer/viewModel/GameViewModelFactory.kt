@@ -11,9 +11,10 @@ class GameViewModelFactory(
         private val playerNameWhite: String,
         private val playerNameBlack: String,
         private val aiLevelWhite: AiLevel?,
-        private val aiLevelBlack: AiLevel?
+        private val aiLevelBlack: AiLevel?,
+        private val time: Long?
 ) : ViewModelProvider.AndroidViewModelFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        return GameViewModel(application, playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack) as T
+        return GameViewModel(application, playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack, time) as T
     }
 }

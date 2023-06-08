@@ -29,7 +29,8 @@ class GameViewModel(
         playerNameWhite: String,
         playerNameBlack: String,
         aiLevelWhite: AiLevel?,
-        aiLevelBlack: AiLevel?
+        aiLevelBlack: AiLevel?,
+        time: Long?
 ) : AndroidViewModel(application) {
     // live data for the view
     val activePlayer: MutableLiveData<Player> = MutableLiveData()
@@ -45,7 +46,7 @@ class GameViewModel(
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
     val pawnDifferenceBlack: MutableLiveData<Int> = MutableLiveData()
 
-    private val game = Game(playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack)
+    private val game = Game(playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack, time)
     private val board = Board()
     private val history = History()
     private val aiRepository = AiRepositoryFactory(game).create()
@@ -78,6 +79,16 @@ class GameViewModel(
         // TODO ki draw analysieren und dann entscheiden ob angenommen wird oder nicht
         //  https://github.com/users/MadMax2506/projects/19/views/1?pane=issue&itemId=29566739
         game.setStatus(GameStatus.DRAW)
+        setValues()
+    }
+
+    fun setCountdownTimer() {
+        game.setCountdownTimer()
+        setValues()
+    }
+
+    fun stopCountdownTimer() {
+        game.stopCountdownTimer()
         setValues()
     }
 

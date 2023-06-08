@@ -1,5 +1,6 @@
 package janorschke.meyer.service.model.game
 
+import android.os.CountDownTimer
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
@@ -7,10 +8,14 @@ import janorschke.meyer.service.model.game.player.PlayerFactory
 import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.model.game.board.PossibleMove
 
-class Game(playerNameWhite: String, playerNameBlack: String, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) {
+class Game(
+        playerNameWhite: String, playerNameBlack: String,
+        aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?,
+        time: Long?
+) {
 
-    val playerWhite = PlayerFactory(PieceColor.WHITE, playerNameWhite, aiLevelWhite).create()
-    val playerBlack = PlayerFactory(PieceColor.BLACK, playerNameBlack, aiLevelBlack).create()
+    val playerWhite = PlayerFactory(PieceColor.WHITE, playerNameWhite, aiLevelWhite, time).create()
+    val playerBlack = PlayerFactory(PieceColor.BLACK, playerNameBlack, aiLevelBlack, time).create()
 
     /**
      * Color of the player who is moving
@@ -33,12 +38,48 @@ class Game(playerNameWhite: String, playerNameBlack: String, aiLevelWhite: AiLev
     private var possibleMoves: MutableList<PossibleMove> = mutableListOf()
 
     /**
+     * CountdownTimer for the game
+     */
+    private var countdownTimer: CountDownTimer? = null
+    /**
      * Sets color of the current player
      *
      * @param color of the player
      */
     fun setColor(color: PieceColor) {
         this.color = color
+    }
+
+    /**
+     * Sets the Timer from the remainingTime
+     */
+    fun setCountdownTimer() {
+        val activePlayer = getPlayer()
+        if(activePlayer.remainingTime == null) return
+        countdownTimer = object : CountDownTimer(activePlayer.remainingTime!!, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                activePlayer.remainingTime = millisUntilFinished
+                val seconds = millisUntilFinished / 1000
+                val minutes = seconds / 60
+                val remainingSeconds = seconds % 60
+                // TODO Zeit anzeigen https://github.com/users/MadMax2506/projects/19/views/1?pane=issue&itemId=29217573
+//                binding.playerTwo!!.time.text = String.format("%02d:%02d", minutes, remainingSeconds)
+            }
+
+            override fun onFinish() {
+                activePlayer.remainingTime = 0
+                // TODO Dialog anzeigen https://github.com/users/MadMax2506/projects/19/views/1?pane=issue&itemId=29217573
+                //  irgendwie die Beziehung jetzt falschrum...
+//                gameViewModel.gameTimeOver()
+            }
+        }.start()
+    }
+
+    /**
+     * Stops the CountdownTimer if active
+     */
+    fun stopCountdownTimer() {
+        this.countdownTimer?.cancel()
     }
 
     /**

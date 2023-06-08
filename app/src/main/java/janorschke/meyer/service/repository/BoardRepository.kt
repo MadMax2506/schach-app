@@ -57,7 +57,7 @@ class BoardRepository(
         // Check if game is finished or
         if (gameRepository.checkEndOfGame(piece!!)) return
 
-        game.setColor(game.getColor().opponent())
+        gameRepository.handleMove()
 
         // move was done by the ai
         if (isAiMove) return
