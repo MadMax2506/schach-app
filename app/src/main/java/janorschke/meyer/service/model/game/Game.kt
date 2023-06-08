@@ -3,23 +3,16 @@ package janorschke.meyer.service.model.game
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
-import janorschke.meyer.service.model.game.player.PlayerFactory
 import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.model.game.board.PossibleMove
+import janorschke.meyer.service.model.game.player.AiPlayer
+import janorschke.meyer.service.model.game.player.PlayerFactory
 
 class Game(playerNameWhite: String, playerNameBlack: String, aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?) {
-
     val playerWhite = PlayerFactory(PieceColor.WHITE, playerNameWhite, aiLevelWhite).create()
     val playerBlack = PlayerFactory(PieceColor.BLACK, playerNameBlack, aiLevelBlack).create()
 
-    /**
-     * Color of the player who is moving
-     */
-    private var color: PieceColor = PieceColor.WHITE
-
-    /**
-     * Current status of the game
-     */
+    private var activeColor: PieceColor = PieceColor.WHITE
     private var status: GameStatus = GameStatus.RUNNING
 
     /**
@@ -32,13 +25,14 @@ class Game(playerNameWhite: String, playerNameBlack: String, aiLevelWhite: AiLev
      */
     private var possibleMoves: MutableList<PossibleMove> = mutableListOf()
 
+    val activePlayer get() = if (activeColor == PieceColor.WHITE) playerWhite else playerBlack
+    val aiPlayer get() = if (playerWhite is AiPlayer) playerWhite else playerBlack as AiPlayer
+
     /**
-     * Sets color of the current player
-     *
-     * @param color of the player
+     * Set the next player to move pieces
      */
-    fun setColor(color: PieceColor) {
-        this.color = color
+    fun setNextPlayer() {
+        activeColor = activeColor.opponent()
     }
 
     /**
@@ -61,9 +55,7 @@ class Game(playerNameWhite: String, playerNameBlack: String, aiLevelWhite: AiLev
         this.possibleMoves = possibleMoves
     }
 
-    fun getPlayer() = if (color == PieceColor.WHITE) playerWhite else playerBlack
-
-    fun getColor() = color
+    fun getActiveColor() = activeColor
 
     fun getStatus() = status
 
