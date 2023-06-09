@@ -63,7 +63,6 @@ object BoardValidator {
         val kingPosition = board.findKingPosition(color) ?: return true
 
         return PieceSequence.allPiecesByColor(board, color.opponent())
-                .filter { it.piece !is King }
                 .any { it.piece.givesOpponentKingCheck(board, history, kingPosition, it.position) }
     }
 
