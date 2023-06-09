@@ -7,10 +7,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import janorschke.meyer.R
 import janorschke.meyer.viewModel.GameViewModel
 
-class GameVoteDrawOnClickListener(private val activity: Activity, private val gameViewModel: GameViewModel) : OnClickListener {
-    override fun onClick(v: View?) {
-        showConfirmationDialog()
-    }
+class GameVoteDrawOnClickListener(
+        private val activity: Activity,
+        private val gameViewModel: GameViewModel
+) : OnClickListener {
+    override fun onClick(v: View?) = showConfirmationDialog()
 
     private fun showConfirmationDialog() {
         MaterialAlertDialogBuilder(activity, R.style.MyTheme_Dialog)
