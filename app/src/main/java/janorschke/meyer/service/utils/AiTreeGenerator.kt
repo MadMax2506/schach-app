@@ -91,9 +91,8 @@ object AiTreeGenerator {
             aiColor: PieceColor
     ): AiEvaluationNode {
         return when {
-            // TODO Rochade bevorzugen: https://github.com/MadMax2506/android-wahlmodul-project/issues/115
-            // priority = 3
             // Castling
+            move.castling != null -> factory.create(3)
 
             // Move the king
             move.from.requiredPiece is King -> factory.create(-3)
