@@ -57,7 +57,7 @@ class BoardRepository(
         // Check if game is finished or
         if (gameRepository.checkEndOfGame(piece!!)) return
 
-        gameRepository.handleMove()
+        game.setNextPlayer()
 
         // move was done by the ai
         if (isAiMove) return

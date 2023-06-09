@@ -48,11 +48,4 @@ class GameRepository(private val board: Board, private val history: History, pri
         }
         return false
     }
-
-    /**
-     * changes the color of the player
-     */
-    fun handleMove() {
-        game.setColor(game.getColor().opponent())
-    }
 }
