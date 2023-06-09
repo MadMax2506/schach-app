@@ -4,7 +4,7 @@ import android.util.Log
 import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.lineMoving.Queen
@@ -28,7 +28,7 @@ class BoardRepository(
         private val gameRepository: GameRepository,
         private val aiRepository: AiRepository
 ) {
-    fun tryToMovePiece(position: PiecePosition) {
+    fun tryToMovePiece(position: Position) {
         val possibleMove = game.getPossibleMoves().firstOrNull { it.to.position == position }
         tryToMovePiece(possibleMove, false)
     }

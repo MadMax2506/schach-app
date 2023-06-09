@@ -4,7 +4,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.Castling
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.validator.BoardValidator
@@ -19,7 +19,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
     override fun possibleMoves(
             board: Board,
             history: History,
-            currentPosition: PiecePosition,
+            currentPosition: Position,
             disableCheckCheck: Boolean
     ): MutableList<PossibleMove> {
         val possibleMoves = mutableListOf<PossibleMove>()
@@ -27,7 +27,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
         // normal move
         for (row in -1..1) {
             for (col in -1..1) {
-                val possiblePosition = PiecePosition(currentPosition.row + row, currentPosition.col + col)
+                val possiblePosition = Position(currentPosition.row + row, currentPosition.col + col)
                 if (isFieldUnavailable(board, possiblePosition)) continue
                 addPossibleMove(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)
             }
@@ -61,14 +61,14 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
             history: History,
             possibleMoves: MutableList<PossibleMove>,
             disableCheckCheck: Boolean,
-            kingPosition: PiecePosition,
+            kingPosition: Position,
             rookCol: Int,
             isShortCastling: Boolean = true
     ) {
         val borderRow = color.borderRow
         val castlingCol = if (isShortCastling) SHORT_CASTLING_COL else LONG_CASTLING_COL
 
-        val rookPosition = PiecePosition(borderRow, rookCol)
+        val rookPosition = Position(borderRow, rookCol)
         val rook = board.getField(rookPosition) ?: return
 
         if (rook.hasMoved(history) || !isCastlingPossible(board, history, kingPosition, rookPosition)) return
@@ -79,7 +79,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
                 board = board,
                 history = history,
                 currentPosition = kingPosition,
-                possiblePosition = PiecePosition(borderRow, castlingCol),
+                possiblePosition = Position(borderRow, castlingCol),
                 possibleMoves = possibleMoves,
                 disableCheckCheck = disableCheckCheck,
                 castling = castling
@@ -99,15 +99,15 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
     private fun isCastlingPossible(
             board: Board,
             history: History,
-            kingPosition: PiecePosition,
-            rookPosition: PiecePosition
+            kingPosition: Position,
+            rookPosition: Position
     ): Boolean {
         val row = kingPosition.row
         val startCol = kingPosition.col.coerceAtMost(rookPosition.col) + 1
         val endCol = kingPosition.col.coerceAtLeast(rookPosition.col) - 1
 
         for (col in IntRange(startCol, endCol)) {
-            val position = PiecePosition(row, col)
+            val position = Position(row, col)
             if (!FieldValidator.isEmpty(board, position)) return false
 
             Board(board).let { boardCopy ->

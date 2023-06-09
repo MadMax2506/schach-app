@@ -3,7 +3,7 @@ package janorschke.meyer.service.validator
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.piece.King
 import janorschke.meyer.service.model.game.piece.Pawn
@@ -33,12 +33,12 @@ object BoardValidator {
 
     /**
      * @param piece which is moving
-     * @param to [PiecePosition] of the [Piece]
+     * @param to [Position] of the [Piece]
      * @return `true`, if the moved piece represents a pawn transformation
      */
-    fun isPawnTransformation(piece: Piece, to: PiecePosition) = piece is Pawn && to.row == piece.color.opponent().borderRow
+    fun isPawnTransformation(piece: Piece, to: Position) = piece is Pawn && to.row == piece.color.opponent().borderRow
 
-    fun isEnPassantMove(lastMove: Move?, color: PieceColor, currentPosition: PiecePosition): Boolean {
+    fun isEnPassantMove(lastMove: Move?, color: PieceColor, currentPosition: Position): Boolean {
         lastMove ?: return false
 
         val lastMovedPiece = lastMove.from.requiredPiece

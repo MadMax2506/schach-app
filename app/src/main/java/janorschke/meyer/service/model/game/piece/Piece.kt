@@ -4,7 +4,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.Castling
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.validator.BoardValidator
@@ -24,7 +24,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
     protected abstract fun possibleMoves(
             board: Board,
             history: History,
-            currentPosition: PiecePosition,
+            currentPosition: Position,
             disableCheckCheck: Boolean
     ): MutableList<PossibleMove>
 
@@ -39,8 +39,8 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
     open fun givesOpponentKingCheck(
             board: Board,
             history: History,
-            kingPosition: PiecePosition,
-            ownPosition: PiecePosition
+            kingPosition: Position,
+            ownPosition: Position
     ): Boolean {
         return possibleMoves(board, history, ownPosition, true)
                 .map { it.beaten.position }
@@ -57,7 +57,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
     fun possibleMoves(
             board: Board,
             history: History,
-            currentPosition: PiecePosition
+            currentPosition: Position
     ): MutableList<PossibleMove> {
         return possibleMoves(board, history, currentPosition, false)
     }
@@ -74,7 +74,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
      *
      * @return true, if you're not allowed to go to that position
      */
-    protected fun isFieldUnavailable(board: Board, currentPosition: PiecePosition): Boolean {
+    protected fun isFieldUnavailable(board: Board, currentPosition: Position): Boolean {
         return !FieldValidator.isInBound(currentPosition) || FieldValidator.isTeammate(board, color, currentPosition)
     }
 
@@ -93,8 +93,8 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
     protected fun addPossibleMove(
             board: Board,
             history: History,
-            currentPosition: PiecePosition,
-            possiblePosition: PiecePosition,
+            currentPosition: Position,
+            possiblePosition: Position,
             possibleMoves: MutableList<PossibleMove>,
             disableCheckCheck: Boolean,
             isEnPassant: Boolean = false,

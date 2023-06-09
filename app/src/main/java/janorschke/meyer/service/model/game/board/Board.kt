@@ -72,9 +72,9 @@ class Board {
      * @param position target
      * @return piece on the target position
      */
-    fun getField(position: PiecePosition) = fields[position.row][position.col]
+    fun getField(position: Position) = fields[position.row][position.col]
 
-    fun setField(position: PiecePosition, piece: Piece?) {
+    fun setField(position: Position, piece: Piece?) {
         fields[position.row][position.col] = piece
     }
 
@@ -83,7 +83,7 @@ class Board {
      * @param color of the piece
      * @return position of the King
      */
-    fun findKingPosition(color: PieceColor): PiecePosition? {
+    fun findKingPosition(color: PieceColor): Position? {
         return PieceSequence.allPiecesByColor(fields, color)
                 .filter { it.piece is King }
                 .map { it.position }
@@ -111,8 +111,8 @@ class Board {
      * @return possible board move
      */
     fun createPossibleMove(
-            fromPosition: PiecePosition,
-            toPosition: PiecePosition,
+            fromPosition: Position,
+            toPosition: Position,
             pawnReplaceWith: Piece? = null,
             isEnPassant: Boolean = false,
             castling: Castling? = null,
@@ -120,17 +120,17 @@ class Board {
         val fromPiece = getField(fromPosition)!!
         val toPiece = getField(toPosition)
 
-        val beatenPiecePosition = if (!isEnPassant) toPosition
+        val beatenPosition = if (!isEnPassant) toPosition
         else {
             fromPiece as Pawn
-            PiecePosition(toPosition.row - fromPiece.getMoveDirection(), toPosition.col)
+            Position(toPosition.row - fromPiece.getMoveDirection(), toPosition.col)
         }
-        val beatenPiece = getField(beatenPiecePosition)
+        val beatenPiece = getField(beatenPosition)
 
         return PossibleMove(
                 from = PiecePositionPair(fromPosition, fromPiece),
                 to = PiecePositionPair(toPosition, toPiece),
-                beaten = PiecePositionPair(beatenPiecePosition, beatenPiece),
+                beaten = PiecePositionPair(beatenPosition, beatenPiece),
                 castling = castling,
                 isEnPassant = isEnPassant,
                 promotionTo = pawnReplaceWith
@@ -147,8 +147,8 @@ class Board {
      * @return board move
      */
     fun createMove(
-            fromPosition: PiecePosition,
-            toPosition: PiecePosition,
+            fromPosition: Position,
+            toPosition: Position,
             pawnReplaceWith: Piece? = null,
             isEnPassant: Boolean = false,
             castling: Castling? = null,
@@ -172,7 +172,7 @@ class Board {
             if (castling != null) {
                 // Move rook
                 val sourceRook = castling.sourceRook
-                
+
                 setField(castling.targetRook.position, sourceRook.piece)
                 setField(sourceRook.position, null)
             }

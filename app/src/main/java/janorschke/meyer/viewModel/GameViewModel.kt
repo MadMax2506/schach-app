@@ -9,7 +9,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.Piece
@@ -70,7 +70,7 @@ class GameViewModel(
 
     fun aiMoved() = setValues()
 
-    fun onFieldClick(position: PiecePosition) {
+    fun onFieldClick(position: Position) {
         val piece = board.getField(position)
         val selectedPosition = game.getSelectedPosition()
         val isPlayersPiece = (piece?.color == game.getActiveColor())

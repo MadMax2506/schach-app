@@ -1,10 +1,10 @@
 package janorschke.meyer.service.model.game.board
 
-class PiecePosition {
+class Position {
     val row: Int
     val col: Int
 
-    constructor(position: PiecePosition) {
+    constructor(position: Position) {
         row = position.row
         col = position.col
     }
@@ -48,7 +48,7 @@ class PiecePosition {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is PiecePosition) return false
+        if (other !is Position) return false
 
         return this.row == other.row && this.col == other.col
     }

@@ -1,11 +1,11 @@
 package janorschke.meyer.service.model.game.board.move
 
 import janorschke.meyer.enums.PieceColor
-import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.piece.Piece
 
 class Castling(
-        rookPosition: PiecePosition,
+        rookPosition: Position,
         rook: Piece,
         color: PieceColor,
         castlingCol: Int,
@@ -17,7 +17,7 @@ class Castling(
     init {
         sourceRook = PiecePositionPair(rookPosition, rook)
 
-        val targetPosition = PiecePosition(color.borderRow, castlingCol + if (isShortCastling) -1 else +1)
+        val targetPosition = Position(color.borderRow, castlingCol + if (isShortCastling) -1 else +1)
         targetRook = PiecePositionPair(targetPosition)
     }
 }

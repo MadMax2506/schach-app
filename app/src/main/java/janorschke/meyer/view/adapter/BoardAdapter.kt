@@ -9,7 +9,7 @@ import android.widget.BaseAdapter
 import janorschke.meyer.R
 import janorschke.meyer.databinding.GameFieldBinding
 import janorschke.meyer.service.model.game.board.Board
-import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.utils.piece.PieceDrawables
@@ -38,7 +38,7 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
 
     override fun getCount(): Int = Board.SIZE
 
-    override fun getItem(index: Int) = PiecePosition(index).let { fields[it.row][it.col] }
+    override fun getItem(index: Int) = Position(index).let { fields[it.row][it.col] }
 
     override fun getItemId(position: Int): Long = position.toLong()
 
@@ -52,7 +52,7 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
             holder = convertView.tag as ViewHolder
         }
 
-        val position = PiecePosition(index)
+        val position = Position(index)
         val piece = getItem(index)
 
         holder.view.setBackgroundResource(getViewBackgroundColor(position))
@@ -62,9 +62,9 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
         return holder.view
     }
 
-    private fun getViewBackgroundColor(position: PiecePosition): Int = if (position.row % 2 != position.col % 2) R.color.red_brown else R.color.beige
+    private fun getViewBackgroundColor(position: Position): Int = if (position.row % 2 != position.col % 2) R.color.red_brown else R.color.beige
 
-    private fun getPieceBackground(piece: Piece?, position: PiecePosition): Drawable? {
+    private fun getPieceBackground(piece: Piece?, position: Position): Drawable? {
         val isPossibleMove = possibleMoves.map { it.to.position }.contains(position)
         if (piece == null) {
             return if (isPossibleMove) PieceDrawables.getPossibleMove(context) else null
