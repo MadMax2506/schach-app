@@ -66,9 +66,7 @@ class GameViewModel(
         setValues()
     }
 
-    fun voteDraw(): Boolean {
-        return gameRepository.playerOffersDraw().also { setValues() }
-    }
+    fun voteDraw() = gameRepository.playerOffersDraw().also { setValues() }
 
     fun timerTick() {
         setValues()
