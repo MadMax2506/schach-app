@@ -4,8 +4,8 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.PiecePosition
-import janorschke.meyer.service.model.game.board.PossibleMove
+import janorschke.meyer.service.model.game.board.Position
+import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.validator.BoardValidator
 import janorschke.meyer.service.validator.FieldValidator
 
@@ -13,11 +13,11 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
     override fun givesOpponentKingCheck(
             board: Board,
             history: History,
-            kingPosition: PiecePosition,
-            ownPosition: PiecePosition
+            kingPosition: Position,
+            ownPosition: Position
     ): Boolean {
         for (i in arrayOf(-1, 1)) {
-            PiecePosition(ownPosition.row + getMoveDirection(), ownPosition.col + i).let { piecePosition ->
+            Position(ownPosition.row + getMoveDirection(), ownPosition.col + i).let { piecePosition ->
                 if (piecePosition == kingPosition) return true
             }
         }
@@ -27,13 +27,14 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
     override fun possibleMoves(
             board: Board,
             history: History,
-            currentPosition: PiecePosition,
-            disableCheckCheck: Boolean
+            currentPosition: Position,
+            disableCheckCheck: Boolean,
+            disableCastlingCheck: Boolean
     ): MutableList<PossibleMove> {
         val possibleMoves = mutableListOf<PossibleMove>()
 
         // normal move
-        PiecePosition(currentPosition.row + getMoveDirection(), currentPosition.col).let { piecePosition ->
+        Position(currentPosition.row + getMoveDirection(), currentPosition.col).let { piecePosition ->
             if (FieldValidator.isEmpty(board, piecePosition)) {
                 addPossibleMove(board, history, currentPosition, piecePosition, possibleMoves, disableCheckCheck)
 
@@ -44,7 +45,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
 
         // beat
         for (i in arrayOf(-1, 1)) {
-            PiecePosition(currentPosition.row + getMoveDirection(), currentPosition.col + i).let { piecePosition ->
+            Position(currentPosition.row + getMoveDirection(), currentPosition.col + i).let { piecePosition ->
                 if (!isFieldUnavailable(board, piecePosition) && FieldValidator.isOpponent(board, color, piecePosition)) {
                     addPossibleMove(board, history, currentPosition, piecePosition, possibleMoves, disableCheckCheck)
                 }
@@ -59,14 +60,14 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
     private fun enPassant(
             board: Board,
             history: History,
-            currentPosition: PiecePosition,
+            currentPosition: Position,
             possibleMoves: MutableList<PossibleMove>,
             disableCheckCheck: Boolean
     ) {
         val lastMove = history.getLastMoves(1).getOrNull(0)
 
         if (BoardValidator.isEnPassantMove(lastMove, color, currentPosition)) {
-            val enPassantPosition = PiecePosition(color.enPassantRow + getMoveDirection(), lastMove!!.toPosition.col)
+            val enPassantPosition = Position(color.enPassantRow + getMoveDirection(), lastMove!!.to.position.col)
             addPossibleMove(board, history, currentPosition, enPassantPosition, possibleMoves, disableCheckCheck, true)
         }
     }
@@ -74,12 +75,12 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
     private fun specialMoveFromBaseLine(
             board: Board,
             history: History,
-            currentPosition: PiecePosition,
+            currentPosition: Position,
             possibleMoves: MutableList<PossibleMove>,
             disableCheckCheck: Boolean
     ) {
         if (currentPosition.row != color.pawnSpawnRow) return
-        PiecePosition(currentPosition.row + 2 * getMoveDirection(), currentPosition.col).let { piecePosition ->
+        Position(currentPosition.row + 2 * getMoveDirection(), currentPosition.col).let { piecePosition ->
             if (FieldValidator.isEmpty(board, piecePosition)) {
                 addPossibleMove(board, history, currentPosition, piecePosition, possibleMoves, disableCheckCheck)
             }

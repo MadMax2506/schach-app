@@ -1,6 +1,10 @@
 package janorschke.meyer.service.model.game.board
 
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.service.model.game.board.move.Castling
+import janorschke.meyer.service.model.game.board.move.Move
+import janorschke.meyer.service.model.game.board.move.PiecePosition
+import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.King
 import janorschke.meyer.service.model.game.piece.Knight
 import janorschke.meyer.service.model.game.piece.Pawn
@@ -66,11 +70,11 @@ class Board {
 
     /**
      * @param position target
-     * @return piece on the target
+     * @return piece on the target position
      */
-    fun getField(position: PiecePosition) = fields[position.row][position.col]
+    fun getField(position: Position) = fields[position.row][position.col]
 
-    fun setField(position: PiecePosition, piece: Piece?) {
+    fun setField(position: Position, piece: Piece?) {
         fields[position.row][position.col] = piece
     }
 
@@ -79,7 +83,7 @@ class Board {
      * @param color of the piece
      * @return position of the King
      */
-    fun findKingPosition(color: PieceColor): PiecePosition? {
+    fun findKingPosition(color: PieceColor): Position? {
         return PieceSequence.allPiecesByColor(fields, color)
                 .filter { it.piece is King }
                 .map { it.position }
@@ -107,61 +111,67 @@ class Board {
      * @return possible board move
      */
     fun createPossibleMove(
-            fromPosition: PiecePosition,
-            toPosition: PiecePosition,
+            fromPosition: Position,
+            toPosition: Position,
             pawnReplaceWith: Piece? = null,
             isEnPassant: Boolean = false,
+            castling: Castling? = null,
     ): PossibleMove {
         val fromPiece = getField(fromPosition)!!
+        val toPiece = getField(toPosition)
 
-        val beatenPiecePosition = if (!isEnPassant) toPosition
+        val beatenPosition = if (!isEnPassant) toPosition
         else {
             fromPiece as Pawn
-            PiecePosition(toPosition.row - fromPiece.getMoveDirection(), toPosition.col)
+            Position(toPosition.row - fromPiece.getMoveDirection(), toPosition.col)
         }
-
-        val beatenPiece = getField(beatenPiecePosition)
+        val beatenPiece = getField(beatenPosition)
 
         return PossibleMove(
-                fromPosition,
-                toPosition,
-                beatenPiecePosition,
-                fromPiece,
-                beatenPiece,
-                isEnPassant,
-                pawnReplaceWith
+                from = PiecePosition(fromPosition, fromPiece),
+                to = PiecePosition(toPosition, toPiece),
+                beaten = PiecePosition(beatenPosition, beatenPiece),
+                castling = castling,
+                isEnPassant = isEnPassant,
+                promotionTo = pawnReplaceWith
         )
     }
 
     /**
      * Moves a piece to another position
      *
-     * @param from source position
-     * @param to target position
+     * @param fromPosition source position
+     * @param toPosition target position
      * @param pawnReplaceWith piece which is used for the pawn promotion
      * @param isEnPassant boolean that (Default = false)
      * @return board move
      */
     fun createMove(
-            from: PiecePosition,
-            to: PiecePosition,
+            fromPosition: Position,
+            toPosition: Position,
             pawnReplaceWith: Piece? = null,
             isEnPassant: Boolean = false,
+            castling: Castling? = null,
     ): Move {
-        return createMove(createPossibleMove(from, to, pawnReplaceWith, isEnPassant))
+        return createMove(createPossibleMove(fromPosition, toPosition, pawnReplaceWith, isEnPassant, castling))
     }
 
     fun createMove(possibleMove: PossibleMove): Move {
-
-        setField(possibleMove.fromPosition, null)
-        setField(possibleMove.beatenPiecePosition, null)
+        setField(possibleMove.from.position, null)
+        setField(possibleMove.beaten.position, null)
 
         if (possibleMove.promotionTo != null) {
             // pawn can be transfer to an higher valency piece
-            setField(possibleMove.toPosition, possibleMove.promotionTo)
+            setField(possibleMove.to.position, possibleMove.promotionTo)
         } else {
             // normal move
-            setField(possibleMove.toPosition, possibleMove.fromPiece)
+            setField(possibleMove.to.position, possibleMove.from.piece)
+
+            // castling
+            possibleMove.castling?.let { castling ->
+                setField(castling.targetPosition, castling.sourcePiecePosition.piece)
+                setField(castling.sourcePiecePosition.position, null)
+            }
         }
         return Move(ArrayUtils.deepCopy(fields), possibleMove)
     }

@@ -6,7 +6,7 @@ import janorschke.meyer.service.model.game.ai.AiEvaluationNode
 import janorschke.meyer.service.model.game.ai.AiEvaluationNodeFactory
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.piece.King
 import janorschke.meyer.service.model.game.piece.Knight
 import janorschke.meyer.service.model.game.piece.Pawn
@@ -59,7 +59,7 @@ object AiTreeGenerator {
             // BoardValidator.isEndgame(parent.history) ->
 
             // First move
-            BoardValidator.isFirstMove(parent.history) -> if (FieldValidator.isCenter(move.toPosition)) factory.create(1) else factory.create()
+            BoardValidator.isFirstMove(parent.history) -> if (FieldValidator.isCenter(move.to.position)) factory.create(1) else factory.create()
 
             // Opening
             BoardValidator.isOpening(parent.history) -> openingPiecePrioritization(factory, move, history, aiColor)
@@ -96,10 +96,10 @@ object AiTreeGenerator {
             // Castling
 
             // Move the king
-            move.fromPiece is King -> factory.create(-3)
+            move.from.requiredPiece is King -> factory.create(-3)
 
             // Move a heavy piece
-            move.fromPiece.pieceInfo.type == PieceType.HEAVY -> factory.create(-2)
+            move.from.requiredPiece.pieceInfo.type == PieceType.HEAVY -> factory.create(-2)
 
             // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/124
             // Move a piece multiple times
@@ -114,7 +114,9 @@ object AiTreeGenerator {
             // Pressure on the center
 
             // Place pieces in the extended center
-            FieldValidator.isExtendedCenter(move.toPosition) -> if (move.fromPiece is Pawn) factory.create(2) else factory.create(1)
+            FieldValidator.isExtendedCenter(move.to.position) -> {
+                if (move.from.requiredPiece is Pawn) factory.create(2) else factory.create(1)
+            }
 
             else -> factory.create()
         }
@@ -131,15 +133,15 @@ object AiTreeGenerator {
                 .asSequence()
                 .map { possibleMove ->
                     // Create moves
-                    if (BoardValidator.isPawnTransformation(indexedPiece.piece, possibleMove.toPosition)) {
+                    if (BoardValidator.isPawnTransformation(indexedPiece.piece, possibleMove.to.position)) {
                         // Special case for the pawn transformation
                         val color = indexedPiece.piece.color
                         arrayOf(Knight(color), Bishop(color), Rook(color), Queen(color)).map { piece ->
-                            Board(board).createMove(indexedPiece.position, possibleMove.toPosition, piece)
+                            Board(board).createMove(indexedPiece.position, possibleMove.to.position, piece)
                         }.toMutableList()
                     } else {
                         // Normal move
-                        mutableListOf(Board(board).createMove(indexedPiece.position, possibleMove.toPosition))
+                        mutableListOf(Board(board).createMove(indexedPiece.position, possibleMove.to.position))
                     }
                 }
                 .flatten()

@@ -2,7 +2,7 @@ package janorschke.meyer.service.model.game.ai
 
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.game.board.move.Move
 
 /**
  * Create a evaluation node depending on the priority
