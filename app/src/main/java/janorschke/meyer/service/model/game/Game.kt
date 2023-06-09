@@ -5,8 +5,8 @@ import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.TimeMode
-import janorschke.meyer.service.model.game.board.PiecePosition
-import janorschke.meyer.service.model.game.board.PossibleMove
+import janorschke.meyer.service.model.game.board.Position
+import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.player.AiPlayer
 import janorschke.meyer.service.model.game.player.PlayerFactory
 import janorschke.meyer.viewModel.GameViewModel
@@ -24,7 +24,7 @@ class Game(
 
     private var activeColor: PieceColor = PieceColor.WHITE
     private var status: GameStatus = GameStatus.RUNNING
-    private var selectedPosition: PiecePosition? = null
+    private var selectedPosition: Position? = null
     private var possibleMoves: MutableList<PossibleMove> = mutableListOf()
     private var countdownTimer: CountDownTimer? = null
 
@@ -84,7 +84,7 @@ class Game(
      * @param selectedPosition the position of the selected piece
      * @param possibleMoves the possible moves for the selected piece
      */
-    fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PossibleMove> = mutableListOf()) {
+    fun setSelectedPiece(selectedPosition: Position? = null, possibleMoves: MutableList<PossibleMove> = mutableListOf()) {
         this.selectedPosition = selectedPosition
         this.possibleMoves = possibleMoves
     }

@@ -5,7 +5,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.utils.BoardUtils.calculatePieceValency
 import janorschke.meyer.service.validator.BoardValidator
 import kotlin.system.measureTimeMillis
@@ -22,7 +22,7 @@ class AiEvaluationNode(val history: History, val move: Move?, private val aiColo
     val valency: Int
 
     val requiredMove get() = move!!
-    val color get() = requiredMove.fromPiece.color
+    val color get() = requiredMove.from.requiredPiece.color
 
     init {
         val time = measureTimeMillis {
@@ -36,7 +36,6 @@ class AiEvaluationNode(val history: History, val move: Move?, private val aiColo
 
                     val valueAi = calculatePieceValency(boardCopy, aiColor)
                     val valueDiff = valueAi - calculatePieceValency(boardCopy, aiColor.opponent())
-
                     if (BoardValidator.isKingCheckmate(boardCopy, history, color.opponent())) return@let Int.MAX_VALUE
                     if (BoardValidator.isStalemate(boardCopy, history, color.opponent())) {
                         // Try to achieve an stalemate if the opponent has a big advantage

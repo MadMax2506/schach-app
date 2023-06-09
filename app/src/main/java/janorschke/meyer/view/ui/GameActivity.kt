@@ -276,7 +276,6 @@ class GameActivity : AppCompatActivity() {
 
         gameViewModel.activePlayerColor.observe(this) { color ->
             Log.d(LOG_TAG, "Update activePlayer")
-            boardAdapter.setPlayerColor(color)
 
             if (color == PieceColor.BLACK) {
                 playerInfoWhite.active.setImageResource(R.drawable.inactive)
@@ -309,11 +308,6 @@ class GameActivity : AppCompatActivity() {
                     playerInfoWhite.time.text = String.format("%02d:%02d", minutes, remainingSeconds)
                 }
             }
-        }
-
-        gameViewModel.selectedPosition.observe(this) { selectedPosition ->
-            Log.d(LOG_TAG, "Update selected positions")
-            boardAdapter.setSelectedPosition(selectedPosition)
         }
 
         gameViewModel.possibleMoves.observe(this) { moves ->

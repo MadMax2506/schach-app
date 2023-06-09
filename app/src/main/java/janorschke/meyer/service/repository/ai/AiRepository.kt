@@ -7,7 +7,7 @@ import janorschke.meyer.service.model.game.ai.AiEvaluationNode
 import janorschke.meyer.service.model.game.ai.LOG_TAG
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.Move
+import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.utils.AiTreeGenerator
 import kotlin.system.measureTimeMillis
 
