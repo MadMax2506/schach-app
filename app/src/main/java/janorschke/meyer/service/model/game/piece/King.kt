@@ -63,7 +63,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
             disableCheckCheck: Boolean,
             kingPosition: Position,
             rookCol: Int,
-            isShortCastling: Boolean = true
+            isShortCastling: Boolean
     ) {
         val borderRow = color.borderRow
         val castlingCol = if (isShortCastling) SHORT_CASTLING_COL else LONG_CASTLING_COL
@@ -106,7 +106,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
         val startCol = kingPosition.col.coerceAtMost(rookPosition.col) + 1
         val endCol = kingPosition.col.coerceAtLeast(rookPosition.col) - 1
 
-        for (col in IntRange(startCol, endCol)) {
+        for (col in startCol..endCol) {
             val position = Position(row, col)
             if (!FieldValidator.isEmpty(board, position)) return false
 
