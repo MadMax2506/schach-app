@@ -7,6 +7,8 @@ import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.Castling
 import janorschke.meyer.service.model.game.board.move.PossibleMove
+import janorschke.meyer.service.model.game.piece.lineMoving.Rook.Companion.LEFT_ROOK_COL
+import janorschke.meyer.service.model.game.piece.lineMoving.Rook.Companion.RIGHT_ROOK_COL
 import janorschke.meyer.service.validator.BoardValidator
 import janorschke.meyer.service.validator.FieldValidator
 
@@ -37,10 +39,10 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
         if (BoardValidator.isKingInCheck(board, history, color)) return possibleMoves
 
         // long castling
-        castling(board, history, possibleMoves, disableCheckCheck, currentPosition, 0, false)
+        castling(board, history, possibleMoves, disableCheckCheck, currentPosition, LEFT_ROOK_COL, LONG_CASTLING_COL)
 
         // short castling
-        castling(board, history, possibleMoves, disableCheckCheck, currentPosition, 7, true)
+        castling(board, history, possibleMoves, disableCheckCheck, currentPosition, RIGHT_ROOK_COL, SHORT_CASTLING_COL)
 
         return possibleMoves
     }
@@ -54,7 +56,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
      * @param disableCheckCheck disables the check is the king is in check
      * @param kingPosition
      * @param rookCol
-     * @param isShortCastling
+     * @param castlingCol
      */
     private fun castling(
             board: Board,
@@ -63,18 +65,16 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
             disableCheckCheck: Boolean,
             kingPosition: Position,
             rookCol: Int,
-            isShortCastling: Boolean
+            castlingCol: Int
     ) {
         val borderRow = color.borderRow
-        val castlingCol = if (isShortCastling) SHORT_CASTLING_COL else LONG_CASTLING_COL
 
         val rookPosition = Position(borderRow, rookCol)
         val rook = board.getField(rookPosition) ?: return
 
         if (rook.hasMoved(history) || !isCastlingPossible(board, history, kingPosition, rookPosition)) return
 
-        val castling = Castling(rookPosition, rook, color, castlingCol, isShortCastling)
-
+        val castling = Castling(rookPosition, rook, color, castlingCol)
         addPossibleMove(
                 board = board,
                 history = history,

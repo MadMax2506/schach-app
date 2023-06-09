@@ -8,6 +8,11 @@ import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 
 class Rook(color: PieceColor) : LineMovingPiece(color, PieceInfo.ROOK) {
+    companion object {
+        const val LEFT_ROOK_COL = 0
+        const val RIGHT_ROOK_COL = 7
+    }
+
     override fun possibleMoves(
             board: Board,
             history: History,
