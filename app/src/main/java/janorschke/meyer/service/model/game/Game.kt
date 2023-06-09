@@ -12,9 +12,8 @@ import janorschke.meyer.service.model.game.player.PlayerFactory
 import janorschke.meyer.viewModel.GameViewModel
 
 class Game(
-        // TODO add ticket
         private val gameViewModel: GameViewModel,
-        private val timeMode: TimeMode,
+        timeMode: TimeMode,
         playerNameWhite: String,
         playerNameBlack: String,
         aiLevelWhite: AiLevel?,
@@ -47,9 +46,7 @@ class Game(
      * Sets the Timer from the remainingTime
      */
     fun setCountdownTimer() {
-        if (timeMode == TimeMode.UNLIMITED) return
-
-        stopCountdownTimer()
+        if (activePlayer.time == null) return
 
         countdownTimer = object : CountDownTimer(activePlayer.requiredTime, 1000) {
             override fun onTick(millisUntilFinished: Long) {

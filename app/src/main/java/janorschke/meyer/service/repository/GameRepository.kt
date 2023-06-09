@@ -7,6 +7,7 @@ import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.piece.Piece
+import janorschke.meyer.service.model.game.player.AiPlayer
 import janorschke.meyer.service.utils.BoardUtils
 import janorschke.meyer.service.validator.BoardValidator
 
@@ -54,6 +55,8 @@ class GameRepository(private val board: Board, private val history: History, pri
      */
     fun handleMove() {
         game.setNextPlayer()
-        game.setCountdownTimer()
+
+        if (game.activePlayer is AiPlayer) game.stopCountdownTimer()
+        else game.setCountdownTimer()
     }
 }

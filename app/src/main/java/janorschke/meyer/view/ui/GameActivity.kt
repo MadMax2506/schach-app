@@ -288,9 +288,11 @@ class GameActivity : AppCompatActivity() {
 
         if (timeMode != TimeMode.UNLIMITED) {
             gameViewModel.activePlayerTime.observe(this) { time ->
+                if (time == null) return@observe
+
                 Log.d(LOG_TAG, "Update activePlayer time")
 
-                val seconds = time!! / 1000
+                val seconds = time / 1000
                 val minutes = seconds / 60
                 val remainingSeconds = seconds % 60
 
