@@ -25,7 +25,8 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
             board: Board,
             history: History,
             currentPosition: Position,
-            disableCheckCheck: Boolean
+            disableCheckCheck: Boolean,
+            disableCastlingCheck: Boolean
     ): MutableList<PossibleMove>
 
     /**
@@ -42,7 +43,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
             kingPosition: Position,
             ownPosition: Position
     ): Boolean {
-        return possibleMoves(board, history, ownPosition, true)
+        return possibleMoves(board, history, ownPosition, true, true)
                 .map { it.beaten.position }
                 .contains(kingPosition)
     }
@@ -59,7 +60,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
             history: History,
             currentPosition: Position
     ): MutableList<PossibleMove> {
-        return possibleMoves(board, history, currentPosition, false)
+        return possibleMoves(board, history, currentPosition, false, false)
     }
 
     /**
@@ -101,11 +102,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
             castling: Castling? = null
     ) {
         if (disableCheckCheck) {
-            board.createPossibleMove(
-                    fromPosition = currentPosition,
-                    toPosition = possiblePosition,
-                    isEnPassant = isEnPassant
-            ).let { possibleMoves.add(it) }
+            possibleMoves.add(board.createPossibleMove(currentPosition, possiblePosition, isEnPassant = isEnPassant))
             return
         }
 

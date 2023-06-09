@@ -13,7 +13,8 @@ class Knight(color: PieceColor) : Piece(color, PieceInfo.KNIGHT) {
             board: Board,
             history: History,
             currentPosition: Position,
-            disableCheckCheck: Boolean
+            disableCheckCheck: Boolean,
+            disableCastlingCheck: Boolean
     ): MutableList<PossibleMove> {
         val possibleMoves = mutableListOf<PossibleMove>()
         for (i in -2..2) {

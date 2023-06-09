@@ -17,7 +17,8 @@ class Rook(color: PieceColor) : LineMovingPiece(color, PieceInfo.ROOK) {
             board: Board,
             history: History,
             currentPosition: Position,
-            disableCheckCheck: Boolean
+            disableCheckCheck: Boolean,
+            disableCastlingCheck: Boolean
     ): MutableList<PossibleMove> {
         return possibleMovesOnStraightLine(board, history, currentPosition, disableCheckCheck)
     }

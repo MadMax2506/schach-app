@@ -28,7 +28,8 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
             board: Board,
             history: History,
             currentPosition: Position,
-            disableCheckCheck: Boolean
+            disableCheckCheck: Boolean,
+            disableCastlingCheck: Boolean
     ): MutableList<PossibleMove> {
         val possibleMoves = mutableListOf<PossibleMove>()
 

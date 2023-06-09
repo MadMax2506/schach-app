@@ -9,7 +9,7 @@ import janorschke.meyer.service.model.game.board.move.Castling
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.lineMoving.Rook.Companion.LEFT_ROOK_COL
 import janorschke.meyer.service.model.game.piece.lineMoving.Rook.Companion.RIGHT_ROOK_COL
-import janorschke.meyer.service.validator.BoardValidator
+import janorschke.meyer.service.validator.BoardValidator.isKingInCheck
 import janorschke.meyer.service.validator.FieldValidator
 
 class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
@@ -22,7 +22,8 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
             board: Board,
             history: History,
             currentPosition: Position,
-            disableCheckCheck: Boolean
+            disableCheckCheck: Boolean,
+            disableCastlingCheck: Boolean
     ): MutableList<PossibleMove> {
         val possibleMoves = mutableListOf<PossibleMove>()
 
@@ -35,8 +36,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
             }
         }
 
-        if (hasMoved(history)) return possibleMoves
-        if (BoardValidator.isKingInCheck(board, history, color)) return possibleMoves
+        if (hasMoved(history) || disableCastlingCheck || isKingInCheck(board, history, color)) return possibleMoves
 
         // long castling
         castling(board, history, possibleMoves, disableCheckCheck, currentPosition, LEFT_ROOK_COL, LONG_CASTLING_COL)
@@ -115,7 +115,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
                     val move = boardCopy.createMove(kingPosition, position)
                     historyCopy.push(move)
 
-                    if (BoardValidator.isKingInCheck(boardCopy, historyCopy, color)) return false
+                    if (isKingInCheck(boardCopy, historyCopy, color)) return false
                 }
             }
         }

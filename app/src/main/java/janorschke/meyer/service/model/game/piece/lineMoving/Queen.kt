@@ -12,7 +12,8 @@ class Queen(color: PieceColor) : LineMovingPiece(color, PieceInfo.QUEEN) {
             board: Board,
             history: History,
             currentPosition: Position,
-            disableCheckCheck: Boolean
+            disableCheckCheck: Boolean,
+            disableCastlingCheck: Boolean
     ): MutableList<PossibleMove> {
         return possibleMovesOnDiagonalLine(board, history, currentPosition, disableCheckCheck)
                 .plus(possibleMovesOnStraightLine(board, history, currentPosition, disableCheckCheck))

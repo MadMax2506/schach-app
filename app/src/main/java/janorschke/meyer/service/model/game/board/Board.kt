@@ -168,14 +168,9 @@ class Board {
             setField(possibleMove.to.position, possibleMove.from.piece)
 
             // castling
-            val castling = possibleMove.castling
-            if (castling != null) {
-                // Move rook
-                val rook = castling.sourcePiecePosition.piece
-                val position = castling.sourcePiecePosition.position
-
-                setField(castling.targetPosition, rook)
-                setField(position, null)
+            possibleMove.castling?.let { castling ->
+                setField(castling.targetPosition, castling.sourcePiecePosition.piece)
+                setField(castling.sourcePiecePosition.position, null)
             }
         }
         return Move(ArrayUtils.deepCopy(fields), possibleMove)
