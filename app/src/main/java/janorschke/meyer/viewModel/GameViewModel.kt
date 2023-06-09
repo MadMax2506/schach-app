@@ -76,9 +76,7 @@ class GameViewModel(
     }
 
     fun voteDraw() {
-        // TODO ki draw analysieren und dann entscheiden ob angenommen wird oder nicht
-        //  https://github.com/users/MadMax2506/projects/19/views/1?pane=issue&itemId=29566739
-        game.setStatus(GameStatus.DRAW)
+        gameRepository.playerOffersDraw()
         setValues()
     }
 
@@ -119,7 +117,7 @@ class GameViewModel(
      */
     private fun setValues() {
         // game settings
-        updateIfDifferent(activePlayer, game.getPlayer())
+        updateIfDifferent(activePlayer, game.activePlayer)
         updateIfDifferent(status, game.getStatus())
         updateIfDifferent(selectedPosition, game.getSelectedPosition())
         updateIfDifferent(possibleMoves, game.getPossibleMoves())
