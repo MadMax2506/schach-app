@@ -278,8 +278,17 @@ class GameActivity : AppCompatActivity() {
             Log.d(LOG_TAG, "Update activePlayer")
 
             val isBlackPlayer = (color == PieceColor.BLACK)
+
             val activePlayerInfo = if (isBlackPlayer) playerInfoBlack else playerInfoWhite
             val inactivePlayerInfo = if (isBlackPlayer) playerInfoWhite else playerInfoBlack
+
+            val layoutVoteDraw = binding.bottomBar?.layoutVoteDraw
+            val layoutSurrender = binding.bottomBar?.layoutSurrender
+
+            val activePlayer = if (isBlackPlayer) gameViewModel.playerBlack.value else gameViewModel.playerWhite.value
+            val isNotAiPlayer = activePlayer !is AiPlayer
+
+            val alphaValue = if (isNotAiPlayer) 1.0f else 0.7f
 
             activePlayerInfo.active.setImageResource(R.drawable.active)
             activePlayerInfo.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
@@ -287,17 +296,9 @@ class GameActivity : AppCompatActivity() {
             inactivePlayerInfo.active.setImageResource(R.drawable.inactive)
             inactivePlayerInfo.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.dark_gray))
 
-            // setting the bottomBar enabled, if activePlayer is not the Ai
-            val layoutVoteDraw = binding.bottomBar?.layoutVoteDraw
-            val layoutSurrender = binding.bottomBar?.layoutSurrender
-
-            val activePlayer = if (isBlackPlayer) gameViewModel.playerBlack.value else gameViewModel.playerWhite.value
-
-            val isNotAiPlayer = activePlayer !is AiPlayer
             layoutSurrender?.isEnabled = isNotAiPlayer
             layoutVoteDraw?.isEnabled = isNotAiPlayer
 
-            val alphaValue = if (isNotAiPlayer) 1.0f else 0.7f
             layoutSurrender?.alpha = alphaValue
             layoutVoteDraw?.alpha = alphaValue
         }
