@@ -22,7 +22,7 @@ class PlayerFactory(
      * @return the created player
      */
     fun create(): Player {
-        if (aiLevel != null) return AiPlayer(color, name, aiLevel, timeMode.time)
+        if (aiLevel != null) return AiPlayer(color, name, aiLevel)
         return Player(color, name, timeMode.time)
     }
 }
