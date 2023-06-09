@@ -66,6 +66,9 @@ class GameViewModel(
         setValues()
     }
 
+    /**
+     * @return `true`, if the draw is accepted
+     */
     fun voteDraw() = gameRepository.playerOffersDraw().also { setValues() }
 
     fun timerTick() {
