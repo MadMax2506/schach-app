@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import janorschke.meyer.R
@@ -279,10 +280,16 @@ class GameActivity : AppCompatActivity() {
 
             if (color == PieceColor.BLACK) {
                 playerInfoWhite.active.setImageResource(R.drawable.inactive)
+                playerInfoWhite.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.dark_gray))
+
                 playerInfoBlack.active.setImageResource(R.drawable.active)
+                playerInfoBlack.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
             } else {
                 playerInfoWhite.active.setImageResource(R.drawable.active)
+                playerInfoWhite.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
+
                 playerInfoBlack.active.setImageResource(R.drawable.inactive)
+                playerInfoBlack.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.dark_gray))
             }
         }
 

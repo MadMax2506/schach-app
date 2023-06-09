@@ -114,7 +114,7 @@ class GameViewModel(
     private fun setValues() {
         // game settings
         updateIfDifferent(activePlayerColor, game.getActiveColor())
-        updateIfDifferent(activePlayerTime, game.activePlayer.time)
+        updateIfDifferent(activePlayerTime, game.activePlayer.remainingTime)
         updateIfDifferent(status, game.getStatus())
         updateIfDifferent(selectedPosition, game.getSelectedPosition())
         updateIfDifferent(possibleMoves, game.getPossibleMoves())

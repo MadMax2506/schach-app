@@ -46,16 +46,16 @@ class Game(
      * Sets the Timer from the remainingTime
      */
     fun setCountdownTimer() {
-        if (activePlayer.time == null) return
+        if (activePlayer.remainingTime == null) return
 
-        countdownTimer = object : CountDownTimer(activePlayer.requiredTime, 1000) {
+        countdownTimer = object : CountDownTimer(activePlayer.requiredRemainingTime, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                activePlayer.requiredTime = millisUntilFinished
+                activePlayer.requiredRemainingTime = millisUntilFinished
                 gameViewModel.timerTick()
             }
 
             override fun onFinish() {
-                activePlayer.requiredTime = 0
+                activePlayer.requiredRemainingTime = 0
                 status = GameStatus.TIME_OVER
                 gameViewModel.timerTick()
             }
