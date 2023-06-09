@@ -51,7 +51,10 @@ class GameRepository(private val board: Board, private val history: History, pri
     }
 
     /**
-     * TODO
+ * Handles the move by setting the next player and performing corresponding actions.
+ * - Sets the next player in the game.
+ * - If the active player is an AI player, stops the countdown timer.
+ * - If the active player is not an AI player, sets the countdown timer.
      */
     fun handleMove() {
         game.setNextPlayer()
