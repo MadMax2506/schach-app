@@ -14,21 +14,30 @@ import janorschke.meyer.service.validator.BoardValidator
 private const val LOG_TAG = "GameRepository"
 
 class GameRepository(private val board: Board, private val history: History, private val game: Game) {
-    fun playerOffersDraw() {
+    fun playerOffersDraw(): Boolean {
         val aiLevel = game.aiPlayer.aiLevel
 
         val offeringPlayerValency = BoardUtils.calculatePieceValency(board, game.getActiveColor())
         val opponentPlayerValency = BoardUtils.calculatePieceValency(board, game.getActiveColor().opponent())
         val valencyDiff = opponentPlayerValency - offeringPlayerValency
 
-        // Accept draw if the other player has more than one pawn
-        if (aiLevel == AiLevel.KEVIN_OTTO && valencyDiff < -1) game.setStatus(GameStatus.DRAW)
+        val shouldAcceptDraw = when (aiLevel) {
+            // Accept draw if the other player has more than one pawn
+            AiLevel.KEVIN_OTTO -> valencyDiff < -1
 
-        // Accept draw if the other player has more than two pawns
-        if (aiLevel == AiLevel.MAX && valencyDiff < -2) game.setStatus(GameStatus.DRAW)
+            // Accept draw if the other player has more than two pawns
+            AiLevel.MAX -> valencyDiff < -2
 
-        // Accept draw if the other player has more than a light piece
-        if (aiLevel == AiLevel.CHRIS && valencyDiff < -3) game.setStatus(GameStatus.DRAW)
+            // Accept draw if the other player has more than a light piece
+            AiLevel.CHRIS -> valencyDiff < -3
+        }
+
+        if (shouldAcceptDraw) {
+            game.setStatus(GameStatus.DRAW)
+            return true
+        }
+
+        return false
     }
 
     /**
@@ -51,10 +60,10 @@ class GameRepository(private val board: Board, private val history: History, pri
     }
 
     /**
- * Handles the move by setting the next player and performing corresponding actions.
- * - Sets the next player in the game.
- * - If the active player is an AI player, stops the countdown timer.
- * - If the active player is not an AI player, sets the countdown timer.
+     * Handles the move by setting the next player and performing corresponding actions.
+     * - Sets the next player in the game.
+     * - If the active player is an AI player, stops the countdown timer.
+     * - If the active player is not an AI player, sets the countdown timer.
      */
     fun handleMove() {
         game.setNextPlayer()

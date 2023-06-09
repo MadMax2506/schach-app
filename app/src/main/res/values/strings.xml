@@ -59,6 +59,7 @@
     <!-- vote-draw dialog -->
     <string name="dialog_draw_title">Remi anbieten</string>
     <string name="dialog_draw_message">Möchten Sie dem Gegner wirklich ein Remi anbieten?</string>
+    <string name="draw_declined">Das Remi wurde vom Gegner abgelehnt</string>
 
     <!-- settings -->
     <string name="save">Speichern</string>
