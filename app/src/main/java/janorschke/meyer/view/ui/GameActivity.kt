@@ -277,18 +277,27 @@ class GameActivity : AppCompatActivity() {
         gameViewModel.activePlayerColor.observe(this) { color ->
             Log.d(LOG_TAG, "Update activePlayer")
 
+            val layoutVoteDraw = binding.bottomBar?.layoutVoteDraw
+            val layoutSurrender = binding.bottomBar?.layoutSurrender
+
             if (color == PieceColor.BLACK) {
                 playerInfoWhite.active.setImageResource(R.drawable.inactive)
                 playerInfoWhite.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.dark_gray))
 
                 playerInfoBlack.active.setImageResource(R.drawable.active)
                 playerInfoBlack.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
+
+                layoutSurrender?.isEnabled = gameViewModel.playerBlack.value !is AiPlayer
+                layoutVoteDraw?.isEnabled = gameViewModel.playerBlack.value !is AiPlayer
             } else {
                 playerInfoWhite.active.setImageResource(R.drawable.active)
                 playerInfoWhite.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
 
                 playerInfoBlack.active.setImageResource(R.drawable.inactive)
                 playerInfoBlack.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.dark_gray))
+
+                layoutSurrender?.isEnabled = gameViewModel.playerWhite.value !is AiPlayer
+                layoutVoteDraw?.isEnabled = gameViewModel.playerWhite.value !is AiPlayer
             }
         }
 
