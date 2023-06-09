@@ -11,13 +11,13 @@ class Castling(
         castlingCol: Int,
         isShortCastling: Boolean
 ) {
-    val sourceRook: PiecePositionPair
-    val targetRook: PiecePositionPair
+    val sourceRook: PiecePosition
+    val targetRook: PiecePosition
 
     init {
-        sourceRook = PiecePositionPair(rookPosition, rook)
+        sourceRook = PiecePosition(rookPosition, rook)
 
         val targetPosition = Position(color.borderRow, castlingCol + if (isShortCastling) -1 else +1)
-        targetRook = PiecePositionPair(targetPosition)
+        targetRook = PiecePosition(targetPosition)
     }
 }

@@ -3,7 +3,7 @@ package janorschke.meyer.service.model.game.board
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.move.Castling
 import janorschke.meyer.service.model.game.board.move.Move
-import janorschke.meyer.service.model.game.board.move.PiecePositionPair
+import janorschke.meyer.service.model.game.board.move.PiecePosition
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.King
 import janorschke.meyer.service.model.game.piece.Knight
@@ -128,9 +128,9 @@ class Board {
         val beatenPiece = getField(beatenPosition)
 
         return PossibleMove(
-                from = PiecePositionPair(fromPosition, fromPiece),
-                to = PiecePositionPair(toPosition, toPiece),
-                beaten = PiecePositionPair(beatenPosition, beatenPiece),
+                from = PiecePosition(fromPosition, fromPiece),
+                to = PiecePosition(toPosition, toPiece),
+                beaten = PiecePosition(beatenPosition, beatenPiece),
                 castling = castling,
                 isEnPassant = isEnPassant,
                 promotionTo = pawnReplaceWith
