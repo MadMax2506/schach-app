@@ -28,12 +28,7 @@ object AiTreeGenerator {
      * @return a sequence of nodes [AiEvaluationNode]
      */
     fun generateChildren(parent: AiEvaluationNode, board: Board, aiColor: PieceColor): Sequence<AiEvaluationNode> {
-        var pieceSequence = PieceSequence.allPiecesByColor(board, aiColor)
-
-        // Do the first move with a pawn
-        if (BoardValidator.isFirstMove(parent.history)) pieceSequence = pieceSequence.filter { it.piece is Pawn }
-
-        return pieceSequence
+        return PieceSequence.allPiecesByColor(board, aiColor)
                 // Create a flatten list of moves for each possible move
                 .map { piece -> generateMovesForPiece(board, parent.history, piece) }
                 .flatten()
@@ -50,46 +45,43 @@ object AiTreeGenerator {
      * @return prioritized evaluation node
      */
     private fun prioritizePieces(parent: AiEvaluationNode, move: Move, aiColor: PieceColor): AiEvaluationNode {
-        val history = parent.history
+        val history = History(parent.history)
         val factory = AiEvaluationNodeFactory(history, move, aiColor)
 
-        return when {
+        when {
             // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/122
             // Endgame
             // BoardValidator.isEndgame(parent.history) ->
 
             // First move
-            BoardValidator.isFirstMove(parent.history) -> if (FieldValidator.isCenter(move.to.position)) factory.create(1) else factory.create()
+            BoardValidator.isFirstMove(parent.history) -> {
+                return if (FieldValidator.isCenter(move.to.position) && move.from.piece is Pawn) factory.create(1)
+                else factory.create(-1)
+            }
 
             // Opening
-            BoardValidator.isOpening(parent.history) -> openingPiecePrioritization(factory, move, history, aiColor)
+            BoardValidator.isOpening(parent.history) -> return openingPiecePrioritization(factory, move, history)
 
-            else -> factory.create()
+            else -> return factory.create()
         }
     }
 
     /**
      * **PRIORITY**
-     * - 3: Castling
-     * - 2: Pawn in the extended center | pressure on the center
-     * - 1: Light piece in the extended center
-     * - 0: Default
-     * - -1: Move same piece
-     * - -2: Heavy piece move
-     * - -3: King move
+     * - `3`: Castling
+     * - `2`: Light piece in the extended center | pressure on the center
+     * - `1`: Pawn in the extended center
+     * - `0`: Default
+     * - `-1`: Move same piece
+     * - `-2`: Heavy piece move
+     * - `-3`: King move
      *
      * @param factory to create a evaluation move
      * @param move of a piece
      * @param history instance
-     * @param aiColor
      * @return prioritized evaluation node
      */
-    private fun openingPiecePrioritization(
-            factory: AiEvaluationNodeFactory,
-            move: Move,
-            history: History,
-            aiColor: PieceColor
-    ): AiEvaluationNode {
+    private fun openingPiecePrioritization(factory: AiEvaluationNodeFactory, move: Move, history: History): AiEvaluationNode {
         return when {
             // Castling
             move.castling != null -> factory.create(3)
@@ -100,13 +92,9 @@ object AiTreeGenerator {
             // Move a heavy piece
             move.from.requiredPiece.pieceInfo.type == PieceType.HEAVY -> factory.create(-2)
 
-            // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/124
             // Move a piece multiple times
-//            history.getLastMoves(history.numberOfMoves.coerceAtMost(6))
-//                    .filter { it.fromPiece.color == aiColor }
-//                    .none { move.from == it.to && move.fromPiece == it.fromPiece } -> {
-//                factory.create(-1)
-//            }
+            history.getLastMoves(history.numberOfMoves.coerceAtMost(12))
+                    .any { move.from.requiredPiece == it.from.requiredPiece } -> factory.create(-1)
 
             // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/123
             // priority = 2
@@ -114,10 +102,10 @@ object AiTreeGenerator {
 
             // Place pieces in the extended center
             FieldValidator.isExtendedCenter(move.to.position) -> {
-                if (move.from.requiredPiece is Pawn) factory.create(2) else factory.create(1)
+                if (move.from.requiredPiece.pieceInfo.type == PieceType.LIGHT) factory.create(2) else factory.create(1)
             }
 
-            else -> factory.create()
+            else -> factory.create(0)
         }
     }
 
@@ -137,7 +125,7 @@ object AiTreeGenerator {
                         val color = indexedPiece.piece.color
                         arrayOf(Knight(color), Bishop(color), Rook(color), Queen(color)).map { piece ->
                             Board(board).createMove(indexedPiece.position, possibleMove.to.position, piece)
-                        }.toMutableList()
+                        }
                     } else {
                         // Normal move
                         mutableListOf(Board(board).createMove(indexedPiece.position, possibleMove.to.position))
