@@ -9,8 +9,8 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.player.Player
@@ -36,7 +36,6 @@ class GameViewModel(
     val playerWhite: MutableLiveData<Player> = MutableLiveData()
     val playerBlack: MutableLiveData<Player> = MutableLiveData()
     val status: MutableLiveData<GameStatus> = MutableLiveData()
-    val selectedPosition: MutableLiveData<PiecePosition?> = MutableLiveData()
     val possibleMoves: MutableLiveData<MutableList<PossibleMove>> = MutableLiveData()
     val fields: MutableLiveData<Array<Array<Piece?>>> = MutableLiveData()
     val moves: MutableLiveData<MutableList<Move>> = MutableLiveData()
@@ -52,20 +51,10 @@ class GameViewModel(
     private val gameRepository = GameRepository(board, history, game)
     private val boardRepository = BoardRepository(this, board, history, game, gameRepository, aiRepository)
 
-    fun getHistory() = history
-
     init {
         playerWhite.value = game.playerWhite
         playerBlack.value = game.playerBlack
 
-        setValues()
-    }
-
-    /**
-     * @see BoardRepository.tryToMovePiece
-     */
-    fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
-        boardRepository.tryToMovePiece(fromPosition, toPosition)
         setValues()
     }
 
@@ -79,20 +68,25 @@ class GameViewModel(
         setValues()
     }
 
-    fun aiMoved() {
-        setValues()
-    }
+    fun aiMoved() = setValues()
 
-    /**
-     * Sets the selected piece and shows the possible moves through the GameFieldAdapter.
-     *
-     * @param selectedPosition the position of the selected piece (optional: Default = null)
-     * @param possibleMoves the possible moves for the selected piece (optional: Default = emptyList())
-     *
-     * @see Game.selectedPosition
-     */
-    fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PossibleMove> = mutableListOf()) {
-        game.setSelectedPiece(selectedPosition, possibleMoves)
+    fun onFieldClick(position: PiecePosition) {
+        val piece = board.getField(position)
+        val selectedPosition = game.getSelectedPosition()
+        val isPlayersPiece = (piece?.color == game.getActiveColor())
+
+        when {
+            // Move piece to a valid position
+            (selectedPosition != null && !isPlayersPiece) -> boardRepository.tryToMovePiece(position)
+
+            // Set the current selected piece on the board
+            (isPlayersPiece && (selectedPosition == null || selectedPosition != position)) -> {
+                val possibleMoves = piece?.possibleMoves(Board(board), history, position) ?: mutableListOf()
+                game.setSelectedPiece(position, possibleMoves)
+            }
+
+            else -> game.setSelectedPiece()
+        }
         setValues()
     }
 
@@ -103,7 +97,6 @@ class GameViewModel(
         // game settings
         updateIfDifferent(activePlayer, game.activePlayer)
         updateIfDifferent(status, game.getStatus())
-        updateIfDifferent(selectedPosition, game.getSelectedPosition())
         updateIfDifferent(possibleMoves, game.getPossibleMoves())
 
         // board

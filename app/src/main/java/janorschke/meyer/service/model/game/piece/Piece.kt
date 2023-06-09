@@ -43,7 +43,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
             ownPosition: PiecePosition
     ): Boolean {
         return possibleMoves(board, history, ownPosition, true)
-                .map { it.beatenPiecePosition }
+                .map { it.beaten.position }
                 .contains(kingPosition)
     }
 
@@ -66,7 +66,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
      * @param history instance
      * @return `true`, if the [Piece] has been moved before
      */
-    fun hasMoved(history: History) = history.getMoves().any { it.fromPiece == this }
+    fun hasMoved(history: History) = history.getMoves().any { it.from.piece == this }
 
     /**
      * @param board instance

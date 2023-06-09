@@ -73,6 +73,8 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
 
         if (rook.hasMoved(history) || !isCastlingPossible(board, history, kingPosition, rookPosition)) return
 
+        val castling = Castling(rookPosition, rook, color, castlingCol, isShortCastling)
+
         addPossibleMove(
                 board = board,
                 history = history,
@@ -80,7 +82,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
                 possiblePosition = PiecePosition(borderRow, castlingCol),
                 possibleMoves = possibleMoves,
                 disableCheckCheck = disableCheckCheck,
-                castling = Castling(rookPosition, color, castlingCol, isShortCastling)
+                castling = castling
         )
     }
 

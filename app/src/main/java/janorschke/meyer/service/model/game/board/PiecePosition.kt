@@ -4,6 +4,11 @@ class PiecePosition {
     val row: Int
     val col: Int
 
+    constructor(position: PiecePosition) {
+        row = position.row
+        col = position.col
+    }
+
     constructor(position: Int) {
         row = position / Board.LINE_SIZE
         col = position % Board.LINE_SIZE

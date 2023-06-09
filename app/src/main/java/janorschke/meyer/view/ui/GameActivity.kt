@@ -267,7 +267,6 @@ class GameActivity : AppCompatActivity() {
 
         gameViewModel.activePlayer.observe(this) { player ->
             Log.d(LOG_TAG, "Update player")
-            boardAdapter.setPlayerColor(player.color)
 
             if (player.color == PieceColor.WHITE) {
                 playerInfoWhite.active.setImageResource(R.drawable.active)
@@ -276,11 +275,6 @@ class GameActivity : AppCompatActivity() {
                 playerInfoWhite.active.setImageResource(R.drawable.inactive)
                 playerInfoBlack.active.setImageResource(R.drawable.active)
             }
-        }
-
-        gameViewModel.selectedPosition.observe(this) { selectedPosition ->
-            Log.d(LOG_TAG, "Update selected positions")
-            boardAdapter.setSelectedPosition(selectedPosition)
         }
 
         gameViewModel.possibleMoves.observe(this) { moves ->

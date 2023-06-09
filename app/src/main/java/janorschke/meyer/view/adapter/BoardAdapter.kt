@@ -8,13 +8,11 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import janorschke.meyer.R
 import janorschke.meyer.databinding.GameFieldBinding
-import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
-import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.model.game.board.move.PossibleMove
+import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.utils.piece.PieceDrawables
-import janorschke.meyer.view.listener.GameFieldOnClickListener
 import janorschke.meyer.viewModel.GameViewModel
 
 /**
@@ -25,24 +23,11 @@ import janorschke.meyer.viewModel.GameViewModel
 class BoardAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
 
-    private var selectedPosition: PiecePosition? = null
-
     private lateinit var fields: Array<Array<Piece?>>
-    private lateinit var playerColor: PieceColor
     private lateinit var possibleMoves: MutableList<PossibleMove>
-
-    fun setSelectedPosition(selectedPosition: PiecePosition?) {
-        this.selectedPosition = selectedPosition
-        notifyDataSetChanged()
-    }
 
     fun setFields(fields: Array<Array<Piece?>>) {
         this.fields = fields
-        notifyDataSetChanged()
-    }
-
-    fun setPlayerColor(playerColor: PieceColor) {
-        this.playerColor = playerColor
         notifyDataSetChanged()
     }
 
@@ -72,15 +57,7 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
 
         holder.view.setBackgroundResource(getViewBackgroundColor(position))
         holder.binding.btn.background = getPieceBackground(piece, position)
-        holder.binding.btn.setOnClickListener(
-                GameFieldOnClickListener(
-                        fields,
-                        position,
-                        playerColor,
-                        selectedPosition,
-                        gameViewModel
-                )
-        )
+        holder.binding.btn.setOnClickListener { gameViewModel.onFieldClick(position) }
 
         return holder.view
     }
@@ -88,7 +65,7 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
     private fun getViewBackgroundColor(position: PiecePosition): Int = if (position.row % 2 != position.col % 2) R.color.red_brown else R.color.beige
 
     private fun getPieceBackground(piece: Piece?, position: PiecePosition): Drawable? {
-        val isPossibleMove = possibleMoves.map { it.toPosition }.contains(position)
+        val isPossibleMove = possibleMoves.map { it.to.position }.contains(position)
         if (piece == null) {
             return if (isPossibleMove) PieceDrawables.getPossibleMove(context) else null
         }

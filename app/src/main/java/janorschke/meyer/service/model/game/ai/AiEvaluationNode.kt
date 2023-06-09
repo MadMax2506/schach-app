@@ -22,7 +22,7 @@ class AiEvaluationNode(val history: History, val move: Move?, private val aiColo
     val valency: Int
 
     val requiredMove get() = move!!
-    val color get() = requiredMove.fromPiece.color
+    val color get() = requiredMove.from.requiredPiece.color
 
     init {
         val time = measureTimeMillis {

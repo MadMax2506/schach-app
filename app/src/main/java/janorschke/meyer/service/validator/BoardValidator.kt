@@ -41,11 +41,11 @@ object BoardValidator {
     fun isEnPassantMove(lastMove: Move?, color: PieceColor, currentPosition: PiecePosition): Boolean {
         lastMove ?: return false
 
-        val lastMovedPiece = lastMove.fromPiece
+        val lastMovedPiece = lastMove.from.requiredPiece
         if (lastMovedPiece !is Pawn || lastMovedPiece.color == color) return false
 
-        val lastMoveTargetRow = lastMove.toPosition.row
-        val lastMoveTargetCol = lastMove.toPosition.col
+        val lastMoveTargetRow = lastMove.to.position.row
+        val lastMoveTargetCol = lastMove.to.position.col
         val currentRow = currentPosition.row
         val currentCol = currentPosition.col
 
@@ -137,7 +137,7 @@ object BoardValidator {
      * @param color of the pieces that have possibly the repeated moves
      */
     private fun hasColorRepeatedMoves(moveHistory: List<Move>, color: PieceColor): Boolean {
-        val filteredHistory = moveHistory.filter { it.fromPiece.color == color }
+        val filteredHistory = moveHistory.filter { it.from.requiredPiece.color == color }
         for (indexedMove in filteredHistory.withIndex()) {
             if (indexedMove.index % 2 == 0 && filteredHistory[0] != indexedMove.value) return false
             else if (indexedMove.index % 2 == 1 && filteredHistory[1] != indexedMove.value) return false

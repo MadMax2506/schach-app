@@ -1,26 +1,21 @@
 package janorschke.meyer.service.model.game.board.move
 
-import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.model.game.piece.Piece
 
 open class PossibleMove(
-        val fromPosition: PiecePosition,
-        val toPosition: PiecePosition,
-        val beatenPiecePosition: PiecePosition,
-        val fromPiece: Piece,
-        val beatenPiece: Piece?,
-        val isEnPassant: Boolean,
+        val from: PiecePositionPair,
+        val to: PiecePositionPair,
+        val beaten: PiecePositionPair,
         val castling: Castling?,
+        val isEnPassant: Boolean,
         val promotionTo: Piece?
 ) {
     constructor(move: Move) : this(
-            move.fromPosition,
-            move.toPosition,
-            move.beatenPiecePosition,
-            move.fromPiece,
-            move.beatenPiece,
-            move.isEnPassant,
-            move.castling,
-            move.promotionTo
+            from = (move.from),
+            to = PiecePositionPair(move.to),
+            beaten = PiecePositionPair(move.beaten),
+            castling = move.castling,
+            isEnPassant = move.isEnPassant,
+            promotionTo = move.promotionTo
     )
 }

@@ -2,21 +2,22 @@ package janorschke.meyer.service.model.game.board.move
 
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.piece.Piece
 
-/**
- * TODO
- */
-data class Castling(
-        val rookPosition: PiecePosition,
-        private val color: PieceColor,
-        private val castlingCol: Int,
-        private val isShortCastling: Boolean
+class Castling(
+        rookPosition: PiecePosition,
+        rook: Piece,
+        color: PieceColor,
+        castlingCol: Int,
+        isShortCastling: Boolean
 ) {
-    val rookCastlingTargetPosition: PiecePosition
-        get() {
-            return PiecePosition(
-                    color.borderRow,
-                    castlingCol + if (isShortCastling) -1 else +1
-            )
-        }
+    val sourceRook: PiecePositionPair
+    val targetRook: PiecePositionPair
+
+    init {
+        sourceRook = PiecePositionPair(rookPosition, rook)
+
+        val targetPosition = PiecePosition(color.borderRow, castlingCol + if (isShortCastling) -1 else +1)
+        targetRook = PiecePositionPair(targetPosition)
+    }
 }
