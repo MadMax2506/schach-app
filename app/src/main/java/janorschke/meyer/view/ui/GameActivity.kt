@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import janorschke.meyer.R
@@ -19,6 +18,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.SettingKeys
 import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.enums.TransferKeys
+import janorschke.meyer.service.model.game.player.AiPlayer
 import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.service.utils.SettingsManager
 import janorschke.meyer.view.adapter.BoardAdapter
@@ -48,8 +48,6 @@ class GameActivity : AppCompatActivity() {
     private lateinit var beatenPiecesByBlackAdapter: BeatenPiecesAdapter
     private lateinit var gameViewModel: GameViewModel
     private lateinit var timeMode: TimeMode
-    private var remainingTime: Long? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,19 +60,11 @@ class GameActivity : AppCompatActivity() {
         playerInfoWhite = binding.playerTwo!!
         playerInfoBlack = binding.playerOne!!
 
-        // Game Mode
-        intent.extras?.getString(TransferKeys.GAME_MODE.name).let { gameModeStr ->
-            if (gameModeStr == null) throw IllegalArgumentException("Wrong game mode")
+        // Time
+        intent.extras?.getString(TransferKeys.TIME_MODE.name).let { timeMode = initTimeMode(it) }
 
-            enumValueOf<GameMode>(gameModeStr).let { gameMode ->
-                when {
-                    gameMode == GameMode.AI -> {
-                        aiGameModeAndTimeMode()
-                    }
-                    // TODO further modes
-                }
-            }
-        }
+        // Game Mode
+        intent.extras?.getString(TransferKeys.GAME_MODE.name).let { gameViewModel = initGameMode(it) }
 
         // Board
         boardAdapter = BoardAdapter(applicationContext, gameViewModel)
@@ -85,7 +75,15 @@ class GameActivity : AppCompatActivity() {
         binding.moveHistoryWrapper?.moveHistory?.adapter = moveHistoryAdapter
 
         // Bottom Bar
-        setBottomBarListener()
+        binding.bottomBar
+                ?.layoutVoteDraw
+                ?.findViewById<LinearLayout>(R.id.layout_vote_draw)
+                ?.setOnClickListener(GameVoteDrawOnClickListener(this, gameViewModel))
+
+        binding.bottomBar
+                ?.layoutSurrender
+                ?.findViewById<LinearLayout>(R.id.layout_surrender)
+                ?.setOnClickListener(GameSurrenderOnClickListener(this, gameViewModel))
 
         // Beaten Pieces By White
         beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)
@@ -101,65 +99,71 @@ class GameActivity : AppCompatActivity() {
     }
 
     /**
-     * Sets the on click listener for the buttons on the bottom bar
+     * Validate and handle the time mode string from extras
+     *
+     * @param timeModeStr
+     * @return the [TimeMode] of the game
      */
-    private fun setBottomBarListener() {
-        val layoutVoteDraw = binding.bottomBar?.layoutVoteDraw
-        val layoutSurrender = binding.bottomBar?.layoutSurrender
-        layoutVoteDraw?.findViewById<LinearLayout>(R.id.layout_vote_draw)?.setOnClickListener(GameVoteDrawOnClickListener(this, gameViewModel))
-        layoutSurrender?.findViewById<LinearLayout>(R.id.layout_surrender)?.setOnClickListener(GameSurrenderOnClickListener(this, gameViewModel))
-    }
+    private fun initTimeMode(timeModeStr: String?): TimeMode {
+        if (timeModeStr == null) throw IllegalArgumentException("Wrong timer mode")
 
-    /**
-     * initializes the game with the timeMode set.
-     * @return the time or null
-     */
-    private fun initTimeMode(): Long? {
-        val timeModeStr = intent.extras?.getString(TransferKeys.TIME_MODE.name)
-                ?: throw IllegalArgumentException("Time Mode null!")
-        timeMode = enumValueOf(timeModeStr)
-
-        // TimeMode off for AI-Player
-        // TODO: wenn AI-Player auch weiß sein kann muss der Code hier angepasst werden
-        binding.playerOne!!.time.visibility = View.GONE
-
-        if (timeMode != TimeMode.UNLIMITED) {
-            return timeMode.time
-        } else {
-            binding.playerTwo!!.time.visibility = View.GONE
+        val timeMode = enumValueOf<TimeMode>(timeModeStr)
+        if (timeMode == TimeMode.UNLIMITED) {
+            playerInfoWhite.time.visibility = View.GONE
+            playerInfoBlack.time.visibility = View.GONE
         }
-        return null
+        return timeMode
     }
 
-
-
     /**
-     * Initialize the game with an ai level and the timeMode
+     * Validate and handle the game mode from extras
+     *
+     * @param gameModeStr
+     * @return the [GameViewModel] of the game depending on the game mode
      */
-    private fun aiGameModeAndTimeMode() {
-        intent.extras?.getString(TransferKeys.AI_LEVEL.name).let { aiLevelStr ->
-            if (aiLevelStr == null) throw IllegalArgumentException("Wrong ai level")
+    private fun initGameMode(gameModeStr: String?): GameViewModel {
+        if (gameModeStr == null) throw IllegalArgumentException("Wrong game mode")
 
-            enumValueOf<AiLevel>(aiLevelStr).let {
-                val playerNameWhite = SettingsManager.loadSettings(applicationContext, SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name)
-                        ?.takeUnless(String::isEmpty)
-                        ?: getString(R.string.default_player_name)
-
-                val playerNameBlack = getString(it.resourceId)
-
-                // Time Mode
-                val time = initTimeMode()
-
-                // ViewModel
-                gameViewModel = ViewModelProvider(
-                        this,
-                        GameViewModelFactory(application, playerNameWhite, playerNameBlack, null, it, time)
-                )[GameViewModel::class.java]
-
-                playerInfoWhite.name.text = playerNameWhite
-                playerInfoBlack.name.text = playerNameBlack
+        return enumValueOf<GameMode>(gameModeStr).let { gameMode ->
+            when (gameMode) {
+                GameMode.AI -> {
+                    val aiLevelStr = intent.extras?.getString(TransferKeys.AI_LEVEL.name)
+                            ?: throw IllegalArgumentException("Wrong ai level")
+                    initAiGame(enumValueOf(aiLevelStr))
+                }
             }
         }
+    }
+
+    /**
+     * Handle the ai level for a new game
+     *
+     * @param aiLevel
+     * @return the [GameViewModel] of the game against the ai
+     */
+    private fun initAiGame(aiLevel: AiLevel): GameViewModel {
+        val playerNameWhite = SettingsManager.loadSettings(applicationContext, SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name)
+                ?.takeUnless(String::isEmpty)
+                ?: getString(R.string.default_player_name)
+
+        val playerNameBlack = getString(aiLevel.resourceId)
+
+        // ViewModel
+        val gameViewModel = ViewModelProvider(
+                this,
+                GameViewModelFactory(application, playerNameWhite, playerNameBlack, null, aiLevel, timeMode)
+        )[GameViewModel::class.java]
+
+        playerInfoWhite.name.text = playerNameWhite
+        playerInfoBlack.name.text = playerNameBlack
+
+        if (gameViewModel.playerWhite.value is AiPlayer) {
+            playerInfoWhite.time.visibility = View.GONE
+        } else if (gameViewModel.playerBlack.value is AiPlayer) {
+            playerInfoBlack.time.visibility = View.GONE
+        }
+
+        return gameViewModel
     }
 
     /**
@@ -187,15 +191,16 @@ class GameActivity : AppCompatActivity() {
      * @param playerBlack
      * @see GameOverDialog.onCreateDialog
      */
-    private fun showGameOverDialogAndStopTimer(
+    private fun showGameOverDialog(
             winningColor: PieceColor? = null,
             playerWhite: Player,
             playerBlack: Player,
             endByVote: Boolean = false
     ) {
         gameViewModel.stopCountdownTimer()
-        val endByTimeOver = (timeMode != TimeMode.UNLIMITED) && (remainingTime!! == 0L)
-        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote, timeMode, endByTimeOver).show(supportFragmentManager, GAME_OVER_DIALOG_TAG)
+        val endByTimeOver = (timeMode != TimeMode.UNLIMITED) && (gameViewModel.activePlayerTime.value == 0L)
+        GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote, timeMode, endByTimeOver)
+                .show(supportFragmentManager, GAME_OVER_DIALOG_TAG)
     }
 
     /**
@@ -203,7 +208,7 @@ class GameActivity : AppCompatActivity() {
      * @param value of the difference
      */
     @SuppressLint("SetTextI18n")
-    private fun setPawnDifference(binding: PlayerInfoBinding, value: Int) {
+    fun setPawnDifference(binding: PlayerInfoBinding, value: Int) {
         when {
             value > 0 -> binding.pawnDifference.text = "+$value"
             value < 0 -> binding.pawnDifference.text = "$value"
@@ -219,8 +224,8 @@ class GameActivity : AppCompatActivity() {
             when (status) {
                 GameStatus.CHECKMATE -> {
                     Log.d(LOG_TAG, "Checkmate")
-                    showGameOverDialogAndStopTimer(
-                            winningColor = gameViewModel.activePlayer.value?.color,
+                    showGameOverDialog(
+                            winningColor = gameViewModel.activePlayerColor.value,
                             playerWhite = gameViewModel.playerWhite.value!!,
                             playerBlack = gameViewModel.playerBlack.value!!
                     )
@@ -228,7 +233,7 @@ class GameActivity : AppCompatActivity() {
 
                 GameStatus.STALEMATE -> {
                     Log.d(LOG_TAG, "Stalemate")
-                    showGameOverDialogAndStopTimer(
+                    showGameOverDialog(
                             playerWhite = gameViewModel.playerWhite.value!!,
                             playerBlack = gameViewModel.playerBlack.value!!
                     )
@@ -236,7 +241,7 @@ class GameActivity : AppCompatActivity() {
 
                 GameStatus.DRAW -> {
                     Log.d(LOG_TAG, "Draw voted")
-                    showGameOverDialogAndStopTimer(
+                    showGameOverDialog(
                             playerWhite = gameViewModel.playerWhite.value!!,
                             playerBlack = gameViewModel.playerBlack.value!!,
                             endByVote = true
@@ -245,8 +250,8 @@ class GameActivity : AppCompatActivity() {
 
                 GameStatus.SURRENDERED -> {
                     Log.d(LOG_TAG, "Surrendered")
-                    showGameOverDialogAndStopTimer(
-                            winningColor = gameViewModel.activePlayer.value?.color?.opponent(),
+                    showGameOverDialog(
+                            winningColor = gameViewModel.activePlayerColor.value?.opponent(),
                             playerWhite = gameViewModel.playerWhite.value!!,
                             playerBlack = gameViewModel.playerBlack.value!!,
                             endByVote = true
@@ -255,7 +260,11 @@ class GameActivity : AppCompatActivity() {
 
                 GameStatus.TIME_OVER -> {
                     Log.d(LOG_TAG, "TimeOver")
-                    showGameOverDialogAndStopTimer(gameViewModel.activePlayer.value?.color?.opponent(), gameViewModel.playerWhite.value!!, gameViewModel.playerBlack.value!!)
+                    showGameOverDialog(
+                            winningColor = gameViewModel.activePlayerColor.value?.opponent(),
+                            playerWhite = gameViewModel.playerWhite.value!!,
+                            playerBlack = gameViewModel.playerBlack.value!!
+                    )
                 }
 
                 GameStatus.RUNNING -> {}
@@ -264,30 +273,31 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
-        gameViewModel.activePlayer.observe(this) { activePlayer ->
+        gameViewModel.activePlayerColor.observe(this) { color ->
             Log.d(LOG_TAG, "Update activePlayer")
-            boardAdapter.setPlayerColor(activePlayer.color)
+            boardAdapter.setPlayerColor(color)
 
-            if (activePlayer.color == PieceColor.BLACK) {
+            if (color == PieceColor.BLACK) {
                 playerInfoWhite.active.setImageResource(R.drawable.inactive)
                 playerInfoBlack.active.setImageResource(R.drawable.active)
             } else {
                 playerInfoWhite.active.setImageResource(R.drawable.active)
                 playerInfoBlack.active.setImageResource(R.drawable.inactive)
             }
+        }
 
-            // TODO: Wohin mit Timer stoppen und Zeit grau (= gestoppt) setzen?
-            //  und genauso wohin mit Timer fortlaufen lassen?
-            //  bleibt der Code hier so und man greift übers GameViewModel auf den Timer zu?
-            if (activePlayer.color == PieceColor.BLACK) {
-                if (timeMode != TimeMode.UNLIMITED) {
-                    gameViewModel.stopCountdownTimer()
-                    binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.dark_gray))
-                }
-            } else {
-                if (timeMode != TimeMode.UNLIMITED) {
-                    gameViewModel.setCountdownTimer()
-                    binding.playerTwo!!.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
+        if (timeMode != TimeMode.UNLIMITED) {
+            gameViewModel.activePlayerTime.observe(this) { time ->
+                Log.d(LOG_TAG, "Update activePlayer time")
+
+                val seconds = time!! / 1000
+                val minutes = seconds / 60
+                val remainingSeconds = seconds % 60
+
+                if (gameViewModel.activePlayerColor.value == PieceColor.BLACK) {
+                    playerInfoBlack.time.text = String.format("%02d:%02d", minutes, remainingSeconds)
+                } else {
+                    playerInfoWhite.time.text = String.format("%02d:%02d", minutes, remainingSeconds)
                 }
             }
         }

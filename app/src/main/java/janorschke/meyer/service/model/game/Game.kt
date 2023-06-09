@@ -4,39 +4,37 @@ import android.os.CountDownTimer
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.service.model.game.board.PiecePosition
 import janorschke.meyer.service.model.game.board.PossibleMove
 import janorschke.meyer.service.model.game.player.AiPlayer
 import janorschke.meyer.service.model.game.player.PlayerFactory
+import janorschke.meyer.viewModel.GameViewModel
 
 class Game(
-        playerNameWhite: String, playerNameBlack: String,
-        aiLevelWhite: AiLevel?, aiLevelBlack: AiLevel?,
-        time: Long?
+        // TODO add ticket
+        private val gameViewModel: GameViewModel,
+        private val timeMode: TimeMode,
+        playerNameWhite: String,
+        playerNameBlack: String,
+        aiLevelWhite: AiLevel?,
+        aiLevelBlack: AiLevel?
 ) {
-    val playerWhite = PlayerFactory(PieceColor.WHITE, playerNameWhite, aiLevelWhite, time).create()
-    val playerBlack = PlayerFactory(PieceColor.BLACK, playerNameBlack, aiLevelBlack, time).create()
+    val playerWhite = PlayerFactory(PieceColor.WHITE, playerNameWhite, aiLevelWhite, timeMode).create()
+    val playerBlack = PlayerFactory(PieceColor.BLACK, playerNameBlack, aiLevelBlack, timeMode).create()
 
     private var activeColor: PieceColor = PieceColor.WHITE
     private var status: GameStatus = GameStatus.RUNNING
-
-    /**
-     * Current selected position
-     */
     private var selectedPosition: PiecePosition? = null
-
-    /**
-     * Possible moves for the piece on the selected position
-     */
     private var possibleMoves: MutableList<PossibleMove> = mutableListOf()
+    private var countdownTimer: CountDownTimer? = null
 
     val activePlayer get() = if (activeColor == PieceColor.WHITE) playerWhite else playerBlack
     val aiPlayer get() = if (playerWhite is AiPlayer) playerWhite else playerBlack as AiPlayer
 
-    /**
-     * CountdownTimer for the game
-     */
-    private var countdownTimer: CountDownTimer? = null
+    init {
+        setCountdownTimer()
+    }
 
     /**
      * Set the next player to move pieces
@@ -49,23 +47,20 @@ class Game(
      * Sets the Timer from the remainingTime
      */
     fun setCountdownTimer() {
-        val activePlayer = getPlayer()
-        if(activePlayer.remainingTime == null) return
-        countdownTimer = object : CountDownTimer(activePlayer.remainingTime!!, 1000) {
+        if (timeMode == TimeMode.UNLIMITED) return
+
+        stopCountdownTimer()
+
+        countdownTimer = object : CountDownTimer(activePlayer.requiredTime, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                activePlayer.remainingTime = millisUntilFinished
-                val seconds = millisUntilFinished / 1000
-                val minutes = seconds / 60
-                val remainingSeconds = seconds % 60
-                // TODO Zeit anzeigen https://github.com/users/MadMax2506/projects/19/views/1?pane=issue&itemId=29217573
-//                binding.playerTwo!!.time.text = String.format("%02d:%02d", minutes, remainingSeconds)
+                activePlayer.requiredTime = millisUntilFinished
+                gameViewModel.timerTick()
             }
 
             override fun onFinish() {
-                activePlayer.remainingTime = 0
-                // TODO Dialog anzeigen https://github.com/users/MadMax2506/projects/19/views/1?pane=issue&itemId=29217573
-                //  irgendwie die Beziehung jetzt falschrum...
-//                gameViewModel.gameTimeOver()
+                activePlayer.requiredTime = 0
+                status = GameStatus.TIME_OVER
+                gameViewModel.timerTick()
             }
         }.start()
     }

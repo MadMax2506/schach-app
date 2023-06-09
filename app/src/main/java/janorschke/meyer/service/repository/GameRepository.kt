@@ -48,4 +48,12 @@ class GameRepository(private val board: Board, private val history: History, pri
         }
         return false
     }
+
+    /**
+     * TODO
+     */
+    fun handleMove() {
+        game.setNextPlayer()
+        game.setCountdownTimer()
+    }
 }
