@@ -5,5 +5,6 @@ enum class GameStatus {
     CHECKMATE,
     SURRENDERED,
     STALEMATE,
+    TIME_OVER,
     DRAW
 }

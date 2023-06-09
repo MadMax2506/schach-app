@@ -3,7 +3,7 @@ package janorschke.meyer.enums
 /**
  * Consideration time of a player in a game
  */
-enum class TimeMode(val time: Long) {
+enum class TimeMode(val time: Long?) {
     /**
      * Bullet mode: 1 minute time limit.
      */
@@ -22,5 +22,5 @@ enum class TimeMode(val time: Long) {
     /**
      * Unlimited mode: No time limit.
      */
-    UNLIMITED(-1);
+    UNLIMITED(null);
 }

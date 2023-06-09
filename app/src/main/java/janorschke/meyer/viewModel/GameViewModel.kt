@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
@@ -29,10 +30,12 @@ class GameViewModel(
         playerNameWhite: String,
         playerNameBlack: String,
         aiLevelWhite: AiLevel?,
-        aiLevelBlack: AiLevel?
+        aiLevelBlack: AiLevel?,
+        timeMode: TimeMode
 ) : AndroidViewModel(application) {
     // live data for the view
-    val activePlayer: MutableLiveData<Player> = MutableLiveData()
+    val activePlayerColor: MutableLiveData<PieceColor> = MutableLiveData()
+    val activePlayerTime: MutableLiveData<Long?> = MutableLiveData()
     val playerWhite: MutableLiveData<Player> = MutableLiveData()
     val playerBlack: MutableLiveData<Player> = MutableLiveData()
     val status: MutableLiveData<GameStatus> = MutableLiveData()
@@ -44,7 +47,7 @@ class GameViewModel(
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
     val pawnDifferenceBlack: MutableLiveData<Int> = MutableLiveData()
 
-    private val game = Game(playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack)
+    private val game = Game(this, timeMode, playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
     private val aiRepository = AiRepositoryFactory(game).create()
@@ -65,6 +68,15 @@ class GameViewModel(
 
     fun voteDraw() {
         gameRepository.playerOffersDraw()
+        setValues()
+    }
+
+    fun timerTick() {
+        setValues()
+    }
+
+    fun stopCountdownTimer() {
+        game.stopCountdownTimer()
         setValues()
     }
 
@@ -95,7 +107,8 @@ class GameViewModel(
      */
     private fun setValues() {
         // game settings
-        updateIfDifferent(activePlayer, game.activePlayer)
+        updateIfDifferent(activePlayerColor, game.getActiveColor())
+        updateIfDifferent(activePlayerTime, game.activePlayer.remainingTime)
         updateIfDifferent(status, game.getStatus())
         updateIfDifferent(possibleMoves, game.getPossibleMoves())
 

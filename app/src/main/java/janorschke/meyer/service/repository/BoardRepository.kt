@@ -57,22 +57,25 @@ class BoardRepository(
         // Check if game is finished or
         if (gameRepository.checkEndOfGame(piece!!)) return
 
-        game.setNextPlayer()
+        gameRepository.handleMove()
 
         // move was done by the ai
         if (isAiMove) return
 
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/99
         GlobalScope.launch {
-            tryToMovePiece(aiRepository.calculateNextMove(board, history), true)
-            withContext(Dispatchers.Main) { gameViewModel.aiMoved() }
+            val move = aiRepository.calculateNextMove(board, history)
+            withContext(Dispatchers.Main) {
+                tryToMovePiece(move, true)
+                gameViewModel.aiMoved()
+            }
         }
     }
 
     /**
      * Moves a piece to the target position
      *
-     * @param possibleMove
+     * @param possibleMove from which the move is created to move the piece
      */
     private fun movePiece(possibleMove: PossibleMove) {
         val move = createMove(possibleMove)
@@ -86,7 +89,7 @@ class BoardRepository(
     /**
      * Moves an piece to another position
      *
-     * @param possibleMove
+     * @param possibleMove from which the move is created
      * @return board move
      *
      * @see Board.createMove
