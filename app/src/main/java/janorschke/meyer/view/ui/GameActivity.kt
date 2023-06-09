@@ -287,8 +287,13 @@ class GameActivity : AppCompatActivity() {
                 playerInfoBlack.active.setImageResource(R.drawable.active)
                 playerInfoBlack.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
 
-                layoutSurrender?.isEnabled = gameViewModel.playerBlack.value !is AiPlayer
-                layoutVoteDraw?.isEnabled = gameViewModel.playerBlack.value !is AiPlayer
+                // setting the bottomBar enabled, if activePlayer is not the Ai
+                val isNotAiPlayer = gameViewModel.playerBlack.value !is AiPlayer
+                layoutSurrender?.isEnabled = isNotAiPlayer
+                layoutVoteDraw?.isEnabled = isNotAiPlayer
+
+                layoutSurrender?.alpha = if (isNotAiPlayer) 1.0f else 0.7f
+                layoutVoteDraw?.alpha = if (isNotAiPlayer) 1.0f else 0.7f
             } else {
                 playerInfoWhite.active.setImageResource(R.drawable.active)
                 playerInfoWhite.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
@@ -296,8 +301,13 @@ class GameActivity : AppCompatActivity() {
                 playerInfoBlack.active.setImageResource(R.drawable.inactive)
                 playerInfoBlack.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.dark_gray))
 
-                layoutSurrender?.isEnabled = gameViewModel.playerWhite.value !is AiPlayer
-                layoutVoteDraw?.isEnabled = gameViewModel.playerWhite.value !is AiPlayer
+                // setting the bottomBar enabled, if activePlayer is not the Ai
+                val isNotAiPlayer = gameViewModel.playerWhite.value !is AiPlayer
+                layoutSurrender?.isEnabled = isNotAiPlayer
+                layoutVoteDraw?.isEnabled = isNotAiPlayer
+
+                layoutSurrender?.alpha = if (isNotAiPlayer) 1.0f else 0.7f
+                layoutVoteDraw?.alpha = if (isNotAiPlayer) 1.0f else 0.7f
             }
         }
 
