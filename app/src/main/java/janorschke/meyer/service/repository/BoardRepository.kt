@@ -4,9 +4,9 @@ import android.util.Log
 import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.Move
-import janorschke.meyer.service.model.game.board.PiecePosition
-import janorschke.meyer.service.model.game.board.PossibleMove
+import janorschke.meyer.service.model.game.board.Position
+import janorschke.meyer.service.model.game.board.move.Move
+import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.lineMoving.Queen
 import janorschke.meyer.service.repository.ai.AiRepository
 import janorschke.meyer.service.validator.BoardValidator
@@ -30,27 +30,27 @@ class BoardRepository(
         private val gameRepository: GameRepository,
         private val aiRepository: AiRepository
 ) {
-    fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
-        tryToMovePiece(fromPosition, toPosition, false)
+    fun tryToMovePiece(position: Position) {
+        val possibleMove = game.getPossibleMoves().firstOrNull { it.to.position == position }
+        tryToMovePiece(possibleMove, false)
     }
 
     /**
      * Moves a chess piece from the source position to the target position, if the target position is valid.
      *
-     * @param fromPosition the source position of the chess piece
-     * @param toPosition the target position to move the chess piece to
+     * @param possibleMove of the piece
      * @param isAiMove if true, the move was produced by an ai
      */
     @OptIn(DelicateCoroutinesApi::class)
-    private fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition, isAiMove: Boolean) {
-        val piece = board.getField(fromPosition)
-        val possibleMoves = piece?.possibleMoves(board, history, fromPosition) ?: emptyList()
-        val possibleMove = possibleMoves.firstOrNull { it.toPosition == toPosition }
+    private fun tryToMovePiece(possibleMove: PossibleMove?, isAiMove: Boolean) {
         // Check if requested position is a possible move of the piece
         if (possibleMove == null) {
             game.setSelectedPiece()
             return
         }
+
+        val fromPosition = possibleMove.from.position
+        val piece = board.getField(fromPosition)
 
         // Move piece and reset selection
         movePiece(possibleMove)
@@ -59,52 +59,51 @@ class BoardRepository(
         // Check if game is finished or
         if (gameRepository.checkEndOfGame(piece!!)) return
 
-        game.setColor(game.getColor().opponent())
+        gameRepository.handleMove()
 
         // move was done by the ai
         if (isAiMove) return
 
         // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/99
         GlobalScope.launch {
-            aiRepository.calculateNextMove(board, history).let { move -> tryToMovePiece(move.fromPosition, move.toPosition, true) }
-            withContext(Dispatchers.Main) { gameViewModel.aiMoved() }
+            val move = aiRepository.calculateNextMove(board, history)
+            withContext(Dispatchers.Main) {
+                tryToMovePiece(move, true)
+                gameViewModel.aiMoved()
+            }
         }
     }
 
     /**
      * Moves a piece to the target position
      *
-     * @param from source position
-     * @param to target position
+     * @param possibleMove from which the move is created to move the piece
      */
     private fun movePiece(possibleMove: PossibleMove) {
         val move = createMove(possibleMove)
         history.push(move)
 
-        if (move.beatenPiece != null) Log.d(LOG_TAG, "${possibleMove.fromPosition.getNotation()} beat piece on ${possibleMove.toPosition.getNotation()}")
-        else Log.d(LOG_TAG, "Move piece from ${possibleMove.fromPosition.getNotation()} to ${possibleMove.toPosition.getNotation()}")
+        if (move.beaten.piece != null) Log.d(LOG_TAG, "${possibleMove.from.position.getNotation()} beat piece on ${possibleMove.to.position.getNotation()}")
+        else Log.d(LOG_TAG, "Move piece from ${possibleMove.from.position.getNotation()} to ${possibleMove.to.position.getNotation()}")
     }
 
 
     /**
      * Moves an piece to another position
      *
-     * @param from source position
-     * @param to target position
+     * @param possibleMove from which the move is created
      * @return board move
      *
      * @see Board.createMove
      */
     private fun createMove(possibleMove: PossibleMove): Move {
-        board.getField(possibleMove.fromPosition)!!.let { piece ->
-            if (BoardValidator.isPawnTransformation(piece, possibleMove.toPosition)) {
-                // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/49
-                //PromotionDialog.newInstance().show(supportFragmentManager, PROMOTION_DIALOG_TAG)
-
-                return board.createMove(possibleMove.fromPosition, possibleMove.toPosition, Queen(piece.color), possibleMove.isEnPassant)
-            } else {
-                return board.createMove(possibleMove)
-            }
+        val piece = possibleMove.from.requiredPiece
+        if (BoardValidator.isPawnTransformation(piece, possibleMove.to.position)) {
+            // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/49
+            //PromotionDialog.newInstance().show(supportFragmentManager, PROMOTION_DIALOG_TAG)
+            return board.createMove(possibleMove.from.position, possibleMove.to.position, Queen(piece.color))
+        } else {
+            return board.createMove(possibleMove)
         }
     }
 }

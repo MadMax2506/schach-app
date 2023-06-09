@@ -30,13 +30,15 @@ class GameOverDialog : BaseDialog() {
         private const val ARG_PLAYER_BLACK = "playerBlack"
         private const val ARG_TIME_MODE = "timeMode"
         private const val ARG_END_BY_VOTE = "endByVote"
+        private const val ARG_END_BY_TIMEOUT = "endByTimeOut"
 
         fun newInstance(
                 winningColor: PieceColor?,
                 playerWhite: Player,
                 playerBlack: Player,
                 endByVote: Boolean,
-                timeMode: TimeMode
+                timeMode: TimeMode,
+                endByTimeOut: Boolean
         ): GameOverDialog {
             return GameOverDialog().also { dialog ->
                 dialog.arguments = Bundle().also { bundle ->
@@ -45,6 +47,7 @@ class GameOverDialog : BaseDialog() {
                     bundle.putSerializable(ARG_PLAYER_BLACK, playerBlack)
                     bundle.putSerializable(ARG_END_BY_VOTE, endByVote)
                     bundle.putSerializable(ARG_TIME_MODE, timeMode)
+                    bundle.putSerializable(ARG_END_BY_TIMEOUT, endByTimeOut)
                 }
             }
         }
@@ -58,10 +61,11 @@ class GameOverDialog : BaseDialog() {
         val playerBlack: Player = requireArguments().requiredSerializable(ARG_PLAYER_BLACK)
         val endByVote: Boolean = requireArguments().requiredSerializable(ARG_END_BY_VOTE)
         val timeMode: TimeMode = requireArguments().requiredSerializable(ARG_TIME_MODE)
+        val endByTimeOut: Boolean = requireArguments().requiredSerializable(ARG_END_BY_TIMEOUT)
 
         aiLevel = if (playerWhite is AiPlayer) playerWhite.aiLevel else (playerBlack as AiPlayer).aiLevel
 
-        binding.textGameOverDialog.text = getDialogText(winningColor, playerWhite, playerBlack, endByVote)
+        binding.textGameOverDialog.text = getDialogText(winningColor, playerWhite, playerBlack, endByVote, endByTimeOut)
 
         setButtonOnClickHandlers(timeMode)
 
@@ -72,7 +76,8 @@ class GameOverDialog : BaseDialog() {
             winningColor: PieceColor?,
             playerWhite: Player,
             playerBlack: Player,
-            endByVote: Boolean
+            endByVote: Boolean,
+            endByTimeOut: Boolean
     ): String {
         return when {
             endByVote && winningColor == null -> resources.getString(R.string.gameover_dialog_text_draw_voted)
@@ -85,6 +90,13 @@ class GameOverDialog : BaseDialog() {
             }
 
             winningColor == null -> resources.getString(R.string.gameover_dialog_text_stalemate)
+
+            endByTimeOut -> {
+                return resources.getString(
+                        R.string.gameover_dialog_text_timeout,
+                        if (winningColor == PieceColor.WHITE) playerWhite.name else playerBlack.name
+                )
+            }
 
             else -> {
                 resources.getString(

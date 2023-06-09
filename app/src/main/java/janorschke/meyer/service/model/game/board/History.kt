@@ -1,6 +1,7 @@
 package janorschke.meyer.service.model.game.board
 
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.piece.Piece
 
 /**
@@ -23,11 +24,6 @@ class History {
         this.moves = history.moves.toMutableList()
     }
 
-    fun reset() {
-        beatenPieces.clear()
-        moves.clear()
-    }
-
     fun getMoves() = moves.toMutableList()
 
     /**
@@ -35,8 +31,6 @@ class History {
      * @return the n last moves
      */
     fun getLastMoves(n: Int) = moves.takeLast(n).toMutableList()
-
-    fun getBeatenPieces() = beatenPieces.toMutableList()
 
     /**
      * @param color of the pieces
@@ -50,16 +44,7 @@ class History {
      * @param move of a piece
      */
     fun push(move: Move) {
-        if (move.beatenPiece != null) beatenPieces.also { it.add(move.beatenPiece) }.sortByDescending { it.pieceInfo.valence }
+        if (move.beaten.piece != null) beatenPieces.also { it.add(move.beaten.requiredPiece) }.sortByDescending { it.pieceInfo.valence }
         moves.add(move)
-    }
-
-    /**
-     * @return the last move and remove it from the history
-     */
-    fun undo(): Move {
-        val move = moves.removeLast()
-        if (move.beatenPiece != null) beatenPieces.removeLast()
-        return move
     }
 }

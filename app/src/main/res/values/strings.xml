@@ -38,6 +38,7 @@
     <string name="gameover_dialog_return_to_main_menu">Zurück zum Hauptmenü</string>
     <string name="gameover_dialog_change_difficulty">Schwierigkeitsgrad ändern</string>
     <string name="gameover_dialog_text_win">Schachmatt! %s gewinnt!</string>
+    <string name="gameover_dialog_text_timeout">%s gewinnt durch Time Out!</string>
     <string name="gameover_dialog_text_stalemate">Patt!</string>
     <string name="gameover_dialog_text_surrender">%s gewinnt durch Aufgabe!</string>
     <string name="gameover_dialog_text_draw_voted">Unentschieden durch Abstimmung!</string>

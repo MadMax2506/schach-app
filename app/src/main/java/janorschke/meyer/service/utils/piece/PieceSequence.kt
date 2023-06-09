@@ -2,7 +2,7 @@ package janorschke.meyer.service.utils.piece
 
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
-import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.piece.Piece
 
 /**
@@ -49,11 +49,11 @@ object PieceSequence {
     }
 
     class IndexedPiece(indexedValue: IndexedValue<Piece?>) {
-        val position: PiecePosition
+        val position: Position
         val piece: Piece
 
         init {
-            position = PiecePosition(indexedValue.index)
+            position = Position(indexedValue.index)
             piece = indexedValue.value!!
         }
     }

@@ -3,8 +3,8 @@ package janorschke.meyer.service.validator
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.Move
-import janorschke.meyer.service.model.game.board.PiecePosition
+import janorschke.meyer.service.model.game.board.Position
+import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.piece.King
 import janorschke.meyer.service.model.game.piece.Pawn
 import janorschke.meyer.service.model.game.piece.Piece
@@ -33,19 +33,19 @@ object BoardValidator {
 
     /**
      * @param piece which is moving
-     * @param to [PiecePosition] of the [Piece]
+     * @param to [Position] of the [Piece]
      * @return `true`, if the moved piece represents a pawn transformation
      */
-    fun isPawnTransformation(piece: Piece, to: PiecePosition) = piece is Pawn && to.row == piece.color.opponent().borderRow
+    fun isPawnTransformation(piece: Piece, to: Position) = piece is Pawn && to.row == piece.color.opponent().borderRow
 
-    fun isEnPassantMove(lastMove: Move?, color: PieceColor, currentPosition: PiecePosition): Boolean {
+    fun isEnPassantMove(lastMove: Move?, color: PieceColor, currentPosition: Position): Boolean {
         lastMove ?: return false
 
-        val lastMovedPiece = lastMove.fromPiece
+        val lastMovedPiece = lastMove.from.requiredPiece
         if (lastMovedPiece !is Pawn || lastMovedPiece.color == color) return false
 
-        val lastMoveTargetRow = lastMove.toPosition.row
-        val lastMoveTargetCol = lastMove.toPosition.col
+        val lastMoveTargetRow = lastMove.to.position.row
+        val lastMoveTargetCol = lastMove.to.position.col
         val currentRow = currentPosition.row
         val currentCol = currentPosition.col
 
@@ -136,7 +136,7 @@ object BoardValidator {
      * @param color of the pieces that have possibly the repeated moves
      */
     private fun hasColorRepeatedMoves(moveHistory: List<Move>, color: PieceColor): Boolean {
-        val filteredHistory = moveHistory.filter { it.fromPiece.color == color }
+        val filteredHistory = moveHistory.filter { it.from.requiredPiece.color == color }
         for (indexedMove in filteredHistory.withIndex()) {
             if (indexedMove.index % 2 == 0 && filteredHistory[0] != indexedMove.value) return false
             else if (indexedMove.index % 2 == 1 && filteredHistory[1] != indexedMove.value) return false

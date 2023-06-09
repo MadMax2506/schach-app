@@ -6,12 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.GameStatus
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.service.model.game.Game
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
-import janorschke.meyer.service.model.game.board.Move
-import janorschke.meyer.service.model.game.board.PiecePosition
-import janorschke.meyer.service.model.game.board.PossibleMove
+import janorschke.meyer.service.model.game.board.Position
+import janorschke.meyer.service.model.game.board.move.Move
+import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.service.repository.BoardRepository
@@ -29,14 +30,15 @@ class GameViewModel(
         playerNameWhite: String,
         playerNameBlack: String,
         aiLevelWhite: AiLevel?,
-        aiLevelBlack: AiLevel?
+        aiLevelBlack: AiLevel?,
+        timeMode: TimeMode
 ) : AndroidViewModel(application) {
     // live data for the view
-    val activePlayer: MutableLiveData<Player> = MutableLiveData()
+    val activePlayerColor: MutableLiveData<PieceColor> = MutableLiveData()
+    val activePlayerTime: MutableLiveData<Long?> = MutableLiveData()
     val playerWhite: MutableLiveData<Player> = MutableLiveData()
     val playerBlack: MutableLiveData<Player> = MutableLiveData()
     val status: MutableLiveData<GameStatus> = MutableLiveData()
-    val selectedPosition: MutableLiveData<PiecePosition?> = MutableLiveData()
     val possibleMoves: MutableLiveData<MutableList<PossibleMove>> = MutableLiveData()
     val fields: MutableLiveData<Array<Array<Piece?>>> = MutableLiveData()
     val moves: MutableLiveData<MutableList<Move>> = MutableLiveData()
@@ -45,27 +47,17 @@ class GameViewModel(
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
     val pawnDifferenceBlack: MutableLiveData<Int> = MutableLiveData()
 
-    private val game = Game(playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack)
+    private val game = Game(this, timeMode, playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
     private val aiRepository = AiRepositoryFactory(game).create()
     private val gameRepository = GameRepository(board, history, game)
     private val boardRepository = BoardRepository(this, board, history, game, gameRepository, aiRepository)
 
-    fun getHistory() = history
-
     init {
         playerWhite.value = game.playerWhite
         playerBlack.value = game.playerBlack
 
-        setValues()
-    }
-
-    /**
-     * @see BoardRepository.tryToMovePiece
-     */
-    fun tryToMovePiece(fromPosition: PiecePosition, toPosition: PiecePosition) {
-        boardRepository.tryToMovePiece(fromPosition, toPosition)
         setValues()
     }
 
@@ -75,26 +67,38 @@ class GameViewModel(
     }
 
     fun voteDraw() {
-        // TODO ki draw analysieren und dann entscheiden ob angenommen wird oder nicht
-        //  https://github.com/users/MadMax2506/projects/19/views/1?pane=issue&itemId=29566739
-        game.setStatus(GameStatus.DRAW)
+        gameRepository.playerOffersDraw()
         setValues()
     }
 
-    fun aiMoved() {
+    fun timerTick() {
         setValues()
     }
 
-    /**
-     * Sets the selected piece and shows the possible moves through the GameFieldAdapter.
-     *
-     * @param selectedPosition the position of the selected piece (optional: Default = null)
-     * @param possibleMoves the possible moves for the selected piece (optional: Default = emptyList())
-     *
-     * @see Game.selectedPosition
-     */
-    fun setSelectedPiece(selectedPosition: PiecePosition? = null, possibleMoves: MutableList<PossibleMove> = mutableListOf()) {
-        game.setSelectedPiece(selectedPosition, possibleMoves)
+    fun stopCountdownTimer() {
+        game.stopCountdownTimer()
+        setValues()
+    }
+
+    fun aiMoved() = setValues()
+
+    fun onFieldClick(position: Position) {
+        val piece = board.getField(position)
+        val selectedPosition = game.getSelectedPosition()
+        val isPlayersPiece = (piece?.color == game.getActiveColor())
+
+        when {
+            // Move piece to a valid position
+            (selectedPosition != null && !isPlayersPiece) -> boardRepository.tryToMovePiece(position)
+
+            // Set the current selected piece on the board
+            (isPlayersPiece && (selectedPosition == null || selectedPosition != position)) -> {
+                val possibleMoves = piece?.possibleMoves(Board(board), history, position) ?: mutableListOf()
+                game.setSelectedPiece(position, possibleMoves)
+            }
+
+            else -> game.setSelectedPiece()
+        }
         setValues()
     }
 
@@ -103,9 +107,9 @@ class GameViewModel(
      */
     private fun setValues() {
         // game settings
-        updateIfDifferent(activePlayer, game.getPlayer())
+        updateIfDifferent(activePlayerColor, game.getActiveColor())
+        updateIfDifferent(activePlayerTime, game.activePlayer.remainingTime)
         updateIfDifferent(status, game.getStatus())
-        updateIfDifferent(selectedPosition, game.getSelectedPosition())
         updateIfDifferent(possibleMoves, game.getPossibleMoves())
 
         // board
