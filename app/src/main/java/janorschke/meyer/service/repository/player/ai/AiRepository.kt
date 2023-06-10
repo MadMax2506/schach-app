@@ -10,6 +10,7 @@ import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.repository.player.PlayerRepository
 import janorschke.meyer.service.utils.AiTreeGenerator.generateChildren
+import janorschke.meyer.service.utils.ai.AiEvaluation.minimax
 import kotlin.system.measureTimeMillis
 
 private const val LOG_TAG = "AiRepository"
@@ -55,46 +56,51 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
      * @return the best [Move] for the current ai
      */
     private fun generateTreeAndCalculateBestMove(): MutableList<AiEvaluationNode> {
-        var alpha = Int.MIN_VALUE
-        var priority = Int.MIN_VALUE
         var nodes: MutableList<AiEvaluationNode> = mutableListOf()
 
         val time = measureTimeMillis {
-            // FIXME
-            Log.d(LOG_TAG, "depth=0/$depth | children=${root.children?.toMutableList()?.size}")
+            var alpha = Int.MIN_VALUE
+            var priority = Int.MIN_VALUE
+            val board: Board
+            val color: PieceColor
 
-            if (root.children == null) {
-                val board: Board
-                val color: PieceColor
-
-                if (root.move == null) {
-                    board = Board()
-                    color = PieceColor.WHITE
-                } else {
-                    board = Board(root.requiredMove.fieldsAfterMoving)
-                    color = root.color.opponent()
-                }
-                root.requiredChildren = generateChildren(root, board, color, aiColor)
+            if (root.move == null) {
+                board = Board()
+                color = PieceColor.WHITE
+            } else {
+                board = Board(root.requiredMove.fieldsAfterMoving)
+                color = root.color.opponent()
             }
 
+            if (root.children == null) root.requiredChildren = generateChildren(root, board, color, aiColor)
+
             for (child in root.requiredChildren) {
-                val value = minimax(child, 1, alpha, Int.MAX_VALUE, aiColor)
+                val calcNode = minimax(
+                        parent = child,
+                        depth = depth,
+                        currentDepth = 1,
+                        alpha = alpha,
+                        beta = Int.MAX_VALUE,
+                        color = color.opponent(),
+                        aiColor = aiColor
+                )
+                val calcValency = calcNode.valency
+                val calcPriority = child.priority
 
                 when {
                     // Node has a better valency
-                    alpha < value -> {
-                        alpha = value
-                        priority = child.priority
+                    alpha < calcValency -> {
+                        alpha = calcValency
+                        priority = calcPriority
                         nodes = mutableListOf(child)
                     }
 
                     // Node has the same valency and priority
-                    alpha == value && priority == child.priority -> nodes.add(child)
-
+                    alpha == calcValency && priority == calcPriority -> nodes.add(child)
 
                     // Node has the same valency and a better priority
-                    alpha == value && priority < child.priority -> {
-                        priority = child.priority
+                    alpha == calcValency && priority < calcPriority -> {
+                        priority = calcPriority
                         nodes = mutableListOf(child)
                     }
                 }
@@ -103,46 +109,5 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
 
         Log.d(LOG_TAG, "Calculate the tree in ${time}ms")
         return nodes
-    }
-
-    /**
-     * @param parent [AiEvaluationNode]
-     * @param currentDepth of the [AiRepository.root]
-     * @param alpha value to optimize the [AiRepository.minimax]-algorithm
-     * @param beta value to optimize the [AiRepository.minimax]-algorithm
-     * @param color of the pieces for the current depth
-     * @return best [AiEvaluationNode.valency] of the evaluated children
-     */
-    private fun minimax(parent: AiEvaluationNode, currentDepth: Int, alpha: Int, beta: Int, color: PieceColor): Int {
-        if (currentDepth == depth) return parent.valency
-
-        val board = Board(parent.requiredMove.fieldsAfterMoving)
-        val maximizingPlayer = (color == aiColor)
-
-        var bestVal = if (maximizingPlayer) Int.MIN_VALUE else Int.MAX_VALUE
-        var mutableAlpha = alpha
-        var mutableBeta = beta
-
-        // FIXME
-        Log.d(LOG_TAG, "depth=$currentDepth/$depth | children=${parent.children?.toMutableList()?.size}")
-
-        if (parent.children == null) {
-            parent.requiredChildren = generateChildren(parent, board, color, aiColor)
-        }
-
-        for (child in parent.requiredChildren) {
-            val calcNode = minimax(child, currentDepth + 1, mutableAlpha, mutableBeta, color.opponent())
-
-            if (maximizingPlayer) {
-                bestVal = bestVal.coerceAtLeast(calcNode)
-                mutableAlpha = mutableAlpha.coerceAtLeast(bestVal)
-            } else {
-                bestVal = bestVal.coerceAtMost(calcNode)
-                mutableBeta = mutableBeta.coerceAtMost(bestVal)
-            }
-
-            if (mutableBeta <= mutableAlpha) break
-        }
-        return bestVal
     }
 }

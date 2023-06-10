@@ -7,9 +7,12 @@ import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.utils.BoardUtils.calculatePieceValency
 import janorschke.meyer.service.validator.BoardValidator
 
-class AiEvaluationNode(history: History, val move: Move?, val aiColor: PieceColor, val priority: Int) {
+class AiEvaluationNode {
     val history: History
+    val move: Move?
+    val aiColor: PieceColor
     val valency: Int
+    val priority: Int
     var children: Sequence<AiEvaluationNode>? = null
 
     val color get() = requiredMove.from.requiredPiece.color
@@ -20,8 +23,20 @@ class AiEvaluationNode(history: History, val move: Move?, val aiColor: PieceColo
             this.children = children
         }
 
-    init {
+    constructor(aiEvaluationNode: AiEvaluationNode) {
+        this.history = History(aiEvaluationNode.history)
+        this.move = aiEvaluationNode.move
+        this.aiColor = aiEvaluationNode.aiColor
+        this.valency = aiEvaluationNode.valency
+        this.priority = aiEvaluationNode.priority
+        this.children = aiEvaluationNode.children
+    }
+
+    constructor(history: History, move: Move?, aiColor: PieceColor, priority: Int) {
         this.history = History(history)
+        this.move = move
+        this.aiColor = aiColor
+        this.priority = priority
         this.valency = if (move == null) {
             // Neutral starting position on the board
             0
