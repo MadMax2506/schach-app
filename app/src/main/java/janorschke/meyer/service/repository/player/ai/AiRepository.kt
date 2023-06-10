@@ -34,7 +34,7 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
     }
 
     override fun apply(move: Move) {
-        root = AiEvaluationNode(root).requiredChildren.first { it.move == move }
+        root = root.requiredChildren.first { it.move == move }
         setBestNodes(generateTreeAndCalculateBestMove(), move.from.requiredPiece.color)
     }
 
@@ -62,7 +62,7 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
         val time = measureTimeMillis {
             // FIXME
             Log.d(LOG_TAG, "depth=0/$depth | children=${root.children?.toMutableList()?.size}")
-            
+
             if (root.children == null) {
                 val board: Board
                 val color: PieceColor
