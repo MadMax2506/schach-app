@@ -121,4 +121,18 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
             }
         }
     }
+
+
+    override fun hashCode(): Int {
+        var result = color.hashCode()
+        result = 31 * result + pieceInfo.hashCode()
+        return result
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Piece) return false
+
+        return this.color == other.color && this.pieceInfo == other.pieceInfo
+    }
 }

@@ -24,11 +24,12 @@ object AiTreeGenerator {
     /**
      * @param parent for the [AiEvaluationNode] which will be generated
      * @param board instance
+     * @param color of the current pieces
      * @param aiColor
      * @return a sequence of nodes [AiEvaluationNode]
      */
-    fun generateChildren(parent: AiEvaluationNode, board: Board, aiColor: PieceColor): Sequence<AiEvaluationNode> {
-        return PieceSequence.allPiecesByColor(board, aiColor)
+    fun generateChildren(parent: AiEvaluationNode, board: Board, color: PieceColor, aiColor: PieceColor): Sequence<AiEvaluationNode> {
+        return PieceSequence.allPiecesByColor(board, color)
                 // Create a flatten list of moves for each possible move
                 .map { piece -> generateMovesForPiece(board, parent.history, piece) }
                 .flatten()

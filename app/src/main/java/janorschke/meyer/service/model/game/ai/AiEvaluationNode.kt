@@ -19,8 +19,14 @@ const val LOG_TAG = "AiEvaluationNode"
  */
 class AiEvaluationNode(val history: History, val move: Move?, private val aiColor: PieceColor, val priority: Int) {
     val valency: Int
+    var children: Sequence<AiEvaluationNode>? = null
 
     val requiredMove get() = move!!
+    var requiredChildren: Sequence<AiEvaluationNode>
+        get() = children!!
+        set(value) {
+            this.children = value
+        }
     val color get() = requiredMove.from.requiredPiece.color
 
     init {
