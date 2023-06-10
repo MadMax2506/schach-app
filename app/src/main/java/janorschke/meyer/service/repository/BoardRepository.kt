@@ -10,7 +10,7 @@ import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.lineMoving.Queen
 import janorschke.meyer.service.repository.game.GameRepository
 import janorschke.meyer.service.repository.player.PlayerRepository
-import janorschke.meyer.service.validator.BoardValidator
+import janorschke.meyer.service.validator.BoardValidator.isPawnTransformation
 import janorschke.meyer.viewModel.GameViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +51,7 @@ class BoardRepository(
         val piece = board.getField(fromPosition)
 
         // Move piece and reset selection
-        movePiece(possibleMove)
+        val move = movePiece(possibleMove)
         game.setSelectedPiece()
 
         // Check if game is finished or
@@ -63,9 +63,13 @@ class BoardRepository(
         if (isExternalMove) return
 
         GlobalScope.launch {
-            val move = playerRepository.nextMove(board, history)
+            playerRepository.apply(move)
+
+            val aiMove = playerRepository.nextMove()
+            playerRepository.apply(aiMove)
+
             withContext(Dispatchers.Main) {
-                tryToMovePiece(move, true)
+                tryToMovePiece(aiMove, true)
                 gameViewModel.aiMoved()
             }
         }
@@ -76,12 +80,13 @@ class BoardRepository(
      *
      * @param possibleMove from which the move is created to move the piece
      */
-    private fun movePiece(possibleMove: PossibleMove) {
+    private fun movePiece(possibleMove: PossibleMove): Move {
         val move = createMove(possibleMove)
         history.push(move)
 
         if (move.beaten.piece != null) Log.d(LOG_TAG, "${possibleMove.from.position.getNotation()} beat piece on ${possibleMove.to.position.getNotation()}")
         else Log.d(LOG_TAG, "Move piece from ${possibleMove.from.position.getNotation()} to ${possibleMove.to.position.getNotation()}")
+        return move
     }
 
 
@@ -95,7 +100,7 @@ class BoardRepository(
      */
     private fun createMove(possibleMove: PossibleMove): Move {
         val piece = possibleMove.from.requiredPiece
-        return if (BoardValidator.isPawnTransformation(piece, possibleMove.to.position)) {
+        return if (isPawnTransformation(piece, possibleMove.to.position)) {
             // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/49
             board.createMove(possibleMove.from.position, possibleMove.to.position, Queen(piece.color))
         } else {

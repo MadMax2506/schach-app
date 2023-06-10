@@ -50,6 +50,8 @@ class GameViewModel(
     private val game = Game(this, timeMode, playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
+
+    // TODO  async
     private val playerRepository = PlayerRepositoryFactory(game).create()
     private val gameRepository = GameRepositoryFactory(board, history, game).create()
     private val boardRepository = BoardRepository(this, board, history, game, gameRepository, playerRepository)

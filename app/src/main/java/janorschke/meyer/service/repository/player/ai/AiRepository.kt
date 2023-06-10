@@ -4,47 +4,80 @@ import android.util.Log
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.ai.AiEvaluationNode
-import janorschke.meyer.service.model.game.ai.LOG_TAG
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.move.Move
+import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.repository.player.PlayerRepository
-import janorschke.meyer.service.utils.AiTreeGenerator
+import janorschke.meyer.service.utils.AiTreeGenerator.generateChildren
 import kotlin.system.measureTimeMillis
+
+private const val LOG_TAG = "AiRepository"
 
 /**
  * Handles the ai moves
  *
- * @param aiColor of the ai
+ * @param aiColor
  * @param level of the ai
  */
 abstract class AiRepository(private val aiColor: PieceColor, private val level: AiLevel) : PlayerRepository {
+    private var root: AiEvaluationNode
+    private var bestNodes: MutableList<AiEvaluationNode> = mutableListOf()
+
     private val depth get() = level.depth + 1
 
     init {
         if (level.depth < 0 || level.depth % 2 != 0) throw IllegalArgumentException("Depth is invalid")
+
+        root = AiEvaluationNode(History(), null, aiColor, 0)
+        setBestNodes(generateTreeAndCalculateBestMove())
     }
 
-    override fun nextMove(board: Board, history: History) = calculateBestMove(board, history)
+    override fun apply(move: Move) {
+        root = AiEvaluationNode(root).requiredChildren.first { it.move == move }
+        setBestNodes(generateTreeAndCalculateBestMove(), move.from.requiredPiece.color)
+    }
+
+    override fun nextMove() = bestNodes.random().requiredMove
 
     /**
-     * Calculates the best move of the ai
+     * If the next move is by the ai, the `bestNodes` are accepted, otherwise an empty list.
      *
-     * @param board instance
-     * @param history instance
-     * @return the best move for the current ai
+     * @param bestNodes for the next [Move]
+     * @param color of the last moving [Piece]
      */
-    private fun calculateBestMove(board: Board, history: History): Move {
+    private fun setBestNodes(bestNodes: MutableList<AiEvaluationNode>, color: PieceColor? = null) {
+        this.bestNodes = if (color == null || color != aiColor) bestNodes else mutableListOf()
+    }
+
+    /**
+     * Calculates the best [Move] of the ai
+     * @return the best [Move] for the current ai
+     */
+    private fun generateTreeAndCalculateBestMove(): MutableList<AiEvaluationNode> {
         var alpha = Int.MIN_VALUE
         var priority = Int.MIN_VALUE
         var nodes: MutableList<AiEvaluationNode> = mutableListOf()
 
         val time = measureTimeMillis {
-            val lastMove = history.getMoves().lastOrNull()
-            val root = AiEvaluationNode(History(history), lastMove, aiColor, 0)
-            val color = lastMove?.from?.requiredPiece?.color?.opponent() ?: PieceColor.WHITE
+            // FIXME
+            Log.d(LOG_TAG, "depth=0/$depth | children=${root.children?.toMutableList()?.size}")
+            
+            if (root.children == null) {
+                val board: Board
+                val color: PieceColor
 
-            for (child in AiTreeGenerator.generateChildren(root, board, color, aiColor)) {
+                if (root.move == null) {
+                    board = Board()
+                    color = PieceColor.WHITE
+                } else {
+                    board = Board(root.requiredMove.fieldsAfterMoving)
+                    color = root.color.opponent()
+                }
+                root.requiredChildren = generateChildren(root, board, color, aiColor)
+            }
+
+            for (child in root.requiredChildren) {
                 val value = minimax(child, 1, alpha, Int.MAX_VALUE, aiColor)
 
                 when {
@@ -68,18 +101,17 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
             }
         }
 
-        Log.d(LOG_TAG, "Calculate the best move in ${time}ms")
-        // Choose random the best move with the highest priority
-        return nodes.random().requiredMove
+        Log.d(LOG_TAG, "Calculate the tree in ${time}ms")
+        return nodes
     }
 
     /**
      * @param parent [AiEvaluationNode]
-     * @param currentDepth of the tree
-     * @param alpha value to optimize the minimax-algorithm
-     * @param beta value to optimize the minimax-algorithm
+     * @param currentDepth of the [AiRepository.root]
+     * @param alpha value to optimize the [AiRepository.minimax]-algorithm
+     * @param beta value to optimize the [AiRepository.minimax]-algorithm
      * @param color of the pieces for the current depth
-     * @return best valency of the evaluated children
+     * @return best [AiEvaluationNode.valency] of the evaluated children
      */
     private fun minimax(parent: AiEvaluationNode, currentDepth: Int, alpha: Int, beta: Int, color: PieceColor): Int {
         if (currentDepth == depth) return parent.valency
@@ -91,7 +123,14 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
         var mutableAlpha = alpha
         var mutableBeta = beta
 
-        for (child in AiTreeGenerator.generateChildren(parent, board, color.opponent(), aiColor)) {
+        // FIXME
+        Log.d(LOG_TAG, "depth=$currentDepth/$depth | children=${parent.children?.toMutableList()?.size}")
+
+        if (parent.children == null) {
+            parent.requiredChildren = generateChildren(parent, board, color, aiColor)
+        }
+
+        for (child in parent.requiredChildren) {
             val calcNode = minimax(child, currentDepth + 1, mutableAlpha, mutableBeta, color.opponent())
 
             if (maximizingPlayer) {
