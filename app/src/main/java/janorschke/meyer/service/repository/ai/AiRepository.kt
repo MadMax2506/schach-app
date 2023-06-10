@@ -44,8 +44,9 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
         val time = measureTimeMillis {
             val lastMove = history.getMoves().lastOrNull()
             val root = AiEvaluationNode(History(history), lastMove, aiColor, 0)
+            val color = lastMove?.from?.requiredPiece?.color?.opponent() ?: PieceColor.WHITE
 
-            for (child in AiTreeGenerator.generateChildren(root, board, aiColor)) {
+            for (child in AiTreeGenerator.generateChildren(root, board, color, aiColor)) {
                 val value = minimax(child, 1, alpha, Int.MAX_VALUE, aiColor)
 
                 when {
@@ -92,7 +93,7 @@ abstract class AiRepository(private val aiColor: PieceColor, private val level: 
         var mutableAlpha = alpha
         var mutableBeta = beta
 
-        for (child in AiTreeGenerator.generateChildren(parent, board, color.opponent())) {
+        for (child in AiTreeGenerator.generateChildren(parent, board, color.opponent(), aiColor)) {
             val calcNode = minimax(child, currentDepth + 1, mutableAlpha, mutableBeta, color.opponent())
 
             if (maximizingPlayer) {
