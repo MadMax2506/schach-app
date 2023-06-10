@@ -16,8 +16,8 @@ import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.service.repository.BoardRepository
-import janorschke.meyer.service.repository.GameRepository
-import janorschke.meyer.service.repository.ai.AiRepositoryFactory
+import janorschke.meyer.service.repository.game.GameRepositoryFactory
+import janorschke.meyer.service.repository.player.PlayerRepositoryFactory
 import janorschke.meyer.service.utils.ArrayUtils
 
 /**
@@ -50,9 +50,9 @@ class GameViewModel(
     private val game = Game(this, timeMode, playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
-    private val aiRepository = AiRepositoryFactory(game).create()
-    private val gameRepository = GameRepository(board, history, game)
-    private val boardRepository = BoardRepository(this, board, history, game, gameRepository, aiRepository)
+    private val playerRepository = PlayerRepositoryFactory(game).create()
+    private val gameRepository = GameRepositoryFactory(board, history, game).create()
+    private val boardRepository = BoardRepository(this, board, history, game, gameRepository, playerRepository)
 
     init {
         playerWhite.value = game.playerWhite

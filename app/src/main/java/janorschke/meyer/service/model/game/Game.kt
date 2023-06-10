@@ -29,7 +29,13 @@ class Game(
     private var countdownTimer: CountDownTimer? = null
 
     val activePlayer get() = if (activeColor == PieceColor.WHITE) playerWhite else playerBlack
-    val aiPlayer get() = if (playerWhite is AiPlayer) playerWhite else playerBlack as AiPlayer
+    val aiPlayer: AiPlayer?
+        get() {
+            if (playerWhite is AiPlayer) return playerWhite
+            else if (playerBlack is AiPlayer) return playerBlack
+            return null
+        }
+    val requiredAiPlayer get() = aiPlayer!!
 
     init {
         setCountdownTimer()

@@ -1,4 +1,4 @@
-package janorschke.meyer.service.repository.ai
+package janorschke.meyer.service.repository.player.ai
 
 import android.util.Log
 import janorschke.meyer.enums.AiLevel
@@ -8,6 +8,7 @@ import janorschke.meyer.service.model.game.ai.LOG_TAG
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.move.Move
+import janorschke.meyer.service.repository.player.PlayerRepository
 import janorschke.meyer.service.utils.AiTreeGenerator
 import kotlin.system.measureTimeMillis
 
@@ -17,17 +18,14 @@ import kotlin.system.measureTimeMillis
  * @param aiColor of the ai
  * @param level of the ai
  */
-abstract class AiRepository(private val aiColor: PieceColor, private val level: AiLevel) {
+abstract class AiRepository(private val aiColor: PieceColor, private val level: AiLevel) : PlayerRepository {
     private val depth get() = level.depth + 1
 
     init {
         if (level.depth < 0 || level.depth % 2 != 0) throw IllegalArgumentException("Depth is invalid")
     }
 
-    /**
-     * @return the next possible move
-     */
-    fun calculateNextMove(board: Board, history: History) = calculateBestMove(board, history)
+    override fun nextMove(board: Board, history: History) = calculateBestMove(board, history)
 
     /**
      * Calculates the best move of the ai
