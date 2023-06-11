@@ -51,7 +51,7 @@ class BoardRepository(
         val piece = board.getField(fromPosition)
 
         // Move piece and reset selection
-        val move = movePiece(possibleMove)
+        movePiece(possibleMove)
         game.setSelectedPiece()
 
         // Check if game is finished or
@@ -63,10 +63,7 @@ class BoardRepository(
         if (isExternalMove) return
 
         GlobalScope.launch {
-            playerRepository.apply(move)
-
-            val aiMove = playerRepository.nextMove()
-            playerRepository.apply(aiMove)
+            val aiMove = playerRepository.nextMove(board, history)
 
             withContext(Dispatchers.Main) {
                 tryToMovePiece(aiMove, true)
@@ -80,13 +77,12 @@ class BoardRepository(
      *
      * @param possibleMove from which the move is created to move the piece
      */
-    private fun movePiece(possibleMove: PossibleMove): Move {
+    private fun movePiece(possibleMove: PossibleMove) {
         val move = createMove(possibleMove)
         history.push(move)
 
         if (move.beaten.piece != null) Log.d(LOG_TAG, "${possibleMove.from.position.getNotation()} beat piece on ${possibleMove.to.position.getNotation()}")
         else Log.d(LOG_TAG, "Move piece from ${possibleMove.from.position.getNotation()} to ${possibleMove.to.position.getNotation()}")
-        return move
     }
 
 

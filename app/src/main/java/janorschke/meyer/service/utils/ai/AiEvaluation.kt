@@ -22,22 +22,18 @@ object AiEvaluation {
             beta: Int,
             color: PieceColor,
             aiColor: PieceColor
-    ): AiEvaluationNode {
-        if (currentDepth == depth) return parent
+    ): Int {
+        if (currentDepth == depth) return parent.valency
 
         val board = Board(parent.requiredMove.fieldsAfterMoving)
         val maximizingPlayer = (color == aiColor)
 
-        var bestNode: AiEvaluationNode? = null
+        var bestVal = if (maximizingPlayer) Int.MIN_VALUE else Int.MAX_VALUE
         var mutableAlpha = alpha
         var mutableBeta = beta
 
-        if (parent.children == null) {
-            parent.requiredChildren = generateChildren(parent, board, color, aiColor)
-        }
-
-        for (child in parent.requiredChildren) {
-            val calcNode = minimax(
+        for (child in generateChildren(parent, board, color, aiColor)) {
+            val calcVal = minimax(
                     parent = child,
                     depth = depth,
                     currentDepth = currentDepth + 1,
@@ -48,24 +44,16 @@ object AiEvaluation {
             )
 
             if (maximizingPlayer) {
-                bestNode = maxNode(bestNode, calcNode)
-                mutableAlpha = mutableAlpha.coerceAtLeast(bestNode.valency)
+                bestVal = bestVal.coerceAtLeast(calcVal)
+                mutableAlpha = mutableAlpha.coerceAtLeast(bestVal)
             } else {
-                bestNode = minNode(bestNode, calcNode)
-                mutableBeta = mutableBeta.coerceAtMost(bestNode.valency)
+                bestVal = bestVal.coerceAtMost(calcVal)
+                mutableBeta = mutableBeta.coerceAtMost(bestVal)
             }
 
             if (mutableBeta <= mutableAlpha) break
         }
 
-        return bestNode!!
-    }
-
-    private fun minNode(node1: AiEvaluationNode?, node2: AiEvaluationNode): AiEvaluationNode {
-        return if (node1 == null || node1.valency > node2.valency) node2 else node1
-    }
-
-    private fun maxNode(node1: AiEvaluationNode?, node2: AiEvaluationNode): AiEvaluationNode {
-        return if (node1 == null || node1.valency < node2.valency) node2 else node1
+        return bestVal
     }
 }
