@@ -1,4 +1,4 @@
-package janorschke.meyer.service.utils
+package janorschke.meyer.service.utils.ai
 
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.PieceType

@@ -3,7 +3,7 @@ package janorschke.meyer.service.utils.ai
 import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.service.model.game.ai.AiEvaluationNode
 import janorschke.meyer.service.model.game.board.Board
-import janorschke.meyer.service.utils.AiTreeGenerator.generateChildren
+import janorschke.meyer.service.utils.ai.AiTreeGenerator.generateChildren
 
 object AiEvaluation {
     /**

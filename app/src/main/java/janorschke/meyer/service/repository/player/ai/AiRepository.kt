@@ -9,8 +9,8 @@ import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.repository.player.PlayerRepository
-import janorschke.meyer.service.utils.AiTreeGenerator.generateChildren
 import janorschke.meyer.service.utils.ai.AiEvaluation.minimax
+import janorschke.meyer.service.utils.ai.AiTreeGenerator.generateChildren
 import kotlin.system.measureTimeMillis
 
 private const val LOG_TAG = "AiRepository"
