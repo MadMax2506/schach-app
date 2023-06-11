@@ -118,18 +118,17 @@ object AiTreeGenerator {
     private fun generateMovesForPiece(board: Board, history: History, indexedPiece: PieceSequence.IndexedPiece): Sequence<Move> {
         return indexedPiece.piece
                 .possibleMoves(board, history, indexedPiece.position)
-                .asSequence()
                 .map { possibleMove ->
                     // Create moves
                     if (BoardValidator.isPawnTransformation(indexedPiece.piece, possibleMove.to.position)) {
                         // Special case for the pawn transformation
                         val color = indexedPiece.piece.color
-                        arrayOf(Knight(color), Bishop(color), Rook(color), Queen(color)).map { piece ->
+                        sequenceOf(Knight(color), Bishop(color), Rook(color), Queen(color)).map { piece ->
                             Board(board).createMove(indexedPiece.position, possibleMove.to.position, piece)
                         }
                     } else {
                         // Normal move
-                        mutableListOf(Board(board).createMove(indexedPiece.position, possibleMove.to.position))
+                        sequenceOf(Board(board).createMove(indexedPiece.position, possibleMove.to.position))
                     }
                 }
                 .flatten()

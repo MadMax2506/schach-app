@@ -27,7 +27,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
             currentPosition: Position,
             disableCheckCheck: Boolean,
             disableCastlingCheck: Boolean
-    ): MutableList<PossibleMove>
+    ): Sequence<PossibleMove>
 
     /**
      * @param board instance
@@ -59,7 +59,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
             board: Board,
             history: History,
             currentPosition: Position
-    ): MutableList<PossibleMove> {
+    ): Sequence<PossibleMove> {
         return possibleMoves(board, history, currentPosition, false, false)
     }
 

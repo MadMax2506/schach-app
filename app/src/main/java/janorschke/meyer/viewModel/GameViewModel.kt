@@ -39,7 +39,7 @@ class GameViewModel(
     val playerWhite: MutableLiveData<Player> = MutableLiveData()
     val playerBlack: MutableLiveData<Player> = MutableLiveData()
     val status: MutableLiveData<GameStatus> = MutableLiveData()
-    val possibleMoves: MutableLiveData<MutableList<PossibleMove>> = MutableLiveData()
+    val possibleMoves: MutableLiveData<Sequence<PossibleMove>> = MutableLiveData()
     val fields: MutableLiveData<Array<Array<Piece?>>> = MutableLiveData()
     val moves: MutableLiveData<MutableList<Move>> = MutableLiveData()
     val beatenPiecesByWhite: MutableLiveData<MutableList<Piece>> = MutableLiveData()
@@ -95,7 +95,7 @@ class GameViewModel(
 
             // Set the current selected piece on the board
             (isPlayersPiece && (selectedPosition == null || selectedPosition != position)) -> {
-                val possibleMoves = piece?.possibleMoves(Board(board), history, position) ?: mutableListOf()
+                val possibleMoves = piece?.possibleMoves(Board(board), history, position) ?: emptySequence()
                 game.setSelectedPiece(position, possibleMoves)
             }
 
@@ -141,8 +141,8 @@ class GameViewModel(
      * @param liveData
      * @param data
      */
-    private fun <T> updateIfDifferent(liveData: MutableLiveData<MutableList<T>>, data: MutableList<T>) {
-        if (data.size != liveData.value?.size || data != liveData.value) liveData.value = data.toMutableList()
+    private fun <T> updateIfDifferent(liveData: MutableLiveData<Sequence<T>>, data: Sequence<T>) {
+        if (data != liveData.value) liveData.value = data
     }
 
     /**

@@ -26,7 +26,7 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
             history: History,
             currentPosition: Position,
             disableCheckCheck: Boolean
-    ): MutableList<PossibleMove> {
+    ): Sequence<PossibleMove> {
         val possibleMoves = mutableListOf<PossibleMove>()
 
         // right down
@@ -53,7 +53,7 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
             if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
-        return possibleMoves
+        return possibleMoves.asSequence()
     }
 
     /**
@@ -68,7 +68,7 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
             history: History,
             currentPosition: Position,
             disableCheckCheck: Boolean
-    ): MutableList<PossibleMove> {
+    ): Sequence<PossibleMove> {
         val possibleMoves = mutableListOf<PossibleMove>()
 
         // down
@@ -95,7 +95,7 @@ abstract class LineMovingPiece(color: PieceColor, pieceInfo: PieceInfo) : Piece(
             if (addPosition(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)) break
         }
 
-        return possibleMoves
+        return possibleMoves.asSequence()
     }
 
     /**
