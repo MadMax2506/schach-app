@@ -277,19 +277,30 @@ class GameActivity : AppCompatActivity() {
         gameViewModel.activePlayerColor.observe(this) { color ->
             Log.d(LOG_TAG, "Update activePlayer")
 
-            if (color == PieceColor.BLACK) {
-                playerInfoWhite.active.setImageResource(R.drawable.inactive)
-                playerInfoWhite.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.dark_gray))
+            val isBlackPlayer = (color == PieceColor.BLACK)
 
-                playerInfoBlack.active.setImageResource(R.drawable.active)
-                playerInfoBlack.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
-            } else {
-                playerInfoWhite.active.setImageResource(R.drawable.active)
-                playerInfoWhite.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
+            val activePlayerInfo = if (isBlackPlayer) playerInfoBlack else playerInfoWhite
+            val inactivePlayerInfo = if (isBlackPlayer) playerInfoWhite else playerInfoBlack
 
-                playerInfoBlack.active.setImageResource(R.drawable.inactive)
-                playerInfoBlack.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.dark_gray))
-            }
+            val layoutVoteDraw = binding.bottomBar?.layoutVoteDraw
+            val layoutSurrender = binding.bottomBar?.layoutSurrender
+
+            val activePlayer = if (isBlackPlayer) gameViewModel.playerBlack.value else gameViewModel.playerWhite.value
+            val isNotAiPlayer = activePlayer !is AiPlayer
+
+            val alphaValue = if (isNotAiPlayer) 1.0f else 0.7f
+
+            activePlayerInfo.active.setImageResource(R.drawable.active)
+            activePlayerInfo.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
+
+            inactivePlayerInfo.active.setImageResource(R.drawable.inactive)
+            inactivePlayerInfo.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.dark_gray))
+
+            layoutSurrender?.isEnabled = isNotAiPlayer
+            layoutVoteDraw?.isEnabled = isNotAiPlayer
+
+            layoutSurrender?.alpha = alphaValue
+            layoutVoteDraw?.alpha = alphaValue
         }
 
         if (timeMode != TimeMode.UNLIMITED) {
