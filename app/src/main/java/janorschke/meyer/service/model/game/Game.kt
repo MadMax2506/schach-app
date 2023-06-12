@@ -25,11 +25,17 @@ class Game(
     private var activeColor: PieceColor = PieceColor.WHITE
     private var status: GameStatus = GameStatus.RUNNING
     private var selectedPosition: Position? = null
-    private var possibleMoves: MutableList<PossibleMove> = mutableListOf()
+    private var possibleMoves: Sequence<PossibleMove> = emptySequence()
     private var countdownTimer: CountDownTimer? = null
 
     val activePlayer get() = if (activeColor == PieceColor.WHITE) playerWhite else playerBlack
-    val aiPlayer get() = if (playerWhite is AiPlayer) playerWhite else playerBlack as AiPlayer
+    val aiPlayer: AiPlayer?
+        get() {
+            if (playerWhite is AiPlayer) return playerWhite
+            else if (playerBlack is AiPlayer) return playerBlack
+            return null
+        }
+    val requiredAiPlayer get() = aiPlayer!!
 
     init {
         setCountdownTimer()
@@ -84,7 +90,7 @@ class Game(
      * @param selectedPosition the position of the selected piece
      * @param possibleMoves the possible moves for the selected piece
      */
-    fun setSelectedPiece(selectedPosition: Position? = null, possibleMoves: MutableList<PossibleMove> = mutableListOf()) {
+    fun setSelectedPiece(selectedPosition: Position? = null, possibleMoves: Sequence<PossibleMove> = emptySequence()) {
         this.selectedPosition = selectedPosition
         this.possibleMoves = possibleMoves
     }

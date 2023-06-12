@@ -8,8 +8,9 @@ import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.lineMoving.Queen
-import janorschke.meyer.service.repository.ai.AiRepository
-import janorschke.meyer.service.validator.BoardValidator
+import janorschke.meyer.service.repository.game.GameRepository
+import janorschke.meyer.service.repository.player.PlayerRepository
+import janorschke.meyer.service.validator.BoardValidator.isPawnTransformation
 import janorschke.meyer.viewModel.GameViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -20,13 +21,12 @@ import kotlinx.coroutines.withContext
 private const val LOG_TAG = "BoardRepository"
 
 class BoardRepository(
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/99
         private val gameViewModel: GameViewModel,
         private val board: Board,
         private val history: History,
         private val game: Game,
         private val gameRepository: GameRepository,
-        private val aiRepository: AiRepository
+        private val playerRepository: PlayerRepository
 ) {
     fun tryToMovePiece(position: Position) {
         val possibleMove = game.getPossibleMoves().firstOrNull { it.to.position == position }
@@ -37,10 +37,10 @@ class BoardRepository(
      * Moves a chess piece from the source position to the target position, if the target position is valid.
      *
      * @param possibleMove of the piece
-     * @param isAiMove if true, the move was produced by an ai
+     * @param isExternalMove if `true`, the [Move] was produced external - ai or network
      */
     @OptIn(DelicateCoroutinesApi::class)
-    private fun tryToMovePiece(possibleMove: PossibleMove?, isAiMove: Boolean) {
+    private fun tryToMovePiece(possibleMove: PossibleMove?, isExternalMove: Boolean) {
         // Check if requested position is a possible move of the piece
         if (possibleMove == null) {
             game.setSelectedPiece()
@@ -60,13 +60,13 @@ class BoardRepository(
         gameRepository.handleMove()
 
         // move was done by the ai
-        if (isAiMove) return
+        if (isExternalMove) return
 
-        // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/99
         GlobalScope.launch {
-            val move = aiRepository.calculateNextMove(board, history)
+            val aiMove = playerRepository.nextMove(board, history)
+
             withContext(Dispatchers.Main) {
-                tryToMovePiece(move, true)
+                tryToMovePiece(aiMove, true)
                 gameViewModel.aiMoved()
             }
         }
@@ -96,7 +96,7 @@ class BoardRepository(
      */
     private fun createMove(possibleMove: PossibleMove): Move {
         val piece = possibleMove.from.requiredPiece
-        return if (BoardValidator.isPawnTransformation(piece, possibleMove.to.position)) {
+        return if (isPawnTransformation(piece, possibleMove.to.position)) {
             // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/49
             board.createMove(possibleMove.from.position, possibleMove.to.position, Queen(piece.color))
         } else {

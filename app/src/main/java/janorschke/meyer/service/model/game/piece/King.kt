@@ -24,7 +24,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
             currentPosition: Position,
             disableCheckCheck: Boolean,
             disableCastlingCheck: Boolean
-    ): MutableList<PossibleMove> {
+    ): Sequence<PossibleMove> {
         val possibleMoves = mutableListOf<PossibleMove>()
 
         // normal move
@@ -36,7 +36,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
             }
         }
 
-        if (hasMoved(history) || disableCastlingCheck || isKingInCheck(board, history, color)) return possibleMoves
+        if (hasMoved(history) || disableCastlingCheck || isKingInCheck(board, history, color)) return possibleMoves.asSequence()
 
         // long castling
         castling(board, history, possibleMoves, disableCheckCheck, currentPosition, LEFT_ROOK_COL, LONG_CASTLING_COL)
@@ -44,7 +44,7 @@ class King(color: PieceColor) : Piece(color, PieceInfo.KING) {
         // short castling
         castling(board, history, possibleMoves, disableCheckCheck, currentPosition, RIGHT_ROOK_COL, SHORT_CASTLING_COL)
 
-        return possibleMoves
+        return possibleMoves.asSequence()
     }
 
     /**
