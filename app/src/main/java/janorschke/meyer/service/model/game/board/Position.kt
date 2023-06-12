@@ -23,7 +23,7 @@ class Position {
      * @return the row-position as string
      */
     fun getRowNotation(): String {
-        return (row + 1).toString()
+        return (8 - row).toString()
     }
 
     /**

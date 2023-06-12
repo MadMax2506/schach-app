@@ -2,7 +2,6 @@ package janorschke.meyer.service.model.game.ai
 
 import android.util.Log
 import janorschke.meyer.enums.PieceColor
-import janorschke.meyer.enums.PieceInfo
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.move.Move
@@ -34,16 +33,8 @@ class AiEvaluationNode(val history: History, val move: Move?, private val aiColo
                 Board(move.fieldsAfterMoving).let { boardCopy ->
                     history.push(move)
 
-                    val valueAi = calculatePieceValency(boardCopy, aiColor)
-                    val valueDiff = valueAi - calculatePieceValency(boardCopy, aiColor.opponent())
                     if (BoardValidator.isKingCheckmate(boardCopy, history, color.opponent())) return@let Int.MAX_VALUE
-                    if (BoardValidator.isStalemate(boardCopy, history, color.opponent())) {
-                        // Try to achieve an stalemate if the opponent has a big advantage
-                        if (valueAi <= PieceInfo.PAWN.valence && valueDiff < 0) return@let Int.MAX_VALUE
-                        if (valueDiff < PieceInfo.QUEEN.valence) return@let Int.MAX_VALUE
-                        return@let Int.MIN_VALUE
-                    }
-                    return@let valueDiff
+                    return@let calculatePieceValency(boardCopy, aiColor) - calculatePieceValency(boardCopy, aiColor.opponent())
                 }
             }
         }
