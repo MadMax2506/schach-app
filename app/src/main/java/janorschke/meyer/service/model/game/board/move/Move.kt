@@ -1,7 +1,7 @@
 package janorschke.meyer.service.model.game.board.move
 
 import janorschke.meyer.service.model.game.piece.Piece
-import janorschke.meyer.service.utils.ArrayUtils.deepEquals
+import janorschke.meyer.service.utils.ArrayUtils.deepCopy
 
 class Move(
         val fieldsAfterMoving: Array<Array<Piece?>>,
@@ -13,7 +13,7 @@ class Move(
         promotionTo: Piece?
 ) : PossibleMove(from, to, beaten, castling, isEnPassant, promotionTo) {
     constructor(fieldsAfterMoving: Array<Array<Piece?>>, possibleMove: PossibleMove) : this(
-            fieldsAfterMoving = fieldsAfterMoving,
+            fieldsAfterMoving = deepCopy(fieldsAfterMoving),
             from = PiecePosition(possibleMove.from),
             to = PiecePosition(possibleMove.to),
             beaten = PiecePosition(possibleMove.beaten),
@@ -38,7 +38,7 @@ class Move(
         if (this === other) return true
         if (other !is Move) return false
 
-        return deepEquals(this.fieldsAfterMoving, other.fieldsAfterMoving)
+        return this.fieldsAfterMoving.contentDeepEquals(other.fieldsAfterMoving)
                 && this.from == other.from
                 && this.to == other.to
                 && this.beaten == other.beaten
