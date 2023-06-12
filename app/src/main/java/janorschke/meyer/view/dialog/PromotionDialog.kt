@@ -5,10 +5,19 @@ import android.os.Bundle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import janorschke.meyer.databinding.DialogPromotionBinding
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.service.model.game.piece.Knight
+import janorschke.meyer.service.model.game.piece.Piece
+import janorschke.meyer.service.model.game.piece.lineMoving.Bishop
 import janorschke.meyer.service.model.game.piece.lineMoving.Queen
+import janorschke.meyer.service.model.game.piece.lineMoving.Rook
 
 class PromotionDialog : BaseDialog() {
     private lateinit var binding: DialogPromotionBinding
+    private lateinit var promotionListener: PromotionListener
+
+    interface PromotionListener {
+        fun onPromotionSelected(piece: Piece)
+    }
 
     companion object {
         private const val ARG_PIECE_COLOR = "pieceColor"
@@ -20,6 +29,10 @@ class PromotionDialog : BaseDialog() {
                 }
             }
         }
+    }
+
+    fun setPromotionListener(listener: PromotionListener) {
+        promotionListener = listener
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -34,7 +47,27 @@ class PromotionDialog : BaseDialog() {
 
     private fun setButtonOnClickHandlers(pieceColor: PieceColor) {
         binding.buttonQueenPromotion.setOnClickListener {
-            // TODO return the Piece
+            val selectedPiece = Queen(pieceColor)
+            promotionListener.onPromotionSelected(selectedPiece)
+            dismiss()
+        }
+
+        binding.buttonRookPromotion.setOnClickListener {
+            val selectedPiece = Rook(pieceColor)
+            promotionListener.onPromotionSelected(selectedPiece)
+            dismiss()
+        }
+
+        binding.buttonBishopPromotion.setOnClickListener {
+            val selectedPiece = Bishop(pieceColor)
+            promotionListener.onPromotionSelected(selectedPiece)
+            dismiss()
+        }
+
+        binding.buttonKnightPromotion.setOnClickListener {
+            val selectedPiece = Knight(pieceColor)
+            promotionListener.onPromotionSelected(selectedPiece)
+            dismiss()
         }
     }
 }

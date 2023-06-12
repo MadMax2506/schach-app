@@ -7,10 +7,10 @@ import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.board.move.PossibleMove
-import janorschke.meyer.service.model.game.piece.lineMoving.Queen
+import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.repository.ai.AiRepository
 import janorschke.meyer.service.validator.BoardValidator
-import janorschke.meyer.view.dialog.PromotionDialog
+import janorschke.meyer.view.callback.BoardRepositoryCallback
 import janorschke.meyer.viewModel.GameViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -28,8 +28,10 @@ class BoardRepository(
         private val history: History,
         private val game: Game,
         private val gameRepository: GameRepository,
-        private val aiRepository: AiRepository
+        private val aiRepository: AiRepository,
 ) {
+    private lateinit var callback: BoardRepositoryCallback
+
     fun tryToMovePiece(position: Position) {
         val possibleMove = game.getPossibleMoves().firstOrNull { it.to.position == position }
         tryToMovePiece(possibleMove, false)
@@ -99,11 +101,26 @@ class BoardRepository(
     private fun createMove(possibleMove: PossibleMove): Move {
         val piece = possibleMove.from.requiredPiece
         if (BoardValidator.isPawnTransformation(piece, possibleMove.to.position)) {
-            // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/49
-            //PromotionDialog.newInstance().show(supportFragmentManager, PROMOTION_DIALOG_TAG)
-            return board.createMove(possibleMove.from.position, possibleMove.to.position, Queen(piece.color))
+            return callback.openPromotionDialog(
+                    possibleMove.from.position,
+                    possibleMove.to.position,
+                    piece.color
+            )
         } else {
             return board.createMove(possibleMove)
         }
+    }
+
+    fun createPromotionMove(
+            fromPosition: Position,
+            toPosition: Position,
+            pawnReplaceWith: Piece
+    ): Move {
+        return board.createMove(fromPosition, toPosition, pawnReplaceWith)
+    }
+
+
+    fun setCallback(callback: BoardRepositoryCallback) {
+        this.callback = callback
     }
 }

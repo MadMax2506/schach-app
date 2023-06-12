@@ -19,6 +19,7 @@ import janorschke.meyer.service.repository.BoardRepository
 import janorschke.meyer.service.repository.GameRepository
 import janorschke.meyer.service.repository.ai.AiRepositoryFactory
 import janorschke.meyer.service.utils.ArrayUtils
+import janorschke.meyer.view.callback.BoardRepositoryCallback
 
 /**
  * View model for the game activity
@@ -54,11 +55,17 @@ class GameViewModel(
     private val gameRepository = GameRepository(board, history, game)
     private val boardRepository = BoardRepository(this, board, history, game, gameRepository, aiRepository)
 
+    fun getBoardRepository() = boardRepository
+
     init {
         playerWhite.value = game.playerWhite
         playerBlack.value = game.playerBlack
 
         setValues()
+    }
+
+    fun setBoardRepositoryCallback(callback: BoardRepositoryCallback) {
+        boardRepository.setCallback(callback)
     }
 
     fun surrenderGame() {
