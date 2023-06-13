@@ -8,7 +8,7 @@ open class PossibleMove(
         val beaten: PiecePosition,
         val castling: Castling?,
         val isEnPassant: Boolean,
-        val promotionTo: Piece?
+        var promotionTo: Piece?
 ) {
     constructor(move: Move) : this(
             from = (move.from),

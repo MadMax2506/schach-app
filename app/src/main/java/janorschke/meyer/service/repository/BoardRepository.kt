@@ -8,12 +8,10 @@ import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.Piece
-import janorschke.meyer.service.validator.BoardValidator
-import janorschke.meyer.view.callback.BoardRepositoryCallback
-import janorschke.meyer.service.model.game.piece.lineMoving.Queen
 import janorschke.meyer.service.repository.game.GameRepository
 import janorschke.meyer.service.repository.player.PlayerRepository
 import janorschke.meyer.service.validator.BoardValidator.isPawnTransformation
+import janorschke.meyer.view.callback.BoardRepositoryCallback
 import janorschke.meyer.viewModel.GameViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -52,16 +50,22 @@ class BoardRepository(
             return
         }
 
-        val fromPosition = possibleMove.from.position
-        val piece = board.getField(fromPosition)
+        val piece = possibleMove.from.requiredPiece
 
         // Move piece and reset selection
-        // TODO hier Dialog öffnen => kein rückabgewert nötig
-        movePiece(possibleMove)
+        // Open the PromotionDialog if Pawn goes to the last field
+        if (isPawnTransformation(piece, possibleMove.to.position)) {
+            callback.openPromotionDialog(
+                    piece.color,
+                    possibleMove
+            )
+        } else {
+            movePiece(possibleMove)
+        }
         game.setSelectedPiece()
 
         // Check if game is finished or
-        if (gameRepository.checkEndOfGame(piece!!)) return
+        if (gameRepository.checkEndOfGame(piece)) return
 
         gameRepository.handleMove()
 
@@ -83,8 +87,7 @@ class BoardRepository(
      *
      * @param possibleMove from which the move is created to move the piece
      */
-    private fun movePiece(possibleMove: PossibleMove) {
-        // TODO Umbau: createMove gibt keinen Move zurück => Ausführung ggf. im Dialog
+    fun movePiece(possibleMove: PossibleMove) {
         val move = createMove(possibleMove)
         history.push(move)
 
@@ -101,26 +104,7 @@ class BoardRepository(
      *
      * @see Board.createMove
      */
-    private fun createMove(possibleMove: PossibleMove): Move {
-        val piece = possibleMove.from.requiredPiece
-        return if (isPawnTransformation(piece, possibleMove.to.position)) {
-            callback.openPromotionDialog(
-                    possibleMove.from.position,
-                    possibleMove.to.position,
-                    piece.color
-            )
-        } else {
-            board.createMove(possibleMove)
-        }
-    }
-
-    fun createPromotionMove(
-            fromPosition: Position,
-            toPosition: Position,
-            pawnReplaceWith: Piece
-    ): Move {
-        return board.createMove(fromPosition, toPosition, pawnReplaceWith)
-    }
+    private fun createMove(possibleMove: PossibleMove): Move = board.createMove(possibleMove)
 
 
     fun setCallback(callback: BoardRepositoryCallback) {

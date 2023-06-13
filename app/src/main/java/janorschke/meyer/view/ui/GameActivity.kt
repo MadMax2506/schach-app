@@ -19,8 +19,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.SettingKeys
 import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.enums.TransferKeys
-import janorschke.meyer.service.model.game.board.Position
-import janorschke.meyer.service.model.game.board.move.Move
+import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.player.AiPlayer
 import janorschke.meyer.service.model.game.player.Player
@@ -225,19 +224,17 @@ class GameActivity : AppCompatActivity(), BoardRepositoryCallback {
     }
 
     override fun openPromotionDialog(
-            fromPosition: Position,
-            toPosition: Position,
-            pieceColor: PieceColor
-    ): Move {
+            pieceColor: PieceColor,
+            possibleMove: PossibleMove
+    ) {
         val promotionDialog = PromotionDialog.newInstance(pieceColor)
-        var move: Move? = null
         promotionDialog.setPromotionListener(object : PromotionDialog.PromotionListener {
             override fun onPromotionSelected(piece: Piece) {
-                move = gameViewModel.getBoardRepository().createPromotionMove(fromPosition, toPosition, piece)
+                possibleMove.promotionTo = piece
+                gameViewModel.getBoardRepository().movePiece(possibleMove)
             }
         })
         promotionDialog.show(supportFragmentManager, PROMOTION_DIALOG_TAG)
-        return move ?: throw IllegalStateException("There must be something to promote to!")
     }
 
     /**
