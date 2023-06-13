@@ -16,12 +16,16 @@ class AiEvaluationNode(history: History, val move: Move?, val aiColor: PieceColo
 
     init {
         this.history = History(history)
-        this.valency = if (move == null) {
+        this.valency = calcValency()
+    }
+
+    private fun calcValency(): Int {
+        if (move == null) {
             // Neutral starting position on the board
-            0
+            return 0
         } else {
             // Calculates valency of the current position
-            Board(move.fieldsAfterMoving).let { boardCopy ->
+            return Board(move.fieldsAfterMoving).let { boardCopy ->
                 history.push(move)
 
                 if (BoardValidator.isKingCheckmate(boardCopy, history, color.opponent())) return@let Int.MAX_VALUE
