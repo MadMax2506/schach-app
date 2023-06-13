@@ -56,6 +56,7 @@ class BoardRepository(
         val piece = board.getField(fromPosition)
 
         // Move piece and reset selection
+        // TODO hier Dialog öffnen => kein rückabgewert nötig
         movePiece(possibleMove)
         game.setSelectedPiece()
 
