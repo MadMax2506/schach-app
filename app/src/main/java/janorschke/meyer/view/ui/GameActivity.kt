@@ -223,6 +223,11 @@ class GameActivity : AppCompatActivity(), BoardRepositoryCallback {
         }
     }
 
+    /**
+     * TODO PromotionDialog
+     */
+    // TODO beim offenen Dialog beim drehen Exception
+    //  => lateinit property promotionListener has not been initialized
     override fun openPromotionDialog(
             pieceColor: PieceColor,
             possibleMove: PossibleMove
