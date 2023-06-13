@@ -27,7 +27,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
             currentPosition: Position,
             disableCheckCheck: Boolean,
             disableCastlingCheck: Boolean
-    ): MutableList<PossibleMove>
+    ): Sequence<PossibleMove>
 
     /**
      * @param board instance
@@ -59,7 +59,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
             board: Board,
             history: History,
             currentPosition: Position
-    ): MutableList<PossibleMove> {
+    ): Sequence<PossibleMove> {
         return possibleMoves(board, history, currentPosition, false, false)
     }
 
@@ -120,5 +120,19 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
                 possibleMoves.add(PossibleMove(move))
             }
         }
+    }
+
+
+    override fun hashCode(): Int {
+        var result = color.hashCode()
+        result = 31 * result + pieceInfo.hashCode()
+        return result
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Piece) return false
+
+        return this.color == other.color && this.pieceInfo == other.pieceInfo
     }
 }

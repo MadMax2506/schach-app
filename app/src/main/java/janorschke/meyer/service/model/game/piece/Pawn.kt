@@ -30,7 +30,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
             currentPosition: Position,
             disableCheckCheck: Boolean,
             disableCastlingCheck: Boolean
-    ): MutableList<PossibleMove> {
+    ): Sequence<PossibleMove> {
         val possibleMoves = mutableListOf<PossibleMove>()
 
         // normal move
@@ -54,7 +54,7 @@ class Pawn(color: PieceColor) : Piece(color, PieceInfo.PAWN) {
 
         enPassant(board, history, currentPosition, possibleMoves, disableCheckCheck)
 
-        return possibleMoves
+        return possibleMoves.asSequence()
     }
 
     private fun enPassant(

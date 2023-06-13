@@ -15,7 +15,7 @@ class Knight(color: PieceColor) : Piece(color, PieceInfo.KNIGHT) {
             currentPosition: Position,
             disableCheckCheck: Boolean,
             disableCastlingCheck: Boolean
-    ): MutableList<PossibleMove> {
+    ): Sequence<PossibleMove> {
         val possibleMoves = mutableListOf<PossibleMove>()
         for (i in -2..2) {
             for (j in -2..2) {
@@ -27,6 +27,6 @@ class Knight(color: PieceColor) : Piece(color, PieceInfo.KNIGHT) {
                 addPossibleMove(board, history, currentPosition, possiblePosition, possibleMoves, disableCheckCheck)
             }
         }
-        return possibleMoves
+        return possibleMoves.asSequence()
     }
 }

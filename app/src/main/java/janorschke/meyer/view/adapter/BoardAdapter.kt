@@ -24,14 +24,14 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
 
     private lateinit var fields: Array<Array<Piece?>>
-    private lateinit var possibleMoves: MutableList<PossibleMove>
+    private lateinit var possibleMoves: Sequence<PossibleMove>
 
     fun setFields(fields: Array<Array<Piece?>>) {
         this.fields = fields
         notifyDataSetChanged()
     }
 
-    fun setPossibleMoves(possibleMoves: MutableList<PossibleMove>) {
+    fun setPossibleMoves(possibleMoves: Sequence<PossibleMove>) {
         this.possibleMoves = possibleMoves
         notifyDataSetChanged()
     }

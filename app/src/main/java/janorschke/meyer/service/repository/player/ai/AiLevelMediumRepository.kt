@@ -1,4 +1,4 @@
-package janorschke.meyer.service.repository.ai
+package janorschke.meyer.service.repository.player.ai
 
 import janorschke.meyer.enums.AiLevel
 import janorschke.meyer.enums.PieceColor
