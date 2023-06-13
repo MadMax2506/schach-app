@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private const val LOG_TAG = "BoardRepository"
-private const val PROMOTION_DIALOG_TAG = "PromotionDialog"
 
 class BoardRepository(
         private val gameViewModel: GameViewModel,
@@ -84,6 +83,7 @@ class BoardRepository(
      * @param possibleMove from which the move is created to move the piece
      */
     private fun movePiece(possibleMove: PossibleMove) {
+        // TODO Umbau: createMove gibt keinen Move zurück => Ausführung ggf. im Dialog
         val move = createMove(possibleMove)
         history.push(move)
 
@@ -102,14 +102,14 @@ class BoardRepository(
      */
     private fun createMove(possibleMove: PossibleMove): Move {
         val piece = possibleMove.from.requiredPiece
-        if (isPawnTransformation(piece, possibleMove.to.position)) {
-            return callback.openPromotionDialog(
+        return if (isPawnTransformation(piece, possibleMove.to.position)) {
+            callback.openPromotionDialog(
                     possibleMove.from.position,
                     possibleMove.to.position,
                     piece.color
             )
         } else {
-            return board.createMove(possibleMove)
+            board.createMove(possibleMove)
         }
     }
 
