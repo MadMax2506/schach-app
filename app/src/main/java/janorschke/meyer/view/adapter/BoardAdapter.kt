@@ -14,7 +14,8 @@ import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.utils.piece.PieceDrawables.getAttackingPossibleMove
-import janorschke.meyer.service.utils.piece.PieceDrawables.getLastMovingPiece
+import janorschke.meyer.service.utils.piece.PieceDrawables.getLastMovingPieceSource
+import janorschke.meyer.service.utils.piece.PieceDrawables.getLastMovingPieceTarget
 import janorschke.meyer.service.utils.piece.PieceDrawables.getPiece
 import janorschke.meyer.service.utils.piece.PieceDrawables.getPossibleMove
 import janorschke.meyer.service.utils.piece.PieceDrawables.getSelectedPiece
@@ -28,7 +29,7 @@ import janorschke.meyer.viewModel.GameViewModel
 class BoardAdapter(private val context: Context) : BaseAdapter() {
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
 
-    private var lastAiMove: Move? = null
+    private var lastMove: Move? = null
     private var position: Position? = null
 
     private lateinit var fields: Array<Array<Piece?>>
@@ -45,7 +46,7 @@ class BoardAdapter(private val context: Context) : BaseAdapter() {
     }
 
     fun setLastMove(lastMove: Move?) {
-        this.lastAiMove = lastMove
+        this.lastMove = lastMove
         notifyDataSetChanged()
     }
 
@@ -84,12 +85,14 @@ class BoardAdapter(private val context: Context) : BaseAdapter() {
 
     private fun getPieceBackground(piece: Piece?, position: Position): Drawable? {
         val isPossibleMove = possibleMoves.map { it.to.position }.contains(position)
+
         return when {
             piece == null && isPossibleMove -> getPossibleMove(context)
+            lastMove?.from?.position == position -> getLastMovingPieceSource(context)
             piece == null -> null
             isPossibleMove -> getAttackingPossibleMove(context, piece)
             this.position == position -> getSelectedPiece(context, piece)
-            lastAiMove?.to?.position == position -> getLastMovingPiece(context, piece)
+            lastMove?.to?.position == position -> getLastMovingPieceTarget(context, piece)
             else -> getPiece(context, piece)
         }
     }

@@ -56,9 +56,9 @@ object PieceDrawables {
     /**
      * @param context of the application
      * @param piece information
-     * @return the drawable for the piece which is marked as last moved
+     * @return the indicator for the target position of the last moving piece
      */
-    fun getLastMovingPiece(context: Context, piece: Piece): Drawable {
+    fun getLastMovingPieceTarget(context: Context, piece: Piece): Drawable {
         val layers = mutableListOf<Drawable>()
 
         getGrayCircle(context).also { drawable ->
@@ -69,6 +69,16 @@ object PieceDrawables {
         layers.add(getPiece(context, piece))
 
         return LayerDrawable(layers.toTypedArray())
+    }
+
+    /**
+     * @param context of the application
+     * @return the indicator for the source position of the last moving piece
+     */
+    fun getLastMovingPieceSource(context: Context): Drawable {
+        return getDrawable(context, R.drawable.border_round)!!.mutate().also { drawable ->
+            drawable.colorFilter = ColorMatrixColorFilter(getRgbColor(184, 132, 40, 180))
+        }
     }
 
     /**
