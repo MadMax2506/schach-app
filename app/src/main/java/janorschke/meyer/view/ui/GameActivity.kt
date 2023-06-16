@@ -110,8 +110,8 @@ class GameActivity : AppCompatActivity() {
 
         val timeMode = enumValueOf<TimeMode>(timeModeStr)
         if (timeMode == TimeMode.UNLIMITED) {
-            playerInfoWhite.time.visibility = View.GONE
-            playerInfoBlack.time.visibility = View.GONE
+            playerInfoWhite.time.visibility = View.INVISIBLE
+            playerInfoBlack.time.visibility = View.INVISIBLE
         }
         return timeMode
     }
