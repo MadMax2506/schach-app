@@ -35,14 +35,14 @@ class Board {
          */
         private fun generateBaseLine(color: PieceColor): Array<Piece?> {
             return arrayOf(
-                    null,
-                    null,
-                    null,
+                    Rook(color),
+                    Knight(color),
+                    Bishop(color),
                     Queen(color),
                     King(color),
-                    null,
-                    null,
-                    null
+                    Bishop(color),
+                    Knight(color),
+                    Rook(color)
             )
         }
     }
@@ -52,7 +52,7 @@ class Board {
     constructor() {
         fields = Array(LINE_SIZE) { Array(LINE_SIZE) { null } }
         fields[0] = generateBaseLine(PieceColor.BLACK)
-        //fields[1] = generatePawnLine(PieceColor.BLACK)
+        fields[1] = generatePawnLine(PieceColor.BLACK)
         fields[6] = generatePawnLine(PieceColor.WHITE)
         fields[7] = generateBaseLine(PieceColor.WHITE)
     }
