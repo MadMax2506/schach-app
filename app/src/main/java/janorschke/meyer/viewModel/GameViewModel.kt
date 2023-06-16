@@ -58,6 +58,7 @@ class GameViewModel(
     val playerWhite: MutableLiveData<Player> = MutableLiveData()
     val playerBlack: MutableLiveData<Player> = MutableLiveData()
     val status: MutableLiveData<GameStatus> = MutableLiveData()
+    val selectedPosition: MutableLiveData<Position?> = MutableLiveData()
     val possibleMoves: MutableLiveData<Sequence<PossibleMove>> = MutableLiveData()
     val fields: MutableLiveData<Array<Array<Piece?>>> = MutableLiveData()
     val moves: MutableLiveData<MutableList<Move>> = MutableLiveData()
@@ -70,7 +71,6 @@ class GameViewModel(
     private val board = Board()
     private val history = History()
 
-    // TODO  async
     private val playerRepository = PlayerRepositoryFactory(game).create()
     private val gameRepository = GameRepositoryFactory(board, history, game).create()
     private val boardRepository = BoardRepository(board, history, game, gameRepository, playerRepository)
@@ -131,6 +131,7 @@ class GameViewModel(
         updateIfDifferent(activePlayerColor, game.getActiveColor())
         updateIfDifferent(activePlayerTime, game.activePlayer.remainingTime)
         updateIfDifferent(status, game.getStatus())
+        updateIfDifferent(selectedPosition, game.getSelectedPosition())
         updateIfDifferent(possibleMoves, game.getPossibleMoves())
 
         // board
