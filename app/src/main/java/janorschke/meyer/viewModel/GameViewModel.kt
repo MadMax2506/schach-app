@@ -34,6 +34,25 @@ class GameViewModel(
         aiLevelBlack: AiLevel?,
         timeMode: TimeMode
 ) : AndroidViewModel(application) {
+
+    companion object {
+        private var instance: GameViewModel? = null
+
+        @Synchronized
+        fun getInstance(gameViewModel: GameViewModel): GameViewModel {
+            if (instance == null) instance = gameViewModel
+            return instance!!
+        }
+
+        @Synchronized
+        fun getInstance() = instance!!
+
+        @Synchronized
+        fun reset() {
+            instance = null
+        }
+    }
+
     // live data for the view
     val activePlayerColor: MutableLiveData<PieceColor> = MutableLiveData()
     val activePlayerTime: MutableLiveData<Long?> = MutableLiveData()
@@ -48,14 +67,14 @@ class GameViewModel(
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
     val pawnDifferenceBlack: MutableLiveData<Int> = MutableLiveData()
 
-    private val game = Game(this, timeMode, playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack)
+    private val game = Game(timeMode, playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
 
     // TODO  async
     private val playerRepository = PlayerRepositoryFactory(game).create()
     private val gameRepository = GameRepositoryFactory(board, history, game).create()
-    private val boardRepository = BoardRepository(this, board, history, game, gameRepository, playerRepository)
+    private val boardRepository = BoardRepository(board, history, game, gameRepository, playerRepository)
 
     fun getBoardRepository() = boardRepository
 

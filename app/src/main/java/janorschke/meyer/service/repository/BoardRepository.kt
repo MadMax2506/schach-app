@@ -22,7 +22,6 @@ import kotlinx.coroutines.withContext
 private const val LOG_TAG = "BoardRepository"
 
 class BoardRepository(
-        private val gameViewModel: GameViewModel,
         private val board: Board,
         private val history: History,
         private val game: Game,
@@ -77,7 +76,7 @@ class BoardRepository(
 
             withContext(Dispatchers.Main) {
                 tryToMovePiece(aiMove, true)
-                gameViewModel.aiMoved()
+                GameViewModel.getInstance().aiMoved()
             }
         }
     }
