@@ -321,6 +321,11 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
+        gameViewModel.selectedPosition.observe(this) { selectedPosition ->
+            Log.d(LOG_TAG, "Update selected position")
+            boardAdapter.setSelectedPosition(selectedPosition)
+        }
+
         gameViewModel.possibleMoves.observe(this) { moves ->
             Log.d(LOG_TAG, "Update possible moves")
             boardAdapter.setPossibleMoves(moves)
@@ -334,6 +339,7 @@ class GameActivity : AppCompatActivity() {
         gameViewModel.moves.observe(this) { moveHistory ->
             Log.d(LOG_TAG, "Update move history")
             moveHistoryAdapter.setMoveHistory(moveHistory)
+            boardAdapter.setLastMove(moveHistory.lastOrNull())
         }
 
         gameViewModel.beatenPiecesByWhite.observe(this) { beatenPieces ->

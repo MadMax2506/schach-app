@@ -4,17 +4,18 @@ import android.content.Context
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
-import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getDrawable
 import janorschke.meyer.R
-import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.enums.PieceColor
+import janorschke.meyer.service.model.game.piece.Piece
 
 object PieceDrawables {
     /**
-     * @param context of the application
      * @return the drawable for possible move on a empty field
+     *
+     * @see getGrayCircle
      */
-    fun getPossibleMove(context: Context): Drawable = ContextCompat.getDrawable(context, R.drawable.chess_possiblemove)!!.mutate()
+    fun getPossibleMove(context: Context): Drawable = getGrayCircle(context)
 
     /**
      * @param context of the application
@@ -25,12 +26,43 @@ object PieceDrawables {
         val layers = mutableListOf<Drawable>()
 
         getPossibleMove(context).also { drawable ->
-            floatArrayOf(
-                    1f, 0.16f, 0.14f, 1f, 1f,  // red
-                    0f, 0f, 0f, 0f, 0f,  // green
-                    0f, 0f, 0f, 0f, 0f,  // blue
-                    1f, 1f, 1f, 1f, 1f // alpha
-            ).let { colorMatrix -> drawable.colorFilter = ColorMatrixColorFilter(colorMatrix) }
+            drawable.colorFilter = ColorMatrixColorFilter(getRgbColor(255, 71, 76))
+        }.let { drawable -> layers.add(drawable) }
+
+        // Add figure at the top
+        layers.add(getPiece(context, piece))
+
+        return LayerDrawable(layers.toTypedArray())
+    }
+
+    /**
+     * @param context of the application
+     * @param piece information
+     * @return the drawable for the piece which is currently selected
+     */
+    fun getSelectedPiece(context: Context, piece: Piece): Drawable {
+        val layers = mutableListOf<Drawable>()
+
+        getGrayCircle(context).also { drawable ->
+            drawable.colorFilter = ColorMatrixColorFilter(getRgbColor(64, 224, 208, 180))
+        }.let { drawable -> layers.add(drawable) }
+
+        // Add figure at the top
+        layers.add(getPiece(context, piece))
+
+        return LayerDrawable(layers.toTypedArray())
+    }
+
+    /**
+     * @param context of the application
+     * @param piece information
+     * @return the drawable for the piece which is marked as last moved
+     */
+    fun getLastMovingPiece(context: Context, piece: Piece): Drawable {
+        val layers = mutableListOf<Drawable>()
+
+        getGrayCircle(context).also { drawable ->
+            drawable.colorFilter = ColorMatrixColorFilter(getRgbColor(184, 132, 40, 180))
         }.let { drawable -> layers.add(drawable) }
 
         // Add figure at the top
@@ -45,7 +77,7 @@ object PieceDrawables {
      * @return the drawable of an piece
      */
     fun getPiece(context: Context, piece: Piece): Drawable {
-        return ContextCompat.getDrawable(context, piece.pieceInfo.imageId)!!
+        return getDrawable(context, piece.pieceInfo.imageId)!!
                 .mutate()
                 .also { drawable ->
                     if (piece.color == PieceColor.BLACK) {
@@ -58,4 +90,19 @@ object PieceDrawables {
                     }
                 }
     }
+
+    private fun getRgbColor(r: Int, g: Int, b: Int, a: Int = 255): FloatArray {
+        return floatArrayOf(
+                0f, 0f, 0f, 0f, r.toFloat(),  // red
+                0f, 0f, 0f, 0f, g.toFloat(),  // green
+                0f, 0f, 0f, 0f, b.toFloat(),  // blue
+                0f, 0f, 0f, 0f, a.toFloat()   // alpha
+        )
+    }
+
+    /**
+     * @param context of the application
+     * @return a gray circle
+     */
+    private fun getGrayCircle(context: Context) = getDrawable(context, R.drawable.gray_circle)!!.mutate()
 }

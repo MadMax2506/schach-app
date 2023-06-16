@@ -10,9 +10,14 @@ import janorschke.meyer.R
 import janorschke.meyer.databinding.GameFieldBinding
 import janorschke.meyer.service.model.game.board.Board
 import janorschke.meyer.service.model.game.board.Position
+import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.piece.Piece
-import janorschke.meyer.service.utils.piece.PieceDrawables
+import janorschke.meyer.service.utils.piece.PieceDrawables.getAttackingPossibleMove
+import janorschke.meyer.service.utils.piece.PieceDrawables.getLastMovingPiece
+import janorschke.meyer.service.utils.piece.PieceDrawables.getPiece
+import janorschke.meyer.service.utils.piece.PieceDrawables.getPossibleMove
+import janorschke.meyer.service.utils.piece.PieceDrawables.getSelectedPiece
 import janorschke.meyer.viewModel.GameViewModel
 
 /**
@@ -22,6 +27,9 @@ import janorschke.meyer.viewModel.GameViewModel
  */
 class BoardAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
+
+    private var lastAiMove: Move? = null
+    private var position: Position? = null
 
     private lateinit var fields: Array<Array<Piece?>>
     private lateinit var possibleMoves: Sequence<PossibleMove>
@@ -33,6 +41,16 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
 
     fun setPossibleMoves(possibleMoves: Sequence<PossibleMove>) {
         this.possibleMoves = possibleMoves
+        notifyDataSetChanged()
+    }
+
+    fun setLastMove(lastMove: Move?) {
+        this.lastAiMove = lastMove
+        notifyDataSetChanged()
+    }
+
+    fun setSelectedPosition(position: Position?) {
+        this.position = position
         notifyDataSetChanged()
     }
 
@@ -66,10 +84,13 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
 
     private fun getPieceBackground(piece: Piece?, position: Position): Drawable? {
         val isPossibleMove = possibleMoves.map { it.to.position }.contains(position)
-        if (piece == null) {
-            return if (isPossibleMove) PieceDrawables.getPossibleMove(context) else null
+        return when {
+            piece == null && isPossibleMove -> getPossibleMove(context)
+            piece == null -> null
+            isPossibleMove -> getAttackingPossibleMove(context, piece)
+            this.position == position -> getSelectedPiece(context, piece)
+            lastAiMove?.to?.position == position -> getLastMovingPiece(context, piece)
+            else -> getPiece(context, piece)
         }
-
-        return if (isPossibleMove) PieceDrawables.getAttackingPossibleMove(context, piece) else PieceDrawables.getPiece(context, piece)
     }
 }
