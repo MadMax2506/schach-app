@@ -36,13 +36,17 @@ class GameViewModel(
 
     companion object {
         private var instance: GameViewModel? = null
+
+        @Synchronized
         fun getInstance(gameViewModel: GameViewModel): GameViewModel {
             if (instance == null) instance = gameViewModel
             return instance!!
         }
 
+        @Synchronized
         fun getInstance() = instance!!
 
+        @Synchronized
         fun reset() {
             instance = null
         }
