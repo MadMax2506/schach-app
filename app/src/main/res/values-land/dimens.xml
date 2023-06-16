@@ -7,6 +7,14 @@
 
     <!-- Dialog -->
     <dimen name="dialog_button_text_size">12sp</dimen>
+    <!-- Dialog GameOver -->
     <dimen name="dialog_game_over_button_width">160sp</dimen>
     <dimen name="dialog_game_over_button_height">50sp</dimen>
+
+    <!-- Dialog Promotion -->
+    <dimen name="dialog_promotion_button_width">90sp</dimen>
+    <dimen name="dialog_promotion_button_height">90sp</dimen>
+
+    <!-- Player-Info -->
+    <dimen name="player_info_widgets_margin">25sp</dimen>
 </resources>

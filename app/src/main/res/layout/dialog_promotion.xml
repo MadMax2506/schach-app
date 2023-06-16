@@ -23,7 +23,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_knight_promotion"
@@ -47,7 +48,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_rook_promotion"
