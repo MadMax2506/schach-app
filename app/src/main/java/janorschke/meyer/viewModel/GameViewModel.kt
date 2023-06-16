@@ -33,6 +33,17 @@ class GameViewModel(
         aiLevelBlack: AiLevel?,
         timeMode: TimeMode
 ) : AndroidViewModel(application) {
+
+    companion object {
+        private var instance: GameViewModel? = null
+        fun getInstance(gameViewModel: GameViewModel): GameViewModel {
+            if (instance == null) instance = gameViewModel
+            return instance!!
+        }
+        
+        fun getInstance() = instance!!
+    }
+
     // live data for the view
     val activePlayerColor: MutableLiveData<PieceColor> = MutableLiveData()
     val activePlayerTime: MutableLiveData<Long?> = MutableLiveData()
