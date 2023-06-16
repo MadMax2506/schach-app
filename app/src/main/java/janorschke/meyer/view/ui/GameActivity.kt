@@ -114,8 +114,8 @@ class GameActivity : AppCompatActivity(), BoardRepositoryCallback {
 
         val timeMode = enumValueOf<TimeMode>(timeModeStr)
         if (timeMode == TimeMode.UNLIMITED) {
-            playerInfoWhite.time.visibility = View.GONE
-            playerInfoBlack.time.visibility = View.GONE
+            playerInfoWhite.time.visibility = View.INVISIBLE
+            playerInfoBlack.time.visibility = View.INVISIBLE
         }
         return timeMode
     }
@@ -168,9 +168,9 @@ class GameActivity : AppCompatActivity(), BoardRepositoryCallback {
         playerInfoBlack.name.text = playerNameBlack
 
         if (gameViewModel.playerWhite.value is AiPlayer) {
-            playerInfoWhite.time.visibility = View.GONE
+            playerInfoWhite.time.visibility = View.INVISIBLE
         } else if (gameViewModel.playerBlack.value is AiPlayer) {
-            playerInfoBlack.time.visibility = View.GONE
+            playerInfoBlack.time.visibility = View.INVISIBLE
         }
     }
 
@@ -309,7 +309,7 @@ class GameActivity : AppCompatActivity(), BoardRepositoryCallback {
             val activePlayer = if (isBlackPlayer) GameViewModel.getInstance().playerBlack.value else GameViewModel.getInstance().playerWhite.value
             val isNotAiPlayer = activePlayer !is AiPlayer
 
-            val alphaValue = if (isNotAiPlayer) 1.0f else 0.7f
+            val alphaValue = if (isNotAiPlayer) 1.0f else 0.5f
 
             activePlayerInfo.active.setImageResource(R.drawable.active)
             activePlayerInfo.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
@@ -342,6 +342,11 @@ class GameActivity : AppCompatActivity(), BoardRepositoryCallback {
             }
         }
 
+        GameViewModel.getInstance().selectedPosition.observe(this) { selectedPosition ->
+            Log.d(LOG_TAG, "Update selected position")
+            boardAdapter.setSelectedPosition(selectedPosition)
+        }
+
         GameViewModel.getInstance().possibleMoves.observe(this) { moves ->
             Log.d(LOG_TAG, "Update possible moves")
             boardAdapter.setPossibleMoves(moves)
@@ -355,6 +360,7 @@ class GameActivity : AppCompatActivity(), BoardRepositoryCallback {
         GameViewModel.getInstance().moves.observe(this) { moveHistory ->
             Log.d(LOG_TAG, "Update move history")
             moveHistoryAdapter.setMoveHistory(moveHistory)
+            boardAdapter.setLastMove(moveHistory.lastOrNull())
         }
 
         GameViewModel.getInstance().beatenPiecesByWhite.observe(this) { beatenPieces ->
