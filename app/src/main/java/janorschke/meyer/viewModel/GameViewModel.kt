@@ -76,7 +76,9 @@ class GameViewModel(
     private val gameRepository = GameRepositoryFactory(board, history, game).create()
     private val boardRepository = BoardRepository(board, history, game, gameRepository, playerRepository)
 
-    fun getBoardRepository() = boardRepository
+    fun movePiece(possibleMove: PossibleMove) {
+        boardRepository.movePiece(possibleMove)
+    }
 
     init {
         playerWhite.value = game.playerWhite

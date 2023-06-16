@@ -65,7 +65,7 @@ class PromotionDialog : BaseDialog() {
             possibleMove: PossibleMove
     ) {
         possibleMove.promotionTo = selectedPiece
-        GameViewModel.getInstance().getBoardRepository().movePiece(possibleMove)
+        GameViewModel.getInstance().movePiece(possibleMove)
         dismiss()
     }
 }
