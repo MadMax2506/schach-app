@@ -21,7 +21,6 @@ import janorschke.meyer.enums.SettingKeys
 import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.enums.TransferKeys
 import janorschke.meyer.service.model.game.board.move.PossibleMove
-import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.model.game.player.AiPlayer
 import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.service.utils.SettingsManager
@@ -226,21 +225,16 @@ class GameActivity : AppCompatActivity(), BoardRepositoryCallback {
     }
 
     /**
-     * TODO PromotionDialog
+     * PromotionDialog is created and shown in this method
+     *
+     * @param pieceColor of the player who moves
+     * @param possibleMove the move to be made
      */
-    // TODO beim offenen Dialog beim drehen Exception
-    //  => lateinit property promotionListener has not been initialized
     override fun openPromotionDialog(
             pieceColor: PieceColor,
             possibleMove: PossibleMove
     ) {
-        val promotionDialog = PromotionDialog.newInstance(pieceColor)
-        promotionDialog.setPromotionListener(object : PromotionDialog.PromotionListener {
-            override fun onPromotionSelected(piece: Piece) {
-                possibleMove.promotionTo = piece
-                GameViewModel.getInstance().getBoardRepository().movePiece(possibleMove)
-            }
-        })
+        val promotionDialog = PromotionDialog.newInstance(pieceColor, possibleMove)
         promotionDialog.show(supportFragmentManager, PROMOTION_DIALOG_TAG)
     }
 
