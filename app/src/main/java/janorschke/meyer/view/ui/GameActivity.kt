@@ -110,8 +110,8 @@ class GameActivity : AppCompatActivity() {
 
         val timeMode = enumValueOf<TimeMode>(timeModeStr)
         if (timeMode == TimeMode.UNLIMITED) {
-            playerInfoWhite.time.visibility = View.GONE
-            playerInfoBlack.time.visibility = View.GONE
+            playerInfoWhite.time.visibility = View.INVISIBLE
+            playerInfoBlack.time.visibility = View.INVISIBLE
         }
         return timeMode
     }
@@ -163,9 +163,9 @@ class GameActivity : AppCompatActivity() {
         playerInfoBlack.name.text = playerNameBlack
 
         if (gameViewModel.playerWhite.value is AiPlayer) {
-            playerInfoWhite.time.visibility = View.GONE
+            playerInfoWhite.time.visibility = View.INVISIBLE
         } else if (gameViewModel.playerBlack.value is AiPlayer) {
-            playerInfoBlack.time.visibility = View.GONE
+            playerInfoBlack.time.visibility = View.INVISIBLE
         }
     }
 
@@ -290,7 +290,7 @@ class GameActivity : AppCompatActivity() {
             val activePlayer = if (isBlackPlayer) GameViewModel.getInstance().playerBlack.value else GameViewModel.getInstance().playerWhite.value
             val isNotAiPlayer = activePlayer !is AiPlayer
 
-            val alphaValue = if (isNotAiPlayer) 1.0f else 0.7f
+            val alphaValue = if (isNotAiPlayer) 1.0f else 0.5f
 
             activePlayerInfo.active.setImageResource(R.drawable.active)
             activePlayerInfo.time.setTextColor(ContextCompat.getColor(applicationContext, R.color.black))
