@@ -78,6 +78,7 @@ class GameViewModel(
 
     fun movePiece(possibleMove: PossibleMove) {
         boardRepository.movePiece(possibleMove)
+        setValues()
     }
 
     init {
