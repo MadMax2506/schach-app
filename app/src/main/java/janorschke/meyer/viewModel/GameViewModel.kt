@@ -40,8 +40,12 @@ class GameViewModel(
             if (instance == null) instance = gameViewModel
             return instance!!
         }
-        
+
         fun getInstance() = instance!!
+
+        fun resetGVM() {
+            instance = null
+        }
     }
 
     // live data for the view
@@ -58,14 +62,14 @@ class GameViewModel(
     val beatenPiecesByBlack: MutableLiveData<MutableList<Piece>> = MutableLiveData()
     val pawnDifferenceBlack: MutableLiveData<Int> = MutableLiveData()
 
-    private val game = Game(this, timeMode, playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack)
+    private val game = Game(timeMode, playerNameWhite, playerNameBlack, aiLevelWhite, aiLevelBlack)
     private val board = Board()
     private val history = History()
 
     // TODO  async
     private val playerRepository = PlayerRepositoryFactory(game).create()
     private val gameRepository = GameRepositoryFactory(board, history, game).create()
-    private val boardRepository = BoardRepository(this, board, history, game, gameRepository, playerRepository)
+    private val boardRepository = BoardRepository(board, history, game, gameRepository, playerRepository)
 
     init {
         playerWhite.value = game.playerWhite

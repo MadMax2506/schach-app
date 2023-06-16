@@ -37,6 +37,9 @@ class TimeModeActivity : AppCompatActivity() {
                 bundle.putString(TransferKeys.AI_LEVEL.name, aiLevelStr)
                 bundle.putString(TransferKeys.GAME_MODE.name, GameMode.AI.name)
             })
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
             startActivity(intent)
         }
     }

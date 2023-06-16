@@ -12,7 +12,6 @@ import janorschke.meyer.service.model.game.player.PlayerFactory
 import janorschke.meyer.viewModel.GameViewModel
 
 class Game(
-        private val gameViewModel: GameViewModel,
         timeMode: TimeMode,
         playerNameWhite: String,
         playerNameBlack: String,
@@ -57,13 +56,13 @@ class Game(
         countdownTimer = object : CountDownTimer(activePlayer.requiredRemainingTime, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 activePlayer.requiredRemainingTime = millisUntilFinished
-                gameViewModel.timerTick()
+                GameViewModel.getInstance().timerTick()
             }
 
             override fun onFinish() {
                 activePlayer.requiredRemainingTime = 0
                 status = GameStatus.TIME_OVER
-                gameViewModel.timerTick()
+                GameViewModel.getInstance().timerTick()
             }
         }.start()
     }
