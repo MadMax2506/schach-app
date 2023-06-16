@@ -238,7 +238,7 @@ class GameActivity : AppCompatActivity(), BoardRepositoryCallback {
         promotionDialog.setPromotionListener(object : PromotionDialog.PromotionListener {
             override fun onPromotionSelected(piece: Piece) {
                 possibleMove.promotionTo = piece
-                gameViewModel.getBoardRepository().movePiece(possibleMove)
+                GameViewModel.getInstance().getBoardRepository().movePiece(possibleMove)
             }
         })
         promotionDialog.show(supportFragmentManager, PROMOTION_DIALOG_TAG)
