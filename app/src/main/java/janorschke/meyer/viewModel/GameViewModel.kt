@@ -43,7 +43,7 @@ class GameViewModel(
 
         fun getInstance() = instance!!
 
-        fun resetGVM() {
+        fun reset() {
             instance = null
         }
     }

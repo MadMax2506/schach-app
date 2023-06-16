@@ -152,7 +152,7 @@ class GameActivity : AppCompatActivity() {
         val playerNameBlack = getString(aiLevel.resourceId)
 
         // ViewModel
-        if (intent.flags == Intent.FLAG_ACTIVITY_CLEAR_TOP) GameViewModel.resetGVM()
+        if (intent.flags == Intent.FLAG_ACTIVITY_CLEAR_TOP) GameViewModel.reset()
 
         val gameViewModel = ViewModelProvider(
                 this,
