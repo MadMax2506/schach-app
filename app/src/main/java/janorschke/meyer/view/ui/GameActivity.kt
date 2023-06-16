@@ -1,6 +1,7 @@
 package janorschke.meyer.view.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -47,7 +48,6 @@ class GameActivity : AppCompatActivity() {
     private lateinit var moveHistoryAdapter: MoveHistoryAdapter
     private lateinit var beatenPiecesByWhiteAdapter: BeatenPiecesAdapter
     private lateinit var beatenPiecesByBlackAdapter: BeatenPiecesAdapter
-    private lateinit var gameViewModel: GameViewModel
     private lateinit var timeMode: TimeMode
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,10 +65,10 @@ class GameActivity : AppCompatActivity() {
         intent.extras?.getString(TransferKeys.TIME_MODE.name).let { timeMode = initTimeMode(it) }
 
         // Game Mode
-        intent.extras?.getString(TransferKeys.GAME_MODE.name).let { gameViewModel = initGameMode(it) }
+        intent.extras?.getString(TransferKeys.GAME_MODE.name).let { initGameMode(it) }
 
         // Board
-        boardAdapter = BoardAdapter(applicationContext, gameViewModel)
+        boardAdapter = BoardAdapter(applicationContext)
         binding.boardWrapper?.board?.adapter = boardAdapter
 
         // Move History
@@ -79,12 +79,12 @@ class GameActivity : AppCompatActivity() {
         binding.bottomBar
                 ?.layoutVoteDraw
                 ?.findViewById<LinearLayout>(R.id.layout_vote_draw)
-                ?.setOnClickListener(GameVoteDrawOnClickListener(this, gameViewModel))
+                ?.setOnClickListener(GameVoteDrawOnClickListener(this, GameViewModel.getInstance()))
 
         binding.bottomBar
                 ?.layoutSurrender
                 ?.findViewById<LinearLayout>(R.id.layout_surrender)
-                ?.setOnClickListener(GameSurrenderOnClickListener(this, gameViewModel))
+                ?.setOnClickListener(GameSurrenderOnClickListener(this, GameViewModel.getInstance()))
 
         // Beaten Pieces By White
         beatenPiecesByWhiteAdapter = BeatenPiecesAdapter(applicationContext)
@@ -120,12 +120,11 @@ class GameActivity : AppCompatActivity() {
      * Validate and handle the game mode from extras
      *
      * @param gameModeStr
-     * @return the [GameViewModel] of the game depending on the game mode
      */
-    private fun initGameMode(gameModeStr: String?): GameViewModel {
+    private fun initGameMode(gameModeStr: String?) {
         if (gameModeStr == null) throw IllegalArgumentException("Wrong game mode")
 
-        return enumValueOf<GameMode>(gameModeStr).let { gameMode ->
+        enumValueOf<GameMode>(gameModeStr).let { gameMode ->
             when (gameMode) {
                 GameMode.AI -> {
                     val aiLevelStr = intent.extras?.getString(TransferKeys.AI_LEVEL.name)
@@ -139,10 +138,13 @@ class GameActivity : AppCompatActivity() {
     /**
      * Handle the ai level for a new game
      *
+     * Initialize the GameViewModel
+     * - If you start a new game, the gameViewModel will be reseted,
+     * otherwise you will get the instance that's already created
+     *
      * @param aiLevel
-     * @return the [GameViewModel] of the game against the ai
      */
-    private fun initAiGame(aiLevel: AiLevel): GameViewModel {
+    private fun initAiGame(aiLevel: AiLevel) {
         val playerNameWhite = SettingsManager.loadSettings(applicationContext, SettingKeys.SETTINGS_SAVED_PLAYER_NAME.name)
                 ?.takeUnless(String::isEmpty)
                 ?: getString(R.string.default_player_name)
@@ -150,10 +152,12 @@ class GameActivity : AppCompatActivity() {
         val playerNameBlack = getString(aiLevel.resourceId)
 
         // ViewModel
+        if (intent.flags == Intent.FLAG_ACTIVITY_CLEAR_TOP) GameViewModel.reset()
+
         val gameViewModel = ViewModelProvider(
                 this,
                 GameViewModelFactory(application, playerNameWhite, playerNameBlack, null, aiLevel, timeMode)
-        )[GameViewModel::class.java]
+        )[GameViewModel::class.java].let { GameViewModel.getInstance(it) }
 
         playerInfoWhite.name.text = playerNameWhite
         playerInfoBlack.name.text = playerNameBlack
@@ -163,8 +167,6 @@ class GameActivity : AppCompatActivity() {
         } else if (gameViewModel.playerBlack.value is AiPlayer) {
             playerInfoBlack.time.visibility = View.GONE
         }
-
-        return gameViewModel
     }
 
     /**
@@ -198,8 +200,8 @@ class GameActivity : AppCompatActivity() {
             playerBlack: Player,
             endByVote: Boolean = false
     ) {
-        gameViewModel.stopCountdownTimer()
-        val endByTimeOver = (timeMode != TimeMode.UNLIMITED) && (gameViewModel.activePlayerTime.value == 0L)
+        GameViewModel.getInstance().stopCountdownTimer()
+        val endByTimeOver = (timeMode != TimeMode.UNLIMITED) && (GameViewModel.getInstance().activePlayerTime.value == 0L)
         GameOverDialog.newInstance(winningColor, playerWhite, playerBlack, endByVote, timeMode, endByTimeOver)
                 .show(supportFragmentManager, GAME_OVER_DIALOG_TAG)
     }
@@ -221,30 +223,30 @@ class GameActivity : AppCompatActivity() {
      * Observer for the view models
      */
     private fun observeViewModel() {
-        gameViewModel.status.observe(this) { status ->
+        GameViewModel.getInstance().status.observe(this) { status ->
             when (status) {
                 GameStatus.CHECKMATE -> {
                     Log.d(LOG_TAG, "Checkmate")
                     showGameOverDialog(
-                            winningColor = gameViewModel.activePlayerColor.value,
-                            playerWhite = gameViewModel.playerWhite.value!!,
-                            playerBlack = gameViewModel.playerBlack.value!!
+                            winningColor = GameViewModel.getInstance().activePlayerColor.value,
+                            playerWhite = GameViewModel.getInstance().playerWhite.value!!,
+                            playerBlack = GameViewModel.getInstance().playerBlack.value!!
                     )
                 }
 
                 GameStatus.STALEMATE -> {
                     Log.d(LOG_TAG, "Stalemate")
                     showGameOverDialog(
-                            playerWhite = gameViewModel.playerWhite.value!!,
-                            playerBlack = gameViewModel.playerBlack.value!!
+                            playerWhite = GameViewModel.getInstance().playerWhite.value!!,
+                            playerBlack = GameViewModel.getInstance().playerBlack.value!!
                     )
                 }
 
                 GameStatus.DRAW -> {
                     Log.d(LOG_TAG, "Draw voted")
                     showGameOverDialog(
-                            playerWhite = gameViewModel.playerWhite.value!!,
-                            playerBlack = gameViewModel.playerBlack.value!!,
+                            playerWhite = GameViewModel.getInstance().playerWhite.value!!,
+                            playerBlack = GameViewModel.getInstance().playerBlack.value!!,
                             endByVote = true
                     )
                 }
@@ -252,9 +254,9 @@ class GameActivity : AppCompatActivity() {
                 GameStatus.SURRENDERED -> {
                     Log.d(LOG_TAG, "Surrendered")
                     showGameOverDialog(
-                            winningColor = gameViewModel.activePlayerColor.value?.opponent(),
-                            playerWhite = gameViewModel.playerWhite.value!!,
-                            playerBlack = gameViewModel.playerBlack.value!!,
+                            winningColor = GameViewModel.getInstance().activePlayerColor.value?.opponent(),
+                            playerWhite = GameViewModel.getInstance().playerWhite.value!!,
+                            playerBlack = GameViewModel.getInstance().playerBlack.value!!,
                             endByVote = true
                     )
                 }
@@ -262,9 +264,9 @@ class GameActivity : AppCompatActivity() {
                 GameStatus.TIME_OVER -> {
                     Log.d(LOG_TAG, "TimeOver")
                     showGameOverDialog(
-                            winningColor = gameViewModel.activePlayerColor.value?.opponent(),
-                            playerWhite = gameViewModel.playerWhite.value!!,
-                            playerBlack = gameViewModel.playerBlack.value!!
+                            winningColor = GameViewModel.getInstance().activePlayerColor.value?.opponent(),
+                            playerWhite = GameViewModel.getInstance().playerWhite.value!!,
+                            playerBlack = GameViewModel.getInstance().playerBlack.value!!
                     )
                 }
 
@@ -274,7 +276,7 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
-        gameViewModel.activePlayerColor.observe(this) { color ->
+        GameViewModel.getInstance().activePlayerColor.observe(this) { color ->
             Log.d(LOG_TAG, "Update activePlayer")
 
             val isBlackPlayer = (color == PieceColor.BLACK)
@@ -285,7 +287,7 @@ class GameActivity : AppCompatActivity() {
             val layoutVoteDraw = binding.bottomBar?.layoutVoteDraw
             val layoutSurrender = binding.bottomBar?.layoutSurrender
 
-            val activePlayer = if (isBlackPlayer) gameViewModel.playerBlack.value else gameViewModel.playerWhite.value
+            val activePlayer = if (isBlackPlayer) GameViewModel.getInstance().playerBlack.value else GameViewModel.getInstance().playerWhite.value
             val isNotAiPlayer = activePlayer !is AiPlayer
 
             val alphaValue = if (isNotAiPlayer) 1.0f else 0.7f
@@ -304,7 +306,7 @@ class GameActivity : AppCompatActivity() {
         }
 
         if (timeMode != TimeMode.UNLIMITED) {
-            gameViewModel.activePlayerTime.observe(this) { time ->
+            GameViewModel.getInstance().activePlayerTime.observe(this) { time ->
                 if (time == null) return@observe
 
                 Log.d(LOG_TAG, "Update activePlayer time")
@@ -313,7 +315,7 @@ class GameActivity : AppCompatActivity() {
                 val minutes = seconds / 60
                 val remainingSeconds = seconds % 60
 
-                if (gameViewModel.activePlayerColor.value == PieceColor.BLACK) {
+                if (GameViewModel.getInstance().activePlayerColor.value == PieceColor.BLACK) {
                     playerInfoBlack.time.text = String.format("%02d:%02d", minutes, remainingSeconds)
                 } else {
                     playerInfoWhite.time.text = String.format("%02d:%02d", minutes, remainingSeconds)
@@ -321,43 +323,43 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
-        gameViewModel.selectedPosition.observe(this) { selectedPosition ->
+        GameViewModel.getInstance().selectedPosition.observe(this) { selectedPosition ->
             Log.d(LOG_TAG, "Update selected position")
             boardAdapter.setSelectedPosition(selectedPosition)
         }
 
-        gameViewModel.possibleMoves.observe(this) { moves ->
+        GameViewModel.getInstance().possibleMoves.observe(this) { moves ->
             Log.d(LOG_TAG, "Update possible moves")
             boardAdapter.setPossibleMoves(moves)
         }
 
-        gameViewModel.fields.observe(this) { fields ->
+        GameViewModel.getInstance().fields.observe(this) { fields ->
             Log.d(LOG_TAG, "Update fields")
             boardAdapter.setFields(fields)
         }
 
-        gameViewModel.moves.observe(this) { moveHistory ->
+        GameViewModel.getInstance().moves.observe(this) { moveHistory ->
             Log.d(LOG_TAG, "Update move history")
             moveHistoryAdapter.setMoveHistory(moveHistory)
             boardAdapter.setLastMove(moveHistory.lastOrNull())
         }
 
-        gameViewModel.beatenPiecesByWhite.observe(this) { beatenPieces ->
+        GameViewModel.getInstance().beatenPiecesByWhite.observe(this) { beatenPieces ->
             Log.d(LOG_TAG, "Update beaten pieces by white")
             beatenPiecesByWhiteAdapter.setBeatenPieces(beatenPieces)
         }
 
-        gameViewModel.beatenPiecesByBlack.observe(this) { beatenPieces ->
+        GameViewModel.getInstance().beatenPiecesByBlack.observe(this) { beatenPieces ->
             Log.d(LOG_TAG, "Update beaten pieces by black")
             beatenPiecesByBlackAdapter.setBeatenPieces(beatenPieces)
         }
 
-        gameViewModel.pawnDifferenceWhite.observe(this) { pawnDifference ->
+        GameViewModel.getInstance().pawnDifferenceWhite.observe(this) { pawnDifference ->
             Log.d(LOG_TAG, "Update pawn difference white")
             setPawnDifference(playerInfoWhite, pawnDifference)
         }
 
-        gameViewModel.pawnDifferenceBlack.observe(this) { pawnDifference ->
+        GameViewModel.getInstance().pawnDifferenceBlack.observe(this) { pawnDifference ->
             Log.d(LOG_TAG, "Update pawn difference black")
             setPawnDifference(playerInfoBlack, pawnDifference)
         }

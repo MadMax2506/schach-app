@@ -25,7 +25,7 @@ import janorschke.meyer.viewModel.GameViewModel
  *
  * @param context of the application
  */
-class BoardAdapter(private val context: Context, private val gameViewModel: GameViewModel) : BaseAdapter() {
+class BoardAdapter(private val context: Context) : BaseAdapter() {
     private data class ViewHolder(val binding: GameFieldBinding, val view: View)
 
     private var lastAiMove: Move? = null
@@ -75,7 +75,7 @@ class BoardAdapter(private val context: Context, private val gameViewModel: Game
 
         holder.view.setBackgroundResource(getViewBackgroundColor(position))
         holder.binding.btn.background = getPieceBackground(piece, position)
-        holder.binding.btn.setOnClickListener { gameViewModel.onFieldClick(position) }
+        holder.binding.btn.setOnClickListener { GameViewModel.getInstance().onFieldClick(position) }
 
         return holder.view
     }
