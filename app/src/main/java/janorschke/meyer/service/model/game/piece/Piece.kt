@@ -67,7 +67,7 @@ abstract class Piece(val color: PieceColor, val pieceInfo: PieceInfo) {
      * @param history instance
      * @return `true`, if the [Piece] has been moved before
      */
-    fun hasMoved(history: History) = history.getMoves().any { it.from.piece == this }
+    fun hasMoved(history: History) = history.getMoves().any { it.from.piece === this }
 
     /**
      * @param board instance
