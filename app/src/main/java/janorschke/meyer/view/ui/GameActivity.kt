@@ -20,6 +20,7 @@ import janorschke.meyer.enums.PieceColor
 import janorschke.meyer.enums.SettingKeys
 import janorschke.meyer.enums.TimeMode
 import janorschke.meyer.enums.TransferKeys
+import janorschke.meyer.service.model.game.board.move.PossibleMove
 import janorschke.meyer.service.model.game.player.AiPlayer
 import janorschke.meyer.service.model.game.player.Player
 import janorschke.meyer.service.utils.SettingsManager
@@ -28,7 +29,9 @@ import janorschke.meyer.view.adapter.MoveHistoryAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPieceDecorator
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPiecesAdapter
 import janorschke.meyer.view.adapter.beatenPieces.BeatenPiecesLayoutManager
+import janorschke.meyer.view.callback.BoardRepositoryCallback
 import janorschke.meyer.view.dialog.GameOverDialog
+import janorschke.meyer.view.dialog.PromotionDialog
 import janorschke.meyer.view.listener.GameSurrenderOnClickListener
 import janorschke.meyer.view.listener.GameVoteDrawOnClickListener
 import janorschke.meyer.viewModel.GameViewModel
@@ -36,11 +39,12 @@ import janorschke.meyer.viewModel.GameViewModelFactory
 
 private const val LOG_TAG = "GameActivity"
 private const val GAME_OVER_DIALOG_TAG = "GameOverDialog"
+private const val PROMOTION_DIALOG_TAG = "PromotionDialog"
 
 /**
  * Activity for a chess game
  */
-class GameActivity : AppCompatActivity() {
+class GameActivity : AppCompatActivity(), BoardRepositoryCallback {
     private lateinit var binding: ActivityGameBinding
     private lateinit var playerInfoWhite: PlayerInfoBinding
     private lateinit var playerInfoBlack: PlayerInfoBinding
@@ -158,6 +162,7 @@ class GameActivity : AppCompatActivity() {
                 this,
                 GameViewModelFactory(application, playerNameWhite, playerNameBlack, null, aiLevel, timeMode)
         )[GameViewModel::class.java].let { GameViewModel.getInstance(it) }
+        gameViewModel.setBoardRepositoryCallback(this)
 
         playerInfoWhite.name.text = playerNameWhite
         playerInfoBlack.name.text = playerNameBlack
@@ -217,6 +222,20 @@ class GameActivity : AppCompatActivity() {
             value < 0 -> binding.pawnDifference.text = "$value"
             else -> binding.pawnDifference.text = "0"
         }
+    }
+
+    /**
+     * PromotionDialog is created and shown in this method
+     *
+     * @param pieceColor of the player who moves
+     * @param possibleMove the move to be made
+     */
+    override fun openPromotionDialog(
+            pieceColor: PieceColor,
+            possibleMove: PossibleMove
+    ) {
+        val promotionDialog = PromotionDialog.newInstance(pieceColor, possibleMove)
+        promotionDialog.show(supportFragmentManager, PROMOTION_DIALOG_TAG)
     }
 
     /**

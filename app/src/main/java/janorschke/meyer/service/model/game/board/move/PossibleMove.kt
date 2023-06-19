@@ -1,6 +1,7 @@
 package janorschke.meyer.service.model.game.board.move
 
 import janorschke.meyer.service.model.game.piece.Piece
+import java.io.Serializable
 
 open class PossibleMove(
         val from: PiecePosition,
@@ -8,8 +9,8 @@ open class PossibleMove(
         val beaten: PiecePosition,
         val castling: Castling?,
         val isEnPassant: Boolean,
-        val promotionTo: Piece?
-) {
+        var promotionTo: Piece?
+) : Serializable {
     constructor(move: Move) : this(
             from = (move.from),
             to = PiecePosition(move.to),

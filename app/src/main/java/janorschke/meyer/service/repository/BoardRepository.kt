@@ -7,10 +7,10 @@ import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.board.move.PossibleMove
-import janorschke.meyer.service.model.game.piece.lineMoving.Queen
 import janorschke.meyer.service.repository.game.GameRepository
 import janorschke.meyer.service.repository.player.PlayerRepository
 import janorschke.meyer.service.validator.BoardValidator.isPawnTransformation
+import janorschke.meyer.view.callback.BoardRepositoryCallback
 import janorschke.meyer.viewModel.GameViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -27,9 +27,37 @@ class BoardRepository(
         private val gameRepository: GameRepository,
         private val playerRepository: PlayerRepository
 ) {
+    private lateinit var callback: BoardRepositoryCallback
+
+    /**
+     * Sets the attribute to the given callback
+     * @param callback [BoardRepositoryCallback]
+     */
+    fun setCallback(callback: BoardRepositoryCallback) {
+        this.callback = callback
+    }
+
+    /**
+     *  Moves a chess piece from the source position to the target position, if the target position is valid.
+     *
+     *  @param position to move to
+     */
     fun tryToMovePiece(position: Position) {
         val possibleMove = game.getPossibleMoves().firstOrNull { it.to.position == position }
         tryToMovePiece(possibleMove, false)
+    }
+
+    /**
+     * Moves a piece to the target position
+     *
+     * @param possibleMove from which the move is created to move the piece
+     */
+    fun movePiece(possibleMove: PossibleMove) {
+        val move = createMove(possibleMove)
+        history.push(move)
+
+        if (move.beaten.piece != null) Log.d(LOG_TAG, "${possibleMove.from.position.getNotation()} beat piece on ${possibleMove.to.position.getNotation()}")
+        else Log.d(LOG_TAG, "Move piece from ${possibleMove.from.position.getNotation()} to ${possibleMove.to.position.getNotation()}")
     }
 
     /**
@@ -46,15 +74,22 @@ class BoardRepository(
             return
         }
 
-        val fromPosition = possibleMove.from.position
-        val piece = board.getField(fromPosition)
+        val piece = possibleMove.from.requiredPiece
 
         // Move piece and reset selection
-        movePiece(possibleMove)
+        // Open the PromotionDialog if Pawn goes to the last field
+        if (isPawnTransformation(piece, possibleMove.to.position)) {
+            callback.openPromotionDialog(
+                    piece.color,
+                    possibleMove
+            )
+        } else {
+            movePiece(possibleMove)
+        }
         game.setSelectedPiece()
 
         // Check if game is finished or
-        if (gameRepository.checkEndOfGame(piece!!)) return
+        if (gameRepository.checkEndOfGame(piece)) return
 
         gameRepository.handleMove()
 
@@ -72,20 +107,6 @@ class BoardRepository(
     }
 
     /**
-     * Moves a piece to the target position
-     *
-     * @param possibleMove from which the move is created to move the piece
-     */
-    private fun movePiece(possibleMove: PossibleMove) {
-        val move = createMove(possibleMove)
-        history.push(move)
-
-        if (move.beaten.piece != null) Log.d(LOG_TAG, "${possibleMove.from.position.getNotation()} beat piece on ${possibleMove.to.position.getNotation()}")
-        else Log.d(LOG_TAG, "Move piece from ${possibleMove.from.position.getNotation()} to ${possibleMove.to.position.getNotation()}")
-    }
-
-
-    /**
      * Moves an piece to another position
      *
      * @param possibleMove from which the move is created
@@ -93,13 +114,5 @@ class BoardRepository(
      *
      * @see Board.createMove
      */
-    private fun createMove(possibleMove: PossibleMove): Move {
-        val piece = possibleMove.from.requiredPiece
-        return if (isPawnTransformation(piece, possibleMove.to.position)) {
-            // TODO https://github.com/MadMax2506/android-wahlmodul-project/issues/49
-            board.createMove(possibleMove.from.position, possibleMove.to.position, Queen(piece.color))
-        } else {
-            board.createMove(possibleMove)
-        }
-    }
+    private fun createMove(possibleMove: PossibleMove): Move = board.createMove(possibleMove)
 }

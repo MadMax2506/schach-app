@@ -19,6 +19,7 @@ import janorschke.meyer.service.repository.BoardRepository
 import janorschke.meyer.service.repository.game.GameRepositoryFactory
 import janorschke.meyer.service.repository.player.PlayerRepositoryFactory
 import janorschke.meyer.service.utils.ArrayUtils
+import janorschke.meyer.view.callback.BoardRepositoryCallback
 
 /**
  * View model for the game activity
@@ -75,11 +76,20 @@ class GameViewModel(
     private val gameRepository = GameRepositoryFactory(board, history, game).create()
     private val boardRepository = BoardRepository(board, history, game, gameRepository, playerRepository)
 
+    fun movePiece(possibleMove: PossibleMove) {
+        boardRepository.movePiece(possibleMove)
+        setValues()
+    }
+
     init {
         playerWhite.value = game.playerWhite
         playerBlack.value = game.playerBlack
 
         setValues()
+    }
+
+    fun setBoardRepositoryCallback(callback: BoardRepositoryCallback) {
+        boardRepository.setCallback(callback)
     }
 
     fun surrenderGame() {
