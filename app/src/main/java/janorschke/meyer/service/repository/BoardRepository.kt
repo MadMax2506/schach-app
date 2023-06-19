@@ -30,9 +30,35 @@ class BoardRepository(
 ) {
     private lateinit var callback: BoardRepositoryCallback
 
+    /**
+     *  Moves a chess piece from the source position to the target position, if the target position is valid.
+     *
+     *  @param position to move to
+     */
     fun tryToMovePiece(position: Position) {
         val possibleMove = game.getPossibleMoves().firstOrNull { it.to.position == position }
         tryToMovePiece(possibleMove, false)
+    }
+
+    /**
+     * Sets the attribute to the given callback
+     * @param callback [BoardRepositoryCallback]
+     */
+    fun setCallback(callback: BoardRepositoryCallback) {
+        this.callback = callback
+    }
+
+    /**
+     * Moves a piece to the target position
+     *
+     * @param possibleMove from which the move is created to move the piece
+     */
+    fun movePiece(possibleMove: PossibleMove) {
+        val move = createMove(possibleMove)
+        history.push(move)
+
+        if (move.beaten.piece != null) Log.d(LOG_TAG, "${possibleMove.from.position.getNotation()} beat piece on ${possibleMove.to.position.getNotation()}")
+        else Log.d(LOG_TAG, "Move piece from ${possibleMove.from.position.getNotation()} to ${possibleMove.to.position.getNotation()}")
     }
 
     /**
@@ -82,20 +108,6 @@ class BoardRepository(
     }
 
     /**
-     * Moves a piece to the target position
-     *
-     * @param possibleMove from which the move is created to move the piece
-     */
-    fun movePiece(possibleMove: PossibleMove) {
-        val move = createMove(possibleMove)
-        history.push(move)
-
-        if (move.beaten.piece != null) Log.d(LOG_TAG, "${possibleMove.from.position.getNotation()} beat piece on ${possibleMove.to.position.getNotation()}")
-        else Log.d(LOG_TAG, "Move piece from ${possibleMove.from.position.getNotation()} to ${possibleMove.to.position.getNotation()}")
-    }
-
-
-    /**
      * Moves an piece to another position
      *
      * @param possibleMove from which the move is created
@@ -104,9 +116,4 @@ class BoardRepository(
      * @see Board.createMove
      */
     private fun createMove(possibleMove: PossibleMove): Move = board.createMove(possibleMove)
-
-
-    fun setCallback(callback: BoardRepositoryCallback) {
-        this.callback = callback
-    }
 }
