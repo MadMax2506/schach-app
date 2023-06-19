@@ -7,7 +7,6 @@ import janorschke.meyer.service.model.game.board.History
 import janorschke.meyer.service.model.game.board.Position
 import janorschke.meyer.service.model.game.board.move.Move
 import janorschke.meyer.service.model.game.board.move.PossibleMove
-import janorschke.meyer.service.model.game.piece.Piece
 import janorschke.meyer.service.repository.game.GameRepository
 import janorschke.meyer.service.repository.player.PlayerRepository
 import janorschke.meyer.service.validator.BoardValidator.isPawnTransformation
@@ -31,6 +30,14 @@ class BoardRepository(
     private lateinit var callback: BoardRepositoryCallback
 
     /**
+     * Sets the attribute to the given callback
+     * @param callback [BoardRepositoryCallback]
+     */
+    fun setCallback(callback: BoardRepositoryCallback) {
+        this.callback = callback
+    }
+
+    /**
      *  Moves a chess piece from the source position to the target position, if the target position is valid.
      *
      *  @param position to move to
@@ -38,14 +45,6 @@ class BoardRepository(
     fun tryToMovePiece(position: Position) {
         val possibleMove = game.getPossibleMoves().firstOrNull { it.to.position == position }
         tryToMovePiece(possibleMove, false)
-    }
-
-    /**
-     * Sets the attribute to the given callback
-     * @param callback [BoardRepositoryCallback]
-     */
-    fun setCallback(callback: BoardRepositoryCallback) {
-        this.callback = callback
     }
 
     /**
