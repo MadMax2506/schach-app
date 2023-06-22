@@ -6,5 +6,7 @@ Gruppe 9
 ## Setup
 
 1. Repo clonen
-2. Run-Configuration für den "Ai-Generator" ausführen. Dies kann einiges an Zeit in Anspruch nehmen.
-3. App bauen und installieren
+2. Javer Version `17` unter `File | Settings | Build, Execution, Deployment | Build Tools | Gradle`
+   einstellen
+3. Emulator mit Android API-Level `33` einstellen
+4. App bauen und installieren
