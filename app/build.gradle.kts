@@ -71,7 +71,7 @@ dependencies {
     // XML serialization dependencies
     compileOnly("javax.xml.bind:jaxb-api:2.3.1")
     compileOnly("javax.activation:activation:1.1.1")
-    compileOnly("org.glassfish.jaxb:jaxb-runtime:4.0.3")
+    compileOnly("org.glassfish.jaxb:jaxb-runtime:4.0.4")
 
     // Material dependencies
     implementation("com.google.android.material:material:1.9.0")
